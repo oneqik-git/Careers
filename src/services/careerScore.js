@@ -3,7 +3,7 @@
  * Calculates and updates Career Score for a candidate
  * based on all five pillars with configurable weights
  */
-const { query, queryOne, transaction } = require('../../config/database');
+const { query, queryOne } = require('../../config/database');
 
 const WEIGHTS = {
   skill_impact:  parseFloat(process.env.WEIGHT_SKILL_IMPACT)  || 0.30,
@@ -22,6 +22,18 @@ const MAX_PTS = {
 };
 
 const BASE_SCORE = parseInt(process.env.SCORE_BASE) || 300;
+
+// Placeholder scoring signals are centralized here so the prototype keeps
+// stable outputs until real event-derived metrics are ready.
+const PLACEHOLDER_SIGNALS = Object.freeze({
+  engagement: {
+    response_rate_to_shortlists: 0.85,
+    consistency_signal: 0.70,
+  },
+  values: {
+    growth_mindset_signal: 0.60,
+  },
+});
 
 // Score band thresholds
 function getBand(score) {
@@ -121,10 +133,11 @@ async function calcEngagement(candidateId) {
     ? parseFloat(apps.relevant) / parseFloat(apps.total)
     : 0.5;
 
-  // Response rate to shortlists (how quickly they respond)
-  const responseRate = 0.85; // TODO: calculate from application_status_history
+  // TODO: replace placeholder signals with real application timeline metrics.
+  const responseRate = PLACEHOLDER_SIGNALS.engagement.response_rate_to_shortlists;
+  const consistencySignal = PLACEHOLDER_SIGNALS.engagement.consistency_signal;
 
-  const raw = completeness * 0.30 + seriousness * 0.25 + responseRate * 0.25 + 0.7 * 0.20;
+  const raw = completeness * 0.30 + seriousness * 0.25 + responseRate * 0.25 + consistencySignal * 0.20;
   return Math.round(raw * MAX_PTS.engagement);
 }
 
@@ -145,7 +158,8 @@ async function calcValues(candidateId) {
   );
   const adaptability = Math.min(parseFloat(expVariety?.variety || 0) / 3, 1);
 
-  const raw = learningActivity * 0.40 + adaptability * 0.30 + 0.6 * 0.30;
+  const growthMindsetSignal = PLACEHOLDER_SIGNALS.values.growth_mindset_signal;
+  const raw = learningActivity * 0.40 + adaptability * 0.30 + growthMindsetSignal * 0.30;
   return Math.round(raw * MAX_PTS.values);
 }
 

@@ -1,0 +1,1248 @@
+0 verbose cli C:\Program Files\nodejs\node.exe C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.11.0
+2 info using node@v24.14.1
+3 silly config load:file:C:\Program Files\nodejs\node_modules\npm\npmrc
+4 silly config load:file:D:\Coding\careers-backend-repair\frontend\.npmrc
+5 silly config load:file:C:\Users\Lenovo\.npmrc
+6 silly config load:file:C:\Users\Lenovo\AppData\Roaming\npm\etc\npmrc
+7 verbose title npm install
+8 verbose argv "install" "--cache" ".npm-cache"
+9 verbose logfile logs-max:10 dir:D:\Coding\careers-backend-repair\frontend\.npm-cache\_logs\2026-04-12T11_21_25_928Z-
+10 verbose logfile D:\Coding\careers-backend-repair\frontend\.npm-cache\_logs\2026-04-12T11_21_25_928Z-debug-0.log
+11 silly logfile done cleaning log files
+12 silly packumentCache heap:4496293888 maxSize:1124073472 maxEntrySize:562036736
+13 silly idealTree buildDeps
+14 silly fetch manifest next@^14.2.30
+15 silly packumentCache full:https://registry.npmjs.org/next cache-miss
+16 verbose shrinkwrap failed to load node_modules/.package-lock.json out of date, updated: node_modules/next
+17 http fetch GET 200 https://registry.npmjs.org/next 857ms (cache revalidated)
+18 silly packumentCache full:https://registry.npmjs.org/next set size:30044759 disposed:false
+19 silly fetch manifest @opentelemetry/api@^1.1.0
+20 silly packumentCache full:https://registry.npmjs.org/@opentelemetry%2fapi cache-miss
+21 http fetch GET 200 https://registry.npmjs.org/@opentelemetry%2fapi 179ms (cache revalidated)
+22 silly packumentCache full:https://registry.npmjs.org/@opentelemetry%2fapi set size:272855 disposed:false
+23 silly fetch manifest @playwright/test@^1.41.2
+24 silly packumentCache full:https://registry.npmjs.org/@playwright%2ftest cache-miss
+25 http fetch GET 200 https://registry.npmjs.org/@playwright%2ftest 141ms (cache revalidated)
+26 silly packumentCache full:https://registry.npmjs.org/@playwright%2ftest set size:9000135 disposed:false
+27 silly fetch manifest react@^18.3.1
+28 silly packumentCache full:https://registry.npmjs.org/react cache-miss
+29 http fetch GET 200 https://registry.npmjs.org/react 123ms (cache revalidated)
+30 silly packumentCache full:https://registry.npmjs.org/react set size:6598084 disposed:false
+31 silly fetch manifest react-dom@^18.3.1
+32 silly packumentCache full:https://registry.npmjs.org/react-dom cache-miss
+33 http fetch GET 200 https://registry.npmjs.org/react-dom 118ms (cache revalidated)
+34 silly packumentCache full:https://registry.npmjs.org/react-dom set size:8778661 disposed:false
+35 silly fetch manifest sass@^1.3.0
+36 silly packumentCache full:https://registry.npmjs.org/sass cache-miss
+37 http fetch GET 200 https://registry.npmjs.org/sass 109ms (cache revalidated)
+38 silly packumentCache full:https://registry.npmjs.org/sass set size:726244 disposed:false
+39 silly fetch manifest autoprefixer@^10.4.20
+40 silly packumentCache full:https://registry.npmjs.org/autoprefixer cache-miss
+41 http cache https://registry.npmjs.org/autoprefixer 16ms (cache hit)
+42 silly packumentCache full:https://registry.npmjs.org/autoprefixer set size:1307925 disposed:false
+43 silly fetch manifest postcss@^8.5.3
+44 silly packumentCache full:https://registry.npmjs.org/postcss cache-miss
+45 http fetch GET 200 https://registry.npmjs.org/postcss 100ms (cache revalidated)
+46 silly packumentCache full:https://registry.npmjs.org/postcss set size:705229 disposed:false
+47 silly fetch manifest tailwindcss@^3.4.17
+48 silly packumentCache full:https://registry.npmjs.org/tailwindcss cache-miss
+49 http fetch GET 200 https://registry.npmjs.org/tailwindcss 142ms (cache revalidated)
+50 silly packumentCache full:https://registry.npmjs.org/tailwindcss set size:10331221 disposed:false
+51 silly placeDep ROOT autoprefixer@10.4.27 OK for: oq-career-frontend@0.1.0 want: ^10.4.20
+52 silly placeDep ROOT next@14.2.35 REPLACE for: oq-career-frontend@0.1.0 want: ^14.2.30
+53 silly placeDep ROOT react@18.3.1 OK for: next@14.2.35 want: ^18.2.0
+54 silly placeDep ROOT react-dom@18.3.1 OK for: next@14.2.35 want: ^18.2.0
+55 silly placeDep ROOT tailwindcss@3.4.19 REPLACE for: oq-career-frontend@0.1.0 want: ^3.4.17
+56 silly fetch manifest browserslist@^4.28.1
+57 silly packumentCache full:https://registry.npmjs.org/browserslist cache-miss
+58 silly fetch manifest fraction.js@^5.3.4
+59 silly packumentCache full:https://registry.npmjs.org/fraction.js cache-miss
+60 silly fetch manifest postcss-value-parser@^4.2.0
+61 silly packumentCache full:https://registry.npmjs.org/postcss-value-parser cache-miss
+62 silly fetch manifest busboy@1.6.0
+63 silly packumentCache full:https://registry.npmjs.org/busboy cache-miss
+64 silly fetch manifest @next/env@14.2.35
+65 silly packumentCache full:https://registry.npmjs.org/@next%2fenv cache-miss
+66 silly fetch manifest styled-jsx@5.1.1
+67 silly packumentCache full:https://registry.npmjs.org/styled-jsx cache-miss
+68 silly fetch manifest @swc/helpers@0.5.5
+69 silly packumentCache full:https://registry.npmjs.org/@swc%2fhelpers cache-miss
+70 http cache https://registry.npmjs.org/postcss-value-parser 52ms (cache hit)
+71 silly packumentCache full:https://registry.npmjs.org/postcss-value-parser set size:73484 disposed:false
+72 silly fetch manifest @next/swc-darwin-x64@14.2.33
+73 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-darwin-x64 cache-miss
+74 http cache https://registry.npmjs.org/browserslist 59ms (cache hit)
+75 silly packumentCache full:https://registry.npmjs.org/browserslist set size:504681 disposed:false
+76 silly fetch manifest @next/swc-darwin-arm64@14.2.33
+77 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-darwin-arm64 cache-miss
+78 http cache https://registry.npmjs.org/busboy 67ms (cache hit)
+79 silly packumentCache full:https://registry.npmjs.org/busboy set size:78925 disposed:false
+80 silly fetch manifest @next/swc-linux-x64-gnu@14.2.33
+81 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-linux-x64-gnu cache-miss
+82 http cache https://registry.npmjs.org/fraction.js 71ms (cache hit)
+83 silly packumentCache full:https://registry.npmjs.org/fraction.js set size:149386 disposed:false
+84 silly fetch manifest @next/swc-linux-x64-musl@14.2.33
+85 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-linux-x64-musl cache-miss
+86 http fetch GET 200 https://registry.npmjs.org/@next%2fenv 193ms (cache revalidated)
+87 silly packumentCache full:https://registry.npmjs.org/@next%2fenv set size:7150050 disposed:false
+88 silly fetch manifest @next/swc-win32-x64-msvc@14.2.33
+89 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-win32-x64-msvc cache-miss
+90 http fetch GET 200 https://registry.npmjs.org/@next%2fswc-win32-x64-msvc 208ms (cache revalidated)
+91 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-win32-x64-msvc set size:5193359 disposed:false
+92 silly fetch manifest @next/swc-linux-arm64-gnu@14.2.33
+93 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-linux-arm64-gnu cache-miss
+94 http fetch GET 200 https://registry.npmjs.org/@swc%2fhelpers 661ms (cache revalidated)
+95 silly packumentCache full:https://registry.npmjs.org/@swc%2fhelpers set size:726705 disposed:false
+96 silly fetch manifest @next/swc-win32-ia32-msvc@14.2.33
+97 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-win32-ia32-msvc cache-miss
+98 http fetch GET 200 https://registry.npmjs.org/styled-jsx 675ms (cache revalidated)
+99 silly packumentCache full:https://registry.npmjs.org/styled-jsx set size:436113 disposed:false
+100 silly fetch manifest @next/swc-linux-arm64-musl@14.2.33
+101 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-linux-arm64-musl cache-miss
+102 http fetch GET 200 https://registry.npmjs.org/@next%2fswc-darwin-x64 640ms (cache revalidated)
+103 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-darwin-x64 set size:5116796 disposed:false
+104 silly fetch manifest @next/swc-win32-arm64-msvc@14.2.33
+105 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-win32-arm64-msvc cache-miss
+106 http fetch GET 200 https://registry.npmjs.org/@next%2fswc-linux-x64-gnu 671ms (cache revalidated)
+107 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-linux-x64-gnu set size:5220982 disposed:false
+108 silly fetch manifest scheduler@^0.23.2
+109 silly packumentCache full:https://registry.npmjs.org/scheduler cache-miss
+110 http fetch GET 200 https://registry.npmjs.org/@next%2fswc-linux-x64-musl 759ms (cache revalidated)
+111 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-linux-x64-musl set size:4977158 disposed:false
+112 silly fetch manifest loose-envify@^1.1.0
+113 silly packumentCache full:https://registry.npmjs.org/loose-envify cache-miss
+114 http fetch GET 200 https://registry.npmjs.org/@next%2fswc-darwin-arm64 815ms (cache revalidated)
+115 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-darwin-arm64 set size:5172836 disposed:false
+116 silly fetch manifest loose-envify@^1.1.0
+117 silly packumentCache full:https://registry.npmjs.org/loose-envify cache-miss
+118 http cache https://registry.npmjs.org/@next%2fswc-win32-ia32-msvc 266ms (cache hit)
+119 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-win32-ia32-msvc set size:3201597 disposed:false
+120 silly fetch manifest arg@^5.0.2
+121 silly packumentCache full:https://registry.npmjs.org/arg cache-miss
+122 http fetch GET 200 https://registry.npmjs.org/@next%2fswc-linux-arm64-gnu 366ms (cache revalidated)
+123 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-linux-arm64-gnu set size:5023804 disposed:false
+124 silly fetch manifest dlv@^1.1.3
+125 silly packumentCache full:https://registry.npmjs.org/dlv cache-miss
+126 http cache https://registry.npmjs.org/loose-envify 171ms (cache hit)
+127 silly packumentCache full:https://registry.npmjs.org/loose-envify set size:12559 disposed:false
+128 silly fetch manifest jiti@^1.21.7
+129 silly packumentCache full:https://registry.npmjs.org/jiti cache-miss
+130 http fetch GET 200 https://registry.npmjs.org/@next%2fswc-linux-arm64-musl 379ms (cache revalidated)
+131 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-linux-arm64-musl set size:5041349 disposed:false
+132 silly fetch manifest is-glob@^4.0.3
+133 silly packumentCache full:https://registry.npmjs.org/is-glob cache-miss
+134 http cache https://registry.npmjs.org/arg 173ms (cache hit)
+135 silly packumentCache full:https://registry.npmjs.org/arg set size:67036 disposed:false
+136 silly fetch manifest resolve@^1.22.8
+137 silly packumentCache full:https://registry.npmjs.org/resolve cache-miss
+138 http cache https://registry.npmjs.org/loose-envify 208ms (cache hit)
+139 silly packumentCache full:https://registry.npmjs.org/loose-envify set size:12559 disposed:false
+140 silly packumentCache full:https://registry.npmjs.org/loose-envify dispose
+141 silly fetch manifest sucrase@^3.35.0
+142 silly packumentCache full:https://registry.npmjs.org/sucrase cache-miss
+143 http cache https://registry.npmjs.org/dlv 119ms (cache hit)
+144 silly packumentCache full:https://registry.npmjs.org/dlv set size:16709 disposed:false
+145 silly fetch manifest chokidar@^3.6.0
+146 silly packumentCache full:https://registry.npmjs.org/chokidar cache-miss
+147 http fetch GET 200 https://registry.npmjs.org/@next%2fswc-win32-arm64-msvc 439ms (cache revalidated)
+148 silly packumentCache full:https://registry.npmjs.org/@next%2fswc-win32-arm64-msvc set size:5006124 disposed:false
+149 silly fetch manifest fast-glob@^3.3.2
+150 silly packumentCache full:https://registry.npmjs.org/fast-glob cache-miss
+151 http fetch GET 200 https://registry.npmjs.org/scheduler 437ms (cache revalidated)
+152 silly packumentCache full:https://registry.npmjs.org/scheduler set size:5468774 disposed:false
+153 silly fetch manifest lilconfig@^3.1.3
+154 silly packumentCache full:https://registry.npmjs.org/lilconfig cache-miss
+155 http cache https://registry.npmjs.org/is-glob 181ms (cache hit)
+156 silly packumentCache full:https://registry.npmjs.org/is-glob set size:40530 disposed:false
+157 silly fetch manifest didyoumean@^1.2.2
+158 silly packumentCache full:https://registry.npmjs.org/didyoumean cache-miss
+159 http cache https://registry.npmjs.org/resolve 170ms (cache hit)
+160 silly packumentCache full:https://registry.npmjs.org/resolve set size:252941 disposed:false
+161 silly fetch manifest micromatch@^4.0.8
+162 silly packumentCache full:https://registry.npmjs.org/micromatch cache-miss
+163 http cache https://registry.npmjs.org/sucrase 172ms (cache hit)
+164 silly packumentCache full:https://registry.npmjs.org/sucrase set size:449399 disposed:false
+165 silly fetch manifest postcss-js@^4.0.1
+166 silly packumentCache full:https://registry.npmjs.org/postcss-js cache-miss
+167 http cache https://registry.npmjs.org/chokidar 169ms (cache hit)
+168 silly packumentCache full:https://registry.npmjs.org/chokidar set size:255902 disposed:false
+169 silly fetch manifest glob-parent@^6.0.2
+170 silly packumentCache full:https://registry.npmjs.org/glob-parent cache-miss
+171 http cache https://registry.npmjs.org/lilconfig 57ms (cache hit)
+172 silly packumentCache full:https://registry.npmjs.org/lilconfig set size:45636 disposed:false
+173 silly fetch manifest object-hash@^3.0.0
+174 silly packumentCache full:https://registry.npmjs.org/object-hash cache-miss
+175 http cache https://registry.npmjs.org/fast-glob 133ms (cache hit)
+176 silly packumentCache full:https://registry.npmjs.org/fast-glob set size:220556 disposed:false
+177 silly fetch manifest normalize-path@^3.0.0
+178 silly packumentCache full:https://registry.npmjs.org/normalize-path cache-miss
+179 http cache https://registry.npmjs.org/didyoumean 52ms (cache hit)
+180 silly packumentCache full:https://registry.npmjs.org/didyoumean set size:11446 disposed:false
+181 silly fetch manifest postcss-import@^15.1.0
+182 silly packumentCache full:https://registry.npmjs.org/postcss-import cache-miss
+183 http cache https://registry.npmjs.org/postcss-js 44ms (cache hit)
+184 silly packumentCache full:https://registry.npmjs.org/postcss-js set size:51308 disposed:false
+185 silly fetch manifest postcss-nested@^6.2.0
+186 silly packumentCache full:https://registry.npmjs.org/postcss-nested cache-miss
+187 http cache https://registry.npmjs.org/micromatch 57ms (cache hit)
+188 silly packumentCache full:https://registry.npmjs.org/micromatch set size:240630 disposed:false
+189 silly fetch manifest postcss-load-config@^4.0.2 || ^5.0 || ^6.0
+190 silly packumentCache full:https://registry.npmjs.org/postcss-load-config cache-miss
+191 http cache https://registry.npmjs.org/glob-parent 51ms (cache hit)
+192 silly packumentCache full:https://registry.npmjs.org/glob-parent set size:42445 disposed:false
+193 silly fetch manifest postcss-selector-parser@^6.1.2
+194 silly packumentCache full:https://registry.npmjs.org/postcss-selector-parser cache-miss
+195 http cache https://registry.npmjs.org/object-hash 55ms (cache hit)
+196 silly packumentCache full:https://registry.npmjs.org/object-hash set size:100564 disposed:false
+197 http cache https://registry.npmjs.org/normalize-path 61ms (cache hit)
+198 silly packumentCache full:https://registry.npmjs.org/normalize-path set size:28713 disposed:false
+199 http cache https://registry.npmjs.org/postcss-import 48ms (cache hit)
+200 silly packumentCache full:https://registry.npmjs.org/postcss-import set size:120971 disposed:false
+201 http cache https://registry.npmjs.org/postcss-nested 47ms (cache hit)
+202 silly packumentCache full:https://registry.npmjs.org/postcss-nested set size:79120 disposed:false
+203 http cache https://registry.npmjs.org/postcss-load-config 45ms (cache hit)
+204 silly packumentCache full:https://registry.npmjs.org/postcss-load-config set size:86425 disposed:false
+205 http cache https://registry.npmjs.org/postcss-selector-parser 36ms (cache hit)
+206 silly packumentCache full:https://registry.npmjs.org/postcss-selector-parser set size:177140 disposed:false
+207 http fetch GET 200 https://registry.npmjs.org/jiti 494ms (cache revalidated)
+208 silly packumentCache full:https://registry.npmjs.org/jiti set size:382310 disposed:false
+209 silly fetch manifest tailwindcss@4.2.2
+210 silly packumentCache full:https://registry.npmjs.org/tailwindcss cache-miss
+211 http cache https://registry.npmjs.org/tailwindcss 117ms (cache hit)
+212 silly packumentCache full:https://registry.npmjs.org/tailwindcss set size:10331221 disposed:false
+213 silly placeDep node_modules/@tailwindcss/node tailwindcss@4.2.2 OK for: @tailwindcss/node@4.2.2 want: 4.2.2
+214 silly placeDep node_modules/@tailwindcss/postcss tailwindcss@4.2.2 OK for: @tailwindcss/postcss@4.2.2 want: 4.2.2
+215 silly placeDep ROOT browserslist@4.28.2 OK for: autoprefixer@10.4.27 want: ^4.28.1
+216 silly placeDep ROOT fraction.js@5.3.4 OK for: autoprefixer@10.4.27 want: ^5.3.4
+217 silly placeDep ROOT postcss-value-parser@4.2.0 OK for: autoprefixer@10.4.27 want: ^4.2.0
+218 silly fetch manifest baseline-browser-mapping@^2.10.12
+219 silly packumentCache full:https://registry.npmjs.org/baseline-browser-mapping cache-miss
+220 silly fetch manifest electron-to-chromium@^1.5.328
+221 silly packumentCache full:https://registry.npmjs.org/electron-to-chromium cache-miss
+222 silly fetch manifest node-releases@^2.0.36
+223 silly packumentCache full:https://registry.npmjs.org/node-releases cache-miss
+224 silly fetch manifest update-browserslist-db@^1.2.3
+225 silly packumentCache full:https://registry.npmjs.org/update-browserslist-db cache-miss
+226 http cache https://registry.npmjs.org/baseline-browser-mapping 34ms (cache hit)
+227 silly packumentCache full:https://registry.npmjs.org/baseline-browser-mapping set size:440343 disposed:false
+228 http cache https://registry.npmjs.org/update-browserslist-db 41ms (cache hit)
+229 silly packumentCache full:https://registry.npmjs.org/update-browserslist-db set size:62000 disposed:false
+230 http cache https://registry.npmjs.org/node-releases 44ms (cache hit)
+231 silly packumentCache full:https://registry.npmjs.org/node-releases set size:272120 disposed:false
+232 http cache https://registry.npmjs.org/electron-to-chromium 59ms (cache hit)
+233 silly packumentCache full:https://registry.npmjs.org/electron-to-chromium set size:4751410 disposed:false
+234 silly fetch manifest browserslist@>= 4.21.0
+235 silly packumentCache full:https://registry.npmjs.org/browserslist cache-hit
+236 silly placeDep ROOT baseline-browser-mapping@2.10.18 OK for: browserslist@4.28.2 want: ^2.10.12
+237 silly placeDep ROOT electron-to-chromium@1.5.335 OK for: browserslist@4.28.2 want: ^1.5.328
+238 silly placeDep ROOT node-releases@2.0.37 OK for: browserslist@4.28.2 want: ^2.0.36
+239 silly placeDep ROOT update-browserslist-db@1.2.3 OK for: browserslist@4.28.2 want: ^1.2.3
+240 silly fetch manifest escalade@^3.2.0
+241 silly packumentCache full:https://registry.npmjs.org/escalade cache-miss
+242 http cache https://registry.npmjs.org/escalade 11ms (cache hit)
+243 silly packumentCache full:https://registry.npmjs.org/escalade set size:33724 disposed:false
+244 silly fetch manifest react@^18.2.0
+245 silly packumentCache full:https://registry.npmjs.org/react cache-miss
+246 http cache https://registry.npmjs.org/react 34ms (cache hit)
+247 silly packumentCache full:https://registry.npmjs.org/react set size:6598084 disposed:false
+248 silly placeDep ROOT @next/env@14.2.35 OK for: next@14.2.35 want: 14.2.35
+249 silly placeDep ROOT @next/swc-darwin-arm64@14.2.33 OK for: next@14.2.35 want: 14.2.33
+250 silly placeDep ROOT @next/swc-darwin-x64@14.2.33 OK for: next@14.2.35 want: 14.2.33
+251 silly placeDep ROOT @next/swc-linux-arm64-gnu@14.2.33 OK for: next@14.2.35 want: 14.2.33
+252 silly placeDep ROOT @next/swc-linux-arm64-musl@14.2.33 OK for: next@14.2.35 want: 14.2.33
+253 silly placeDep ROOT @next/swc-linux-x64-gnu@14.2.33 OK for: next@14.2.35 want: 14.2.33
+254 silly placeDep ROOT @next/swc-linux-x64-musl@14.2.33 OK for: next@14.2.35 want: 14.2.33
+255 silly placeDep ROOT @next/swc-win32-arm64-msvc@14.2.33 OK for: next@14.2.35 want: 14.2.33
+256 silly placeDep ROOT @next/swc-win32-ia32-msvc@14.2.33 OK for: next@14.2.35 want: 14.2.33
+257 silly placeDep ROOT @next/swc-win32-x64-msvc@14.2.33 OK for: next@14.2.35 want: 14.2.33
+258 silly placeDep ROOT @swc/helpers@0.5.5 OK for: next@14.2.35 want: 0.5.5
+259 silly placeDep ROOT busboy@1.6.0 OK for: next@14.2.35 want: 1.6.0
+260 silly placeDep ROOT styled-jsx@5.1.1 OK for: next@14.2.35 want: 5.1.1
+261 silly fetch manifest @swc/counter@^0.1.3
+262 silly packumentCache full:https://registry.npmjs.org/@swc%2fcounter cache-miss
+263 silly fetch manifest streamsearch@^1.1.0
+264 silly packumentCache full:https://registry.npmjs.org/streamsearch cache-miss
+265 silly fetch manifest client-only@0.0.1
+266 silly packumentCache full:https://registry.npmjs.org/client-only cache-miss
+267 http cache https://registry.npmjs.org/@swc%2fcounter 29ms (cache hit)
+268 silly packumentCache full:https://registry.npmjs.org/@swc%2fcounter set size:7199 disposed:false
+269 http cache https://registry.npmjs.org/streamsearch 33ms (cache hit)
+270 silly packumentCache full:https://registry.npmjs.org/streamsearch set size:27372 disposed:false
+271 http fetch GET 200 https://registry.npmjs.org/client-only 954ms (cache revalidated)
+272 silly packumentCache full:https://registry.npmjs.org/client-only set size:2750 disposed:false
+273 silly placeDep ROOT @swc/counter@0.1.3 OK for: @swc/helpers@0.5.5 want: ^0.1.3
+274 silly placeDep ROOT streamsearch@1.1.0 OK for: busboy@1.6.0 want: ^1.1.0
+275 silly placeDep ROOT loose-envify@1.4.0 OK for: react@18.3.1 want: ^1.1.0
+276 silly fetch manifest js-tokens@^3.0.0 || ^4.0.0
+277 silly packumentCache full:https://registry.npmjs.org/js-tokens cache-miss
+278 http cache https://registry.npmjs.org/js-tokens 13ms (cache hit)
+279 silly packumentCache full:https://registry.npmjs.org/js-tokens set size:41947 disposed:false
+280 silly placeDep ROOT js-tokens@4.0.0 OK for: loose-envify@1.4.0 want: ^3.0.0 || ^4.0.0
+281 silly placeDep ROOT scheduler@0.23.2 OK for: react-dom@18.3.1 want: ^0.23.2
+282 silly placeDep ROOT client-only@0.0.1 OK for: styled-jsx@5.1.1 want: 0.0.1
+283 silly fetch manifest postcss@^8.4.47
+284 silly packumentCache full:https://registry.npmjs.org/postcss cache-hit
+285 silly fetch manifest tsx@^4.8.1
+286 silly packumentCache full:https://registry.npmjs.org/tsx cache-miss
+287 http cache https://registry.npmjs.org/tsx 15ms (cache hit)
+288 silly packumentCache full:https://registry.npmjs.org/tsx set size:289592 disposed:false
+289 silly fetch manifest yaml@^2.4.2
+290 silly packumentCache full:https://registry.npmjs.org/yaml cache-miss
+291 http cache https://registry.npmjs.org/yaml 16ms (cache hit)
+292 silly packumentCache full:https://registry.npmjs.org/yaml set size:375230 disposed:false
+293 silly placeDep ROOT arg@5.0.2 OK for: tailwindcss@3.4.19 want: ^5.0.2
+294 silly placeDep ROOT chokidar@3.6.0 OK for: tailwindcss@3.4.19 want: ^3.6.0
+295 silly placeDep ROOT didyoumean@1.2.2 OK for: tailwindcss@3.4.19 want: ^1.2.2
+296 silly placeDep ROOT dlv@1.1.3 OK for: tailwindcss@3.4.19 want: ^1.1.3
+297 silly placeDep ROOT fast-glob@3.3.3 OK for: tailwindcss@3.4.19 want: ^3.3.2
+298 silly placeDep ROOT glob-parent@6.0.2 OK for: tailwindcss@3.4.19 want: ^6.0.2
+299 silly placeDep ROOT is-glob@4.0.3 OK for: tailwindcss@3.4.19 want: ^4.0.3
+300 silly placeDep node_modules/tailwindcss jiti@1.21.7 OK for: tailwindcss@3.4.19 want: ^1.21.7
+301 silly placeDep ROOT lilconfig@3.1.3 OK for: tailwindcss@3.4.19 want: ^3.1.3
+302 silly placeDep ROOT micromatch@4.0.8 OK for: tailwindcss@3.4.19 want: ^4.0.8
+303 silly placeDep ROOT normalize-path@3.0.0 OK for: tailwindcss@3.4.19 want: ^3.0.0
+304 silly placeDep ROOT object-hash@3.0.0 OK for: tailwindcss@3.4.19 want: ^3.0.0
+305 silly placeDep ROOT postcss-import@15.1.0 OK for: tailwindcss@3.4.19 want: ^15.1.0
+306 silly placeDep ROOT postcss-js@4.1.0 OK for: tailwindcss@3.4.19 want: ^4.0.1
+307 silly placeDep ROOT postcss-load-config@6.0.1 OK for: tailwindcss@3.4.19 want: ^4.0.2 || ^5.0 || ^6.0
+308 silly placeDep ROOT postcss-nested@6.2.0 OK for: tailwindcss@3.4.19 want: ^6.2.0
+309 silly placeDep ROOT postcss-selector-parser@6.1.2 OK for: tailwindcss@3.4.19 want: ^6.1.2
+310 silly placeDep ROOT resolve@1.22.12 OK for: tailwindcss@3.4.19 want: ^1.22.8
+311 silly placeDep ROOT sucrase@3.35.1 OK for: tailwindcss@3.4.19 want: ^3.35.0
+312 silly fetch manifest braces@~3.0.2
+313 silly packumentCache full:https://registry.npmjs.org/braces cache-miss
+314 silly fetch manifest is-glob@~4.0.1
+315 silly packumentCache full:https://registry.npmjs.org/is-glob cache-hit
+316 silly fetch manifest anymatch@~3.1.2
+317 silly packumentCache full:https://registry.npmjs.org/anymatch cache-miss
+318 silly fetch manifest readdirp@~3.6.0
+319 silly packumentCache full:https://registry.npmjs.org/readdirp cache-miss
+320 silly fetch manifest glob-parent@~5.1.2
+321 silly packumentCache full:https://registry.npmjs.org/glob-parent cache-hit
+322 silly fetch manifest is-binary-path@~2.1.0
+323 silly packumentCache full:https://registry.npmjs.org/is-binary-path cache-miss
+324 silly fetch manifest normalize-path@~3.0.0
+325 silly packumentCache full:https://registry.npmjs.org/normalize-path cache-hit
+326 silly fetch manifest fsevents@~2.3.2
+327 silly packumentCache full:https://registry.npmjs.org/fsevents cache-miss
+328 silly fetch manifest @nodelib/fs.stat@^2.0.2
+329 silly packumentCache full:https://registry.npmjs.org/@nodelib%2ffs.stat cache-miss
+330 silly fetch manifest @nodelib/fs.walk@^1.2.3
+331 silly packumentCache full:https://registry.npmjs.org/@nodelib%2ffs.walk cache-miss
+332 http cache https://registry.npmjs.org/readdirp 55ms (cache hit)
+333 silly packumentCache full:https://registry.npmjs.org/readdirp set size:107589 disposed:false
+334 silly fetch manifest glob-parent@^5.1.2
+335 silly packumentCache full:https://registry.npmjs.org/glob-parent cache-hit
+336 silly fetch manifest merge2@^1.3.0
+337 silly packumentCache full:https://registry.npmjs.org/merge2 cache-miss
+338 http cache https://registry.npmjs.org/is-binary-path 60ms (cache hit)
+339 silly packumentCache full:https://registry.npmjs.org/is-binary-path set size:13475 disposed:false
+340 silly fetch manifest is-extglob@^2.1.1
+341 silly packumentCache full:https://registry.npmjs.org/is-extglob cache-miss
+342 http cache https://registry.npmjs.org/anymatch 63ms (cache hit)
+343 silly packumentCache full:https://registry.npmjs.org/anymatch set size:42974 disposed:false
+344 silly fetch manifest braces@^3.0.3
+345 silly packumentCache full:https://registry.npmjs.org/braces cache-miss
+346 http cache https://registry.npmjs.org/braces 68ms (cache hit)
+347 silly packumentCache full:https://registry.npmjs.org/braces set size:114529 disposed:false
+348 silly fetch manifest picomatch@^2.3.1
+349 silly packumentCache full:https://registry.npmjs.org/picomatch cache-miss
+350 http cache https://registry.npmjs.org/fsevents 68ms (cache hit)
+351 silly packumentCache full:https://registry.npmjs.org/fsevents set size:182472 disposed:false
+352 silly fetch manifest resolve@^1.1.7
+353 silly packumentCache full:https://registry.npmjs.org/resolve cache-hit
+354 silly fetch manifest read-cache@^1.0.0
+355 silly packumentCache full:https://registry.npmjs.org/read-cache cache-miss
+356 http cache https://registry.npmjs.org/@nodelib%2ffs.stat 73ms (cache hit)
+357 silly packumentCache full:https://registry.npmjs.org/@nodelib%2ffs.stat set size:36993 disposed:false
+358 silly fetch manifest camelcase-css@^2.0.1
+359 silly packumentCache full:https://registry.npmjs.org/camelcase-css cache-miss
+360 http cache https://registry.npmjs.org/@nodelib%2ffs.walk 76ms (cache hit)
+361 silly packumentCache full:https://registry.npmjs.org/@nodelib%2ffs.walk set size:41589 disposed:false
+362 silly fetch manifest postcss-selector-parser@^6.1.1
+363 silly packumentCache full:https://registry.npmjs.org/postcss-selector-parser cache-hit
+364 silly fetch manifest cssesc@^3.0.0
+365 silly packumentCache full:https://registry.npmjs.org/cssesc cache-miss
+366 http cache https://registry.npmjs.org/merge2 59ms (cache hit)
+367 silly packumentCache full:https://registry.npmjs.org/merge2 set size:46159 disposed:false
+368 silly fetch manifest util-deprecate@^1.0.2
+369 silly packumentCache full:https://registry.npmjs.org/util-deprecate cache-miss
+370 http cache https://registry.npmjs.org/braces 61ms (cache hit)
+371 silly packumentCache full:https://registry.npmjs.org/braces set size:114529 disposed:false
+372 silly packumentCache full:https://registry.npmjs.org/braces dispose
+373 silly fetch manifest is-core-module@^2.16.1
+374 silly packumentCache full:https://registry.npmjs.org/is-core-module cache-miss
+375 http cache https://registry.npmjs.org/is-extglob 67ms (cache hit)
+376 silly packumentCache full:https://registry.npmjs.org/is-extglob set size:11766 disposed:false
+377 silly fetch manifest path-parse@^1.0.7
+378 silly packumentCache full:https://registry.npmjs.org/path-parse cache-miss
+379 http cache https://registry.npmjs.org/picomatch 64ms (cache hit)
+380 silly packumentCache full:https://registry.npmjs.org/picomatch set size:126376 disposed:false
+381 silly fetch manifest supports-preserve-symlinks-flag@^1.0.0
+382 silly packumentCache full:https://registry.npmjs.org/supports-preserve-symlinks-flag cache-miss
+383 http cache https://registry.npmjs.org/read-cache 63ms (cache hit)
+384 silly packumentCache full:https://registry.npmjs.org/read-cache set size:3003 disposed:false
+385 silly fetch manifest commander@^4.0.0
+386 silly packumentCache full:https://registry.npmjs.org/commander cache-miss
+387 http cache https://registry.npmjs.org/camelcase-css 61ms (cache hit)
+388 silly packumentCache full:https://registry.npmjs.org/camelcase-css set size:9392 disposed:false
+389 silly fetch manifest lines-and-columns@^1.1.6
+390 silly packumentCache full:https://registry.npmjs.org/lines-and-columns cache-miss
+391 http cache https://registry.npmjs.org/cssesc 59ms (cache hit)
+392 silly packumentCache full:https://registry.npmjs.org/cssesc set size:18815 disposed:false
+393 silly fetch manifest mz@^2.7.0
+394 silly packumentCache full:https://registry.npmjs.org/mz cache-miss
+395 http cache https://registry.npmjs.org/util-deprecate 48ms (cache hit)
+396 silly packumentCache full:https://registry.npmjs.org/util-deprecate set size:6674 disposed:false
+397 silly fetch manifest pirates@^4.0.1
+398 silly packumentCache full:https://registry.npmjs.org/pirates cache-miss
+399 http cache https://registry.npmjs.org/is-core-module 44ms (cache hit)
+400 silly packumentCache full:https://registry.npmjs.org/is-core-module set size:71788 disposed:false
+401 silly fetch manifest tinyglobby@^0.2.11
+402 silly packumentCache full:https://registry.npmjs.org/tinyglobby cache-miss
+403 http cache https://registry.npmjs.org/path-parse 62ms (cache hit)
+404 silly packumentCache full:https://registry.npmjs.org/path-parse set size:14523 disposed:false
+405 silly fetch manifest ts-interface-checker@^0.1.9
+406 silly packumentCache full:https://registry.npmjs.org/ts-interface-checker cache-miss
+407 http cache https://registry.npmjs.org/supports-preserve-symlinks-flag 64ms (cache hit)
+408 silly packumentCache full:https://registry.npmjs.org/supports-preserve-symlinks-flag set size:6802 disposed:false
+409 http cache https://registry.npmjs.org/commander 63ms (cache hit)
+410 silly packumentCache full:https://registry.npmjs.org/commander set size:306325 disposed:false
+411 http cache https://registry.npmjs.org/lines-and-columns 66ms (cache hit)
+412 silly packumentCache full:https://registry.npmjs.org/lines-and-columns set size:73796 disposed:false
+413 http cache https://registry.npmjs.org/mz 67ms (cache hit)
+414 silly packumentCache full:https://registry.npmjs.org/mz set size:42731 disposed:false
+415 http cache https://registry.npmjs.org/pirates 52ms (cache hit)
+416 silly packumentCache full:https://registry.npmjs.org/pirates set size:51327 disposed:false
+417 http cache https://registry.npmjs.org/tinyglobby 50ms (cache hit)
+418 silly packumentCache full:https://registry.npmjs.org/tinyglobby set size:52660 disposed:false
+419 http cache https://registry.npmjs.org/ts-interface-checker 31ms (cache hit)
+420 silly packumentCache full:https://registry.npmjs.org/ts-interface-checker set size:58946 disposed:false
+421 silly placeDep ROOT anymatch@3.1.3 OK for: chokidar@3.6.0 want: ~3.1.2
+422 silly placeDep ROOT braces@3.0.3 OK for: chokidar@3.6.0 want: ~3.0.2
+423 silly placeDep ROOT fsevents@2.3.3 OK for: chokidar@3.6.0 want: ~2.3.2
+424 silly placeDep node_modules/chokidar glob-parent@5.1.2 OK for: chokidar@3.6.0 want: ~5.1.2
+425 silly placeDep ROOT is-binary-path@2.1.0 OK for: chokidar@3.6.0 want: ~2.1.0
+426 silly placeDep ROOT readdirp@3.6.0 OK for: chokidar@3.6.0 want: ~3.6.0
+427 silly fetch manifest picomatch@^2.0.4
+428 silly packumentCache full:https://registry.npmjs.org/picomatch cache-hit
+429 silly fetch manifest fill-range@^7.1.1
+430 silly packumentCache full:https://registry.npmjs.org/fill-range cache-miss
+431 silly fetch manifest binary-extensions@^2.0.0
+432 silly packumentCache full:https://registry.npmjs.org/binary-extensions cache-miss
+433 silly fetch manifest picomatch@^2.2.1
+434 silly packumentCache full:https://registry.npmjs.org/picomatch cache-hit
+435 http cache https://registry.npmjs.org/binary-extensions 19ms (cache hit)
+436 silly packumentCache full:https://registry.npmjs.org/binary-extensions set size:51551 disposed:false
+437 http cache https://registry.npmjs.org/fill-range 23ms (cache hit)
+438 silly packumentCache full:https://registry.npmjs.org/fill-range set size:90212 disposed:false
+439 silly placeDep ROOT picomatch@2.3.2 OK for: anymatch@3.1.3 want: ^2.0.4
+440 silly placeDep ROOT fill-range@7.1.1 OK for: braces@3.0.3 want: ^7.1.1
+441 silly fetch manifest to-regex-range@^5.0.1
+442 silly packumentCache full:https://registry.npmjs.org/to-regex-range cache-miss
+443 http cache https://registry.npmjs.org/to-regex-range 11ms (cache hit)
+444 silly packumentCache full:https://registry.npmjs.org/to-regex-range set size:61569 disposed:false
+445 silly placeDep ROOT @nodelib/fs.stat@2.0.5 OK for: fast-glob@3.3.3 want: ^2.0.2
+446 silly placeDep ROOT @nodelib/fs.walk@1.2.8 OK for: fast-glob@3.3.3 want: ^1.2.3
+447 silly placeDep node_modules/fast-glob glob-parent@5.1.2 OK for: fast-glob@3.3.3 want: ^5.1.2
+448 silly placeDep ROOT merge2@1.4.1 OK for: fast-glob@3.3.3 want: ^1.3.0
+449 silly fetch manifest fastq@^1.6.0
+450 silly packumentCache full:https://registry.npmjs.org/fastq cache-miss
+451 silly fetch manifest @nodelib/fs.scandir@2.1.5
+452 silly packumentCache full:https://registry.npmjs.org/@nodelib%2ffs.scandir cache-miss
+453 http cache https://registry.npmjs.org/@nodelib%2ffs.scandir 19ms (cache hit)
+454 silly packumentCache full:https://registry.npmjs.org/@nodelib%2ffs.scandir set size:49256 disposed:false
+455 http cache https://registry.npmjs.org/fastq 22ms (cache hit)
+456 silly packumentCache full:https://registry.npmjs.org/fastq set size:78301 disposed:false
+457 silly placeDep ROOT @nodelib/fs.scandir@2.1.5 OK for: @nodelib/fs.walk@1.2.8 want: 2.1.5
+458 silly placeDep ROOT fastq@1.20.1 OK for: @nodelib/fs.walk@1.2.8 want: ^1.6.0
+459 silly fetch manifest run-parallel@^1.1.9
+460 silly packumentCache full:https://registry.npmjs.org/run-parallel cache-miss
+461 silly fetch manifest reusify@^1.0.4
+462 silly packumentCache full:https://registry.npmjs.org/reusify cache-miss
+463 http cache https://registry.npmjs.org/reusify 21ms (cache hit)
+464 silly packumentCache full:https://registry.npmjs.org/reusify set size:14249 disposed:false
+465 http cache https://registry.npmjs.org/run-parallel 22ms (cache hit)
+466 silly packumentCache full:https://registry.npmjs.org/run-parallel set size:35172 disposed:false
+467 silly placeDep ROOT run-parallel@1.2.0 OK for: @nodelib/fs.scandir@2.1.5 want: ^1.1.9
+468 silly fetch manifest queue-microtask@^1.2.2
+469 silly packumentCache full:https://registry.npmjs.org/queue-microtask cache-miss
+470 http cache https://registry.npmjs.org/queue-microtask 12ms (cache hit)
+471 silly packumentCache full:https://registry.npmjs.org/queue-microtask set size:36088 disposed:false
+472 silly placeDep ROOT reusify@1.1.0 OK for: fastq@1.20.1 want: ^1.0.4
+473 silly placeDep ROOT to-regex-range@5.0.1 OK for: fill-range@7.1.1 want: ^5.0.1
+474 silly fetch manifest is-number@^7.0.0
+475 silly packumentCache full:https://registry.npmjs.org/is-number cache-miss
+476 http cache https://registry.npmjs.org/is-number 12ms (cache hit)
+477 silly packumentCache full:https://registry.npmjs.org/is-number set size:36183 disposed:false
+478 silly placeDep ROOT binary-extensions@2.3.0 OK for: is-binary-path@2.1.0 want: ^2.0.0
+479 silly placeDep ROOT is-extglob@2.1.1 OK for: is-glob@4.0.3 want: ^2.1.1
+480 silly placeDep ROOT read-cache@1.0.0 OK for: postcss-import@15.1.0 want: ^1.0.0
+481 silly fetch manifest pify@^2.3.0
+482 silly packumentCache full:https://registry.npmjs.org/pify cache-miss
+483 http cache https://registry.npmjs.org/pify 13ms (cache hit)
+484 silly packumentCache full:https://registry.npmjs.org/pify set size:33583 disposed:false
+485 silly placeDep ROOT camelcase-css@2.0.1 OK for: postcss-js@4.1.0 want: ^2.0.1
+486 silly placeDep ROOT cssesc@3.0.0 OK for: postcss-selector-parser@6.1.2 want: ^3.0.0
+487 silly placeDep ROOT util-deprecate@1.0.2 OK for: postcss-selector-parser@6.1.2 want: ^1.0.2
+488 silly placeDep ROOT pify@2.3.0 OK for: read-cache@1.0.0 want: ^2.3.0
+489 silly placeDep ROOT is-core-module@2.16.1 OK for: resolve@1.22.12 want: ^2.16.1
+490 silly placeDep ROOT path-parse@1.0.7 OK for: resolve@1.22.12 want: ^1.0.7
+491 silly placeDep ROOT supports-preserve-symlinks-flag@1.0.0 OK for: resolve@1.22.12 want: ^1.0.0
+492 silly placeDep ROOT queue-microtask@1.2.3 OK for: run-parallel@1.2.0 want: ^1.2.2
+493 silly placeDep ROOT commander@4.1.1 OK for: sucrase@3.35.1 want: ^4.0.0
+494 silly placeDep ROOT lines-and-columns@1.2.4 OK for: sucrase@3.35.1 want: ^1.1.6
+495 silly placeDep ROOT mz@2.7.0 OK for: sucrase@3.35.1 want: ^2.7.0
+496 silly placeDep ROOT pirates@4.0.7 OK for: sucrase@3.35.1 want: ^4.0.1
+497 silly placeDep ROOT tinyglobby@0.2.16 OK for: sucrase@3.35.1 want: ^0.2.11
+498 silly placeDep ROOT ts-interface-checker@0.1.13 OK for: sucrase@3.35.1 want: ^0.1.9
+499 silly fetch manifest any-promise@^1.0.0
+500 silly packumentCache full:https://registry.npmjs.org/any-promise cache-miss
+501 silly fetch manifest object-assign@^4.0.1
+502 silly packumentCache full:https://registry.npmjs.org/object-assign cache-miss
+503 silly fetch manifest thenify-all@^1.0.0
+504 silly packumentCache full:https://registry.npmjs.org/thenify-all cache-miss
+505 silly fetch manifest fdir@^6.5.0
+506 silly packumentCache full:https://registry.npmjs.org/fdir cache-miss
+507 silly fetch manifest picomatch@^4.0.4
+508 silly packumentCache full:https://registry.npmjs.org/picomatch cache-hit
+509 http cache https://registry.npmjs.org/fdir 75ms (cache hit)
+510 silly packumentCache full:https://registry.npmjs.org/fdir set size:136182 disposed:false
+511 http cache https://registry.npmjs.org/any-promise 83ms (cache hit)
+512 silly packumentCache full:https://registry.npmjs.org/any-promise set size:20233 disposed:false
+513 http cache https://registry.npmjs.org/object-assign 89ms (cache hit)
+514 silly packumentCache full:https://registry.npmjs.org/object-assign set size:28988 disposed:false
+515 http cache https://registry.npmjs.org/thenify-all 91ms (cache hit)
+516 silly packumentCache full:https://registry.npmjs.org/thenify-all set size:18488 disposed:false
+517 silly placeDep ROOT any-promise@1.3.0 OK for: mz@2.7.0 want: ^1.0.0
+518 silly placeDep ROOT object-assign@4.1.1 OK for: mz@2.7.0 want: ^4.0.1
+519 silly placeDep ROOT thenify-all@1.6.0 OK for: mz@2.7.0 want: ^1.0.0
+520 silly fetch manifest thenify@>= 3.1.0 < 4
+521 silly packumentCache full:https://registry.npmjs.org/thenify cache-miss
+522 http cache https://registry.npmjs.org/thenify 12ms (cache hit)
+523 silly packumentCache full:https://registry.npmjs.org/thenify set size:21379 disposed:false
+524 silly placeDep ROOT thenify@3.3.1 OK for: thenify-all@1.6.0 want: >= 3.1.0 < 4
+525 silly placeDep node_modules/tinyglobby fdir@6.5.0 OK for: tinyglobby@0.2.16 want: ^6.5.0
+526 silly placeDep node_modules/tinyglobby picomatch@4.0.4 OK for: fdir@6.5.0 want: ^3 || ^4
+527 silly placeDep ROOT is-number@7.0.0 OK for: to-regex-range@5.0.1 want: ^7.0.0
+528 silly placeDep ROOT escalade@3.2.0 OK for: update-browserslist-db@1.2.3 want: ^3.2.0
+529 silly reify mark retired [
+529 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\react-dom'
+529 silly reify ]
+530 silly reify mark retired [ 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\react' ]
+531 silly reify mark retired [
+531 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\next',
+531 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\next',
+531 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\next.cmd',
+531 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\next.ps1'
+531 silly reify ]
+532 silly reify mark retired [
+532 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\scheduler'
+532 silly reify ]
+533 silly reify mark retired [
+533 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\styled-jsx'
+533 silly reify ]
+534 silly reify mark retired [
+534 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\autoprefixer',
+534 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\autoprefixer',
+534 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\autoprefixer.cmd',
+534 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\autoprefixer.ps1'
+534 silly reify ]
+535 silly reify mark retired [
+535 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\fraction.js'
+535 silly reify ]
+536 silly reify mark retired [
+536 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\browserslist',
+536 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\browserslist',
+536 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\browserslist.cmd',
+536 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\browserslist.ps1'
+536 silly reify ]
+537 silly reify mark retired [
+537 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\electron-to-chromium'
+537 silly reify ]
+538 silly reify mark retired [
+538 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\postcss-value-parser'
+538 silly reify ]
+539 silly reify mark retired [
+539 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\baseline-browser-mapping',
+539 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\baseline-browser-mapping',
+539 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\baseline-browser-mapping.cmd',
+539 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\baseline-browser-mapping.ps1'
+539 silly reify ]
+540 silly reify mark retired [
+540 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\update-browserslist-db',
+540 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\update-browserslist-db',
+540 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\update-browserslist-db.cmd',
+540 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\update-browserslist-db.ps1'
+540 silly reify ]
+541 silly reify mark retired [
+541 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\loose-envify',
+541 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\loose-envify',
+541 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\loose-envify.cmd',
+541 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\loose-envify.ps1'
+541 silly reify ]
+542 silly reify mark retired [
+542 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\node-releases'
+542 silly reify ]
+543 silly reify mark retired [
+543 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\streamsearch'
+543 silly reify ]
+544 silly reify mark retired [
+544 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\busboy'
+544 silly reify ]
+545 silly reify mark retired [ 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\arg' ]
+546 silly reify mark retired [ 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\dlv' ]
+547 silly reify mark retired [
+547 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\didyoumean'
+547 silly reify ]
+548 silly reify mark retired [
+548 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\js-tokens'
+548 silly reify ]
+549 silly reify mark retired [
+549 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\glob-parent'
+549 silly reify ]
+550 silly reify mark retired [
+550 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\is-glob'
+550 silly reify ]
+551 silly reify mark retired [
+551 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\lilconfig'
+551 silly reify ]
+552 silly reify mark retired [
+552 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\normalize-path'
+552 silly reify ]
+553 silly reify mark retired [
+553 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\micromatch'
+553 silly reify ]
+554 silly reify mark retired [
+554 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\object-hash'
+554 silly reify ]
+555 silly reify mark retired [
+555 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\postcss-import'
+555 silly reify ]
+556 silly reify mark retired [
+556 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\postcss-js'
+556 silly reify ]
+557 silly reify mark retired [
+557 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\postcss-nested'
+557 silly reify ]
+558 silly reify mark retired [
+558 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\postcss-load-config'
+558 silly reify ]
+559 silly reify mark retired [
+559 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\postcss-selector-parser'
+559 silly reify ]
+560 silly reify mark retired [
+560 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\sucrase',
+560 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\sucrase',
+560 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\sucrase.cmd',
+560 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\sucrase.ps1',
+560 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\sucrase-node',
+560 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\sucrase-node.cmd',
+560 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\sucrase-node.ps1'
+560 silly reify ]
+561 silly reify mark retired [
+561 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\resolve',
+561 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\resolve',
+561 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\resolve.cmd',
+561 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\resolve.ps1'
+561 silly reify ]
+562 silly reify mark retired [
+562 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\is-binary-path'
+562 silly reify ]
+563 silly reify mark retired [
+563 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\braces'
+563 silly reify ]
+564 silly reify mark retired [
+564 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\readdirp'
+564 silly reify ]
+565 silly reify mark retired [
+565 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\picomatch'
+565 silly reify ]
+566 silly reify mark retired [
+566 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\anymatch'
+566 silly reify ]
+567 silly reify mark retired [
+567 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\merge2'
+567 silly reify ]
+568 silly reify mark retired [
+568 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\fill-range'
+568 silly reify ]
+569 silly reify mark retired [
+569 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\reusify'
+569 silly reify ]
+570 silly reify mark retired [
+570 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\run-parallel'
+570 silly reify ]
+571 silly reify mark retired [ 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\fastq' ]
+572 silly reify mark retired [
+572 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\to-regex-range'
+572 silly reify ]
+573 silly reify mark retired [
+573 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\binary-extensions'
+573 silly reify ]
+574 silly reify mark retired [
+574 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\read-cache'
+574 silly reify ]
+575 silly reify mark retired [
+575 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\is-extglob'
+575 silly reify ]
+576 silly reify mark retired [
+576 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\cssesc',
+576 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\cssesc',
+576 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\cssesc.cmd',
+576 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\cssesc.ps1'
+576 silly reify ]
+577 silly reify mark retired [
+577 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\camelcase-css'
+577 silly reify ]
+578 silly reify mark retired [ 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\pify' ]
+579 silly reify mark retired [
+579 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\is-core-module'
+579 silly reify ]
+580 silly reify mark retired [
+580 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\util-deprecate'
+580 silly reify ]
+581 silly reify mark retired [
+581 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\path-parse'
+581 silly reify ]
+582 silly reify mark retired [
+582 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\supports-preserve-symlinks-flag'
+582 silly reify ]
+583 silly reify mark retired [
+583 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\commander'
+583 silly reify ]
+584 silly reify mark retired [
+584 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\queue-microtask'
+584 silly reify ]
+585 silly reify mark retired [
+585 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\lines-and-columns'
+585 silly reify ]
+586 silly reify mark retired [ 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\mz' ]
+587 silly reify mark retired [
+587 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\pirates'
+587 silly reify ]
+588 silly reify mark retired [
+588 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\ts-interface-checker'
+588 silly reify ]
+589 silly reify mark retired [
+589 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\any-promise'
+589 silly reify ]
+590 silly reify mark retired [
+590 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\thenify'
+590 silly reify ]
+591 silly reify mark retired [
+591 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\thenify-all'
+591 silly reify ]
+592 silly reify mark retired [
+592 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\object-assign'
+592 silly reify ]
+593 silly reify mark retired [
+593 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\is-number'
+593 silly reify ]
+594 silly reify mark retired [
+594 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\escalade'
+594 silly reify ]
+595 silly reify mark retired [
+595 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\tinyglobby'
+595 silly reify ]
+596 silly reify mark retired [
+596 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\tailwindcss',
+596 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\tailwind',
+596 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\tailwind.cmd',
+596 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\tailwind.ps1',
+596 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\tailwindcss',
+596 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\tailwindcss.cmd',
+596 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\tailwindcss.ps1'
+596 silly reify ]
+597 silly reify mark retired [
+597 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\chokidar'
+597 silly reify ]
+598 silly reify mark retired [
+598 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\fast-glob'
+598 silly reify ]
+599 silly reify mark retired [
+599 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@next\\env'
+599 silly reify ]
+600 silly reify mark retired [
+600 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@next\\swc-win32-x64-msvc'
+600 silly reify ]
+601 silly reify mark retired [
+601 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@swc\\counter'
+601 silly reify ]
+602 silly reify mark retired [
+602 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@swc\\helpers'
+602 silly reify ]
+603 silly reify mark retired [
+603 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@nodelib\\fs.walk'
+603 silly reify ]
+604 silly reify mark retired [
+604 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@nodelib\\fs.scandir'
+604 silly reify ]
+605 silly reify mark retired [
+605 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@nodelib\\fs.stat'
+605 silly reify ]
+606 silly reify moves {
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\react-dom': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.react-dom-K1J2uCx1',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\react': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.react-uPeY0Uki',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\next': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.next-TPv7U1tP',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\next': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.next-RFki9BTs',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\next.cmd': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.next.cmd-nwVJOq75',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\next.ps1': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.next.ps1-xljkVdjV',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\scheduler': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.scheduler-O7uW7bmi',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\styled-jsx': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.styled-jsx-kcjhI6iB',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\autoprefixer': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.autoprefixer-m6LQPOmI',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\autoprefixer': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.autoprefixer-VLoVVoVL',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\autoprefixer.cmd': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.autoprefixer.cmd-GDtr7C0G',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\autoprefixer.ps1': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.autoprefixer.ps1-duVsgrL5',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\fraction.js': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.fraction.js-TzAeoWr9',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\browserslist': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.browserslist-lbjUYoGT',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\browserslist': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.browserslist-FOxVdoPj',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\browserslist.cmd': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.browserslist.cmd-pkqfXgjH',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\browserslist.ps1': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.browserslist.ps1-yymhADSU',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\electron-to-chromium': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.electron-to-chromium-GKqyNen0',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\postcss-value-parser': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.postcss-value-parser-bcui8iwh',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\baseline-browser-mapping': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.baseline-browser-mapping-xasSxm1y',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\baseline-browser-mapping': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.baseline-browser-mapping-63r1erWv',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\baseline-browser-mapping.cmd': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.baseline-browser-mapping.cmd-ZPJqTkWd',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\baseline-browser-mapping.ps1': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.baseline-browser-mapping.ps1-EmvLYMSP',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\update-browserslist-db': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.update-browserslist-db-oWDdIodB',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\update-browserslist-db': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.update-browserslist-db-UBYhshs7',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\update-browserslist-db.cmd': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.update-browserslist-db.cmd-HzGDXdqv',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\update-browserslist-db.ps1': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.update-browserslist-db.ps1-jChN4VRl',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\loose-envify': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.loose-envify-cxyQ9zA3',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\loose-envify': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.loose-envify-vqyc4WuU',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\loose-envify.cmd': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.loose-envify.cmd-0XMwBGyj',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\loose-envify.ps1': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.loose-envify.ps1-zz1Cei7r',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\node-releases': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.node-releases-VrFyYYL8',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\streamsearch': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.streamsearch-gYhPjxEU',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\busboy': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.busboy-yxwgf3g7',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\arg': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.arg-ovNdNuj8',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\dlv': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.dlv-9JZCP3sQ',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\didyoumean': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.didyoumean-4xiZc29K',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\js-tokens': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.js-tokens-XOyfPvSl',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\glob-parent': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.glob-parent-DhWm8FJA',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\is-glob': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.is-glob-YcEkFYJ8',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\lilconfig': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.lilconfig-otHPT9y1',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\normalize-path': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.normalize-path-luN08ohk',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\micromatch': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.micromatch-S29DHCWd',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\object-hash': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.object-hash-QLtvhfEX',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\postcss-import': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.postcss-import-H0qiI1H9',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\postcss-js': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.postcss-js-ks2RPVQp',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\postcss-nested': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.postcss-nested-klNUe1Eq',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\postcss-load-config': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.postcss-load-config-yqLv1a6Q',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\postcss-selector-parser': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.postcss-selector-parser-mTqJw9WC',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\sucrase': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.sucrase-Ty8fvjZn',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\sucrase': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.sucrase-lWbMkPzR',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\sucrase.cmd': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.sucrase.cmd-PBuH2CgA',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\sucrase.ps1': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.sucrase.ps1-PnKGlHL7',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\sucrase-node': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.sucrase-node-TuxD1ctB',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\sucrase-node.cmd': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.sucrase-node.cmd-S4xAAnBA',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\sucrase-node.ps1': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.sucrase-node.ps1-4vCQl50W',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\resolve': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.resolve-yZTU7Ewy',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\resolve': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.resolve-wiQg1bnG',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\resolve.cmd': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.resolve.cmd-qxQJwOrl',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\resolve.ps1': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.resolve.ps1-c3MvUida',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\is-binary-path': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.is-binary-path-D7mXRe2t',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\braces': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.braces-IkhQGjxZ',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\readdirp': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.readdirp-mgSkWi9s',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\picomatch': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.picomatch-6HbMVPq0',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\anymatch': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.anymatch-AAC2IbEF',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\merge2': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.merge2-rJMDXEA3',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\fill-range': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.fill-range-udEdRJDA',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\reusify': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.reusify-dC34Xe3k',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\run-parallel': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.run-parallel-BDp2QZYJ',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\fastq': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.fastq-xH1i5IBp',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\to-regex-range': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.to-regex-range-byGx5nCx',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\binary-extensions': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.binary-extensions-8tYf7nY3',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\read-cache': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.read-cache-OwLuYnK8',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\is-extglob': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.is-extglob-gPTGnicC',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\cssesc': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.cssesc-qMnmMcZ7',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\cssesc': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.cssesc-0THK28AQ',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\cssesc.cmd': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.cssesc.cmd-KAr2ZpH0',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\cssesc.ps1': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.cssesc.ps1-a8rqNxuA',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\camelcase-css': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.camelcase-css-L3q9vcIU',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\pify': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.pify-NQXih2kz',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\is-core-module': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.is-core-module-I7cIUhiQ',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\util-deprecate': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.util-deprecate-aWQ09FHB',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\path-parse': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.path-parse-FZOdB4RP',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\supports-preserve-symlinks-flag': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.supports-preserve-symlinks-flag-zIso95uk',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\commander': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.commander-DXktRRG4',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\queue-microtask': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.queue-microtask-Yx4puLlN',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\lines-and-columns': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.lines-and-columns-BzR10dVw',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\mz': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.mz-HB3VLbka',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\pirates': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.pirates-Yco11ZrN',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\ts-interface-checker': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.ts-interface-checker-2dNiElt5',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\any-promise': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.any-promise-VfssjlYi',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\thenify': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.thenify-J7MlaAn9',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\thenify-all': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.thenify-all-ZFbAY1e2',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\object-assign': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.object-assign-i94ketx3',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\is-number': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.is-number-A7fWy7v3',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\escalade': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.escalade-VIsfx8tR',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\tinyglobby': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.tinyglobby-1j4evyui',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\tailwindcss': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.tailwindcss-NeYzxFBi',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\tailwind': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.tailwind-jvEcsUQ6',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\tailwind.cmd': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.tailwind.cmd-e54u6D4w',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\tailwind.ps1': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.tailwind.ps1-iby7n4sq',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\tailwindcss': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.tailwindcss-SoAOn6n3',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\tailwindcss.cmd': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.tailwindcss.cmd-TOari5qL',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\tailwindcss.ps1': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.bin\\.tailwindcss.ps1-KLhT5CM1',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\chokidar': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.chokidar-rnqcmlKF',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\fast-glob': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\.fast-glob-8f3Q7eWj',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@next\\env': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@next\\.env-HMy19lW9',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@next\\swc-win32-x64-msvc': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@next\\.swc-win32-x64-msvc-K7phwgvv',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@swc\\counter': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@swc\\.counter-AV5IYtKr',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@swc\\helpers': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@swc\\.helpers-FdvWwnjk',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@nodelib\\fs.walk': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@nodelib\\.fs.walk-KF9Ti7Qp',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@nodelib\\fs.scandir': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@nodelib\\.fs.scandir-hU0Yx9Or',
+606 silly reify   'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@nodelib\\fs.stat': 'D:\\Coding\\careers-backend-repair\\frontend\\node_modules\\@nodelib\\.fs.stat-o2UTv1fb'
+606 silly reify }
+607 silly audit bulk request {
+607 silly audit   '@alloc/quick-lru': [ '5.2.0' ],
+607 silly audit   '@jridgewell/gen-mapping': [ '0.3.13' ],
+607 silly audit   '@jridgewell/resolve-uri': [ '3.1.2' ],
+607 silly audit   '@jridgewell/sourcemap-codec': [ '1.5.5' ],
+607 silly audit   '@jridgewell/trace-mapping': [ '0.3.31' ],
+607 silly audit   asynckit: [ '0.4.0' ],
+607 silly audit   axios: [ '1.15.0' ],
+607 silly audit   'call-bind-apply-helpers': [ '1.0.2' ],
+607 silly audit   'caniuse-lite': [ '1.0.30001787' ],
+607 silly audit   'combined-stream': [ '1.0.8' ],
+607 silly audit   'delayed-stream': [ '1.0.0' ],
+607 silly audit   'dunder-proto': [ '1.0.1' ],
+607 silly audit   'es-define-property': [ '1.0.1' ],
+607 silly audit   'es-errors': [ '1.3.0' ],
+607 silly audit   'es-object-atoms': [ '1.1.1' ],
+607 silly audit   'es-set-tostringtag': [ '2.1.0' ],
+607 silly audit   'follow-redirects': [ '1.15.11' ],
+607 silly audit   'form-data': [ '4.0.5' ],
+607 silly audit   'function-bind': [ '1.1.2' ],
+607 silly audit   'get-intrinsic': [ '1.3.0' ],
+607 silly audit   'get-proto': [ '1.0.1' ],
+607 silly audit   gopd: [ '1.2.0' ],
+607 silly audit   'graceful-fs': [ '4.2.11' ],
+607 silly audit   'has-symbols': [ '1.1.0' ],
+607 silly audit   'has-tostringtag': [ '1.0.2' ],
+607 silly audit   hasown: [ '2.0.2' ],
+607 silly audit   jiti: [ '1.21.7' ],
+607 silly audit   'math-intrinsics': [ '1.1.0' ],
+607 silly audit   'mime-db': [ '1.52.0' ],
+607 silly audit   'mime-types': [ '2.1.35' ],
+607 silly audit   nanoid: [ '3.3.11' ],
+607 silly audit   postcss: [ '8.5.9', '8.4.31' ],
+607 silly audit   picocolors: [ '1.1.1' ],
+607 silly audit   'proxy-from-env': [ '2.1.0' ],
+607 silly audit   'source-map-js': [ '1.2.1' ],
+607 silly audit   tslib: [ '2.8.1' ],
+607 silly audit   autoprefixer: [ '10.4.27' ],
+607 silly audit   next: [ '14.2.35' ],
+607 silly audit   react: [ '18.3.1' ],
+607 silly audit   'react-dom': [ '18.3.1' ],
+607 silly audit   tailwindcss: [ '3.4.19' ],
+607 silly audit   browserslist: [ '4.28.2' ],
+607 silly audit   'fraction.js': [ '5.3.4' ],
+607 silly audit   'postcss-value-parser': [ '4.2.0' ],
+607 silly audit   'baseline-browser-mapping': [ '2.10.18' ],
+607 silly audit   'electron-to-chromium': [ '1.5.335' ],
+607 silly audit   'node-releases': [ '2.0.37' ],
+607 silly audit   'update-browserslist-db': [ '1.2.3' ],
+607 silly audit   '@next/env': [ '14.2.35' ],
+607 silly audit   '@next/swc-darwin-arm64': [ '14.2.33' ],
+607 silly audit   '@next/swc-darwin-x64': [ '14.2.33' ],
+607 silly audit   '@next/swc-linux-arm64-gnu': [ '14.2.33' ],
+607 silly audit   '@next/swc-linux-arm64-musl': [ '14.2.33' ],
+607 silly audit   '@next/swc-linux-x64-gnu': [ '14.2.33' ],
+607 silly audit   '@next/swc-linux-x64-musl': [ '14.2.33' ],
+607 silly audit   '@next/swc-win32-arm64-msvc': [ '14.2.33' ],
+607 silly audit   '@next/swc-win32-ia32-msvc': [ '14.2.33' ],
+607 silly audit   '@next/swc-win32-x64-msvc': [ '14.2.33' ],
+607 silly audit   '@swc/helpers': [ '0.5.5' ],
+607 silly audit   busboy: [ '1.6.0' ],
+607 silly audit   'styled-jsx': [ '5.1.1' ],
+607 silly audit   '@swc/counter': [ '0.1.3' ],
+607 silly audit   streamsearch: [ '1.1.0' ],
+607 silly audit   'loose-envify': [ '1.4.0' ],
+607 silly audit   'js-tokens': [ '4.0.0' ],
+607 silly audit   scheduler: [ '0.23.2' ],
+607 silly audit   'client-only': [ '0.0.1' ],
+607 silly audit   arg: [ '5.0.2' ],
+607 silly audit   chokidar: [ '3.6.0' ],
+607 silly audit   didyoumean: [ '1.2.2' ],
+607 silly audit   dlv: [ '1.1.3' ],
+607 silly audit   'fast-glob': [ '3.3.3' ],
+607 silly audit   'glob-parent': [ '6.0.2', '5.1.2' ],
+607 silly audit   'is-glob': [ '4.0.3' ],
+607 silly audit   lilconfig: [ '3.1.3' ],
+607 silly audit   micromatch: [ '4.0.8' ],
+607 silly audit   'normalize-path': [ '3.0.0' ],
+607 silly audit   'object-hash': [ '3.0.0' ],
+607 silly audit   'postcss-import': [ '15.1.0' ],
+607 silly audit   'postcss-js': [ '4.1.0' ],
+607 silly audit   'postcss-load-config': [ '6.0.1' ],
+607 silly audit   'postcss-nested': [ '6.2.0' ],
+607 silly audit   'postcss-selector-parser': [ '6.1.2' ],
+607 silly audit   resolve: [ '1.22.12' ],
+607 silly audit   sucrase: [ '3.35.1' ],
+607 silly audit   anymatch: [ '3.1.3' ],
+607 silly audit   braces: [ '3.0.3' ],
+607 silly audit   fsevents: [ '2.3.3' ],
+607 silly audit   'is-binary-path': [ '2.1.0' ],
+607 silly audit   readdirp: [ '3.6.0' ],
+607 silly audit   picomatch: [ '2.3.2', '4.0.4' ],
+607 silly audit   'fill-range': [ '7.1.1' ],
+607 silly audit   '@nodelib/fs.stat': [ '2.0.5' ],
+607 silly audit   '@nodelib/fs.walk': [ '1.2.8' ],
+607 silly audit   merge2: [ '1.4.1' ],
+607 silly audit   '@nodelib/fs.scandir': [ '2.1.5' ],
+607 silly audit   fastq: [ '1.20.1' ],
+607 silly audit   'run-parallel': [ '1.2.0' ],
+607 silly audit   reusify: [ '1.1.0' ],
+607 silly audit   'to-regex-range': [ '5.0.1' ],
+607 silly audit   'binary-extensions': [ '2.3.0' ],
+607 silly audit   'is-extglob': [ '2.1.1' ],
+607 silly audit   'read-cache': [ '1.0.0' ],
+607 silly audit   'camelcase-css': [ '2.0.1' ],
+607 silly audit   cssesc: [ '3.0.0' ],
+607 silly audit   'util-deprecate': [ '1.0.2' ],
+607 silly audit   pify: [ '2.3.0' ],
+607 silly audit   'is-core-module': [ '2.16.1' ],
+607 silly audit   'path-parse': [ '1.0.7' ],
+607 silly audit   'supports-preserve-symlinks-flag': [ '1.0.0' ],
+607 silly audit   'queue-microtask': [ '1.2.3' ],
+607 silly audit   commander: [ '4.1.1' ],
+607 silly audit   'lines-and-columns': [ '1.2.4' ],
+607 silly audit   mz: [ '2.7.0' ],
+607 silly audit   pirates: [ '4.0.7' ],
+607 silly audit   tinyglobby: [ '0.2.16' ],
+607 silly audit   'ts-interface-checker': [ '0.1.13' ],
+607 silly audit   'any-promise': [ '1.3.0' ],
+607 silly audit   'object-assign': [ '4.1.1' ],
+607 silly audit   'thenify-all': [ '1.6.0' ],
+607 silly audit   thenify: [ '3.3.1' ],
+607 silly audit   fdir: [ '6.5.0' ],
+607 silly audit   'is-number': [ '7.0.0' ],
+607 silly audit   escalade: [ '3.2.0' ]
+607 silly audit }
+608 http cache @nodelib/fs.scandir@https://registry.npmjs.org/@nodelib/fs.scandir/-/fs.scandir-2.1.5.tgz 0ms (cache hit)
+609 http cache @nodelib/fs.stat@https://registry.npmjs.org/@nodelib/fs.stat/-/fs.stat-2.0.5.tgz 0ms (cache hit)
+610 http cache @nodelib/fs.walk@https://registry.npmjs.org/@nodelib/fs.walk/-/fs.walk-1.2.8.tgz 0ms (cache hit)
+611 http cache @swc/helpers@https://registry.npmjs.org/@swc/helpers/-/helpers-0.5.5.tgz 0ms (cache hit)
+612 http cache @swc/counter@https://registry.npmjs.org/@swc/counter/-/counter-0.1.3.tgz 0ms (cache hit)
+613 http cache @next/swc-win32-x64-msvc@https://registry.npmjs.org/@next/swc-win32-x64-msvc/-/swc-win32-x64-msvc-14.2.33.tgz 0ms (cache hit)
+614 http cache @next/env@https://registry.npmjs.org/@next/env/-/env-14.2.35.tgz 0ms (cache hit)
+615 http cache fast-glob@https://registry.npmjs.org/fast-glob/-/fast-glob-3.3.3.tgz 0ms (cache hit)
+616 http cache chokidar@https://registry.npmjs.org/chokidar/-/chokidar-3.6.0.tgz 0ms (cache hit)
+617 http cache tailwindcss@https://registry.npmjs.org/tailwindcss/-/tailwindcss-3.4.19.tgz 0ms (cache hit)
+618 http cache tinyglobby@https://registry.npmjs.org/tinyglobby/-/tinyglobby-0.2.16.tgz 0ms (cache hit)
+619 http cache is-number@https://registry.npmjs.org/is-number/-/is-number-7.0.0.tgz 0ms (cache hit)
+620 http cache escalade@https://registry.npmjs.org/escalade/-/escalade-3.2.0.tgz 0ms (cache hit)
+621 http cache object-assign@https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz 0ms (cache hit)
+622 http cache thenify-all@https://registry.npmjs.org/thenify-all/-/thenify-all-1.6.0.tgz 0ms (cache hit)
+623 http cache thenify@https://registry.npmjs.org/thenify/-/thenify-3.3.1.tgz 0ms (cache hit)
+624 http cache any-promise@https://registry.npmjs.org/any-promise/-/any-promise-1.3.0.tgz 0ms (cache hit)
+625 http cache pirates@https://registry.npmjs.org/pirates/-/pirates-4.0.7.tgz 0ms (cache hit)
+626 http cache ts-interface-checker@https://registry.npmjs.org/ts-interface-checker/-/ts-interface-checker-0.1.13.tgz 0ms (cache hit)
+627 http cache mz@https://registry.npmjs.org/mz/-/mz-2.7.0.tgz 0ms (cache hit)
+628 http cache lines-and-columns@https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz 0ms (cache hit)
+629 http cache queue-microtask@https://registry.npmjs.org/queue-microtask/-/queue-microtask-1.2.3.tgz 0ms (cache hit)
+630 http cache commander@https://registry.npmjs.org/commander/-/commander-4.1.1.tgz 0ms (cache hit)
+631 http cache supports-preserve-symlinks-flag@https://registry.npmjs.org/supports-preserve-symlinks-flag/-/supports-preserve-symlinks-flag-1.0.0.tgz 0ms (cache hit)
+632 http cache path-parse@https://registry.npmjs.org/path-parse/-/path-parse-1.0.7.tgz 0ms (cache hit)
+633 http cache util-deprecate@https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz 0ms (cache hit)
+634 http cache is-core-module@https://registry.npmjs.org/is-core-module/-/is-core-module-2.16.1.tgz 0ms (cache hit)
+635 http cache pify@https://registry.npmjs.org/pify/-/pify-2.3.0.tgz 0ms (cache hit)
+636 http cache camelcase-css@https://registry.npmjs.org/camelcase-css/-/camelcase-css-2.0.1.tgz 0ms (cache hit)
+637 http cache cssesc@https://registry.npmjs.org/cssesc/-/cssesc-3.0.0.tgz 0ms (cache hit)
+638 http cache is-extglob@https://registry.npmjs.org/is-extglob/-/is-extglob-2.1.1.tgz 0ms (cache hit)
+639 http cache read-cache@https://registry.npmjs.org/read-cache/-/read-cache-1.0.0.tgz 0ms (cache hit)
+640 http cache binary-extensions@https://registry.npmjs.org/binary-extensions/-/binary-extensions-2.3.0.tgz 0ms (cache hit)
+641 http cache to-regex-range@https://registry.npmjs.org/to-regex-range/-/to-regex-range-5.0.1.tgz 0ms (cache hit)
+642 http cache fastq@https://registry.npmjs.org/fastq/-/fastq-1.20.1.tgz 0ms (cache hit)
+643 http cache run-parallel@https://registry.npmjs.org/run-parallel/-/run-parallel-1.2.0.tgz 0ms (cache hit)
+644 http cache reusify@https://registry.npmjs.org/reusify/-/reusify-1.1.0.tgz 0ms (cache hit)
+645 http cache fill-range@https://registry.npmjs.org/fill-range/-/fill-range-7.1.1.tgz 0ms (cache hit)
+646 http cache merge2@https://registry.npmjs.org/merge2/-/merge2-1.4.1.tgz 0ms (cache hit)
+647 http cache anymatch@https://registry.npmjs.org/anymatch/-/anymatch-3.1.3.tgz 0ms (cache hit)
+648 http cache picomatch@https://registry.npmjs.org/picomatch/-/picomatch-2.3.2.tgz 0ms (cache hit)
+649 http cache readdirp@https://registry.npmjs.org/readdirp/-/readdirp-3.6.0.tgz 0ms (cache hit)
+650 http cache braces@https://registry.npmjs.org/braces/-/braces-3.0.3.tgz 0ms (cache hit)
+651 http cache is-binary-path@https://registry.npmjs.org/is-binary-path/-/is-binary-path-2.1.0.tgz 0ms (cache hit)
+652 http cache resolve@https://registry.npmjs.org/resolve/-/resolve-1.22.12.tgz 0ms (cache hit)
+653 http cache sucrase@https://registry.npmjs.org/sucrase/-/sucrase-3.35.1.tgz 0ms (cache hit)
+654 http cache postcss-selector-parser@https://registry.npmjs.org/postcss-selector-parser/-/postcss-selector-parser-6.1.2.tgz 0ms (cache hit)
+655 http cache postcss-nested@https://registry.npmjs.org/postcss-nested/-/postcss-nested-6.2.0.tgz 0ms (cache hit)
+656 http cache postcss-load-config@https://registry.npmjs.org/postcss-load-config/-/postcss-load-config-6.0.1.tgz 0ms (cache hit)
+657 http cache postcss-js@https://registry.npmjs.org/postcss-js/-/postcss-js-4.1.0.tgz 0ms (cache hit)
+658 http cache postcss-import@https://registry.npmjs.org/postcss-import/-/postcss-import-15.1.0.tgz 0ms (cache hit)
+659 http cache object-hash@https://registry.npmjs.org/object-hash/-/object-hash-3.0.0.tgz 0ms (cache hit)
+660 http cache micromatch@https://registry.npmjs.org/micromatch/-/micromatch-4.0.8.tgz 0ms (cache hit)
+661 http cache lilconfig@https://registry.npmjs.org/lilconfig/-/lilconfig-3.1.3.tgz 0ms (cache hit)
+662 http cache normalize-path@https://registry.npmjs.org/normalize-path/-/normalize-path-3.0.0.tgz 0ms (cache hit)
+663 http cache is-glob@https://registry.npmjs.org/is-glob/-/is-glob-4.0.3.tgz 0ms (cache hit)
+664 http cache js-tokens@https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz 0ms (cache hit)
+665 http cache glob-parent@https://registry.npmjs.org/glob-parent/-/glob-parent-6.0.2.tgz 0ms (cache hit)
+666 http cache didyoumean@https://registry.npmjs.org/didyoumean/-/didyoumean-1.2.2.tgz 0ms (cache hit)
+667 http cache dlv@https://registry.npmjs.org/dlv/-/dlv-1.1.3.tgz 0ms (cache hit)
+668 http cache arg@https://registry.npmjs.org/arg/-/arg-5.0.2.tgz 0ms (cache hit)
+669 http cache streamsearch@https://registry.npmjs.org/streamsearch/-/streamsearch-1.1.0.tgz 0ms (cache hit)
+670 http cache busboy@https://registry.npmjs.org/busboy/-/busboy-1.6.0.tgz 0ms (cache hit)
+671 http cache node-releases@https://registry.npmjs.org/node-releases/-/node-releases-2.0.37.tgz 0ms (cache hit)
+672 http cache loose-envify@https://registry.npmjs.org/loose-envify/-/loose-envify-1.4.0.tgz 0ms (cache hit)
+673 http cache baseline-browser-mapping@https://registry.npmjs.org/baseline-browser-mapping/-/baseline-browser-mapping-2.10.18.tgz 0ms (cache hit)
+674 http cache update-browserslist-db@https://registry.npmjs.org/update-browserslist-db/-/update-browserslist-db-1.2.3.tgz 0ms (cache hit)
+675 http cache postcss-value-parser@https://registry.npmjs.org/postcss-value-parser/-/postcss-value-parser-4.2.0.tgz 0ms (cache hit)
+676 http cache electron-to-chromium@https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.5.335.tgz 0ms (cache hit)
+677 http cache browserslist@https://registry.npmjs.org/browserslist/-/browserslist-4.28.2.tgz 0ms (cache hit)
+678 http cache fraction.js@https://registry.npmjs.org/fraction.js/-/fraction.js-5.3.4.tgz 0ms (cache hit)
+679 http cache styled-jsx@https://registry.npmjs.org/styled-jsx/-/styled-jsx-5.1.1.tgz 0ms (cache hit)
+680 http cache autoprefixer@https://registry.npmjs.org/autoprefixer/-/autoprefixer-10.4.27.tgz 0ms (cache hit)
+681 http cache scheduler@https://registry.npmjs.org/scheduler/-/scheduler-0.23.2.tgz 0ms (cache hit)
+682 http cache next@https://registry.npmjs.org/next/-/next-14.2.35.tgz 0ms (cache hit)
+683 http cache react@https://registry.npmjs.org/react/-/react-18.3.1.tgz 0ms (cache hit)
+684 http cache react-dom@https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz 0ms (cache hit)
+685 http cache glob-parent@https://registry.npmjs.org/glob-parent/-/glob-parent-5.1.2.tgz 0ms (cache hit)
+686 http cache glob-parent@https://registry.npmjs.org/glob-parent/-/glob-parent-5.1.2.tgz 0ms (cache hit)
+687 http cache fdir@https://registry.npmjs.org/fdir/-/fdir-6.5.0.tgz 0ms (cache hit)
+688 http cache jiti@https://registry.npmjs.org/jiti/-/jiti-1.21.7.tgz 0ms (cache hit)
+689 http cache picomatch@https://registry.npmjs.org/picomatch/-/picomatch-4.0.4.tgz 0ms (cache hit)
+690 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 1605ms
+691 silly audit report {
+691 silly audit report   next: [
+691 silly audit report     {
+691 silly audit report       id: 1112593,
+691 silly audit report       url: 'https://github.com/advisories/GHSA-9g9p-9gw9-jx7f',
+691 silly audit report       title: 'Next.js self-hosted applications vulnerable to DoS via Image Optimizer remotePatterns configuration',
+691 silly audit report       severity: 'moderate',
+691 silly audit report       vulnerable_versions: '>=10.0.0 <15.5.10',
+691 silly audit report       cwe: [Array],
+691 silly audit report       cvss: [Object]
+691 silly audit report     },
+691 silly audit report     {
+691 silly audit report       id: 1112653,
+691 silly audit report       url: 'https://github.com/advisories/GHSA-h25m-26qc-wcjf',
+691 silly audit report       title: 'Next.js HTTP request deserialization can lead to DoS when using insecure React Server Components',
+691 silly audit report       severity: 'high',
+691 silly audit report       vulnerable_versions: '>=13.0.0 <15.0.8',
+691 silly audit report       cwe: [Array],
+691 silly audit report       cvss: [Object]
+691 silly audit report     },
+691 silly audit report     {
+691 silly audit report       id: 1114897,
+691 silly audit report       url: 'https://github.com/advisories/GHSA-ggv3-7p47-pfv8',
+691 silly audit report       title: 'Next.js: HTTP request smuggling in rewrites',
+691 silly audit report       severity: 'moderate',
+691 silly audit report       vulnerable_versions: '>=9.5.0 <15.5.13',
+691 silly audit report       cwe: [Array],
+691 silly audit report       cvss: [Object]
+691 silly audit report     },
+691 silly audit report     {
+691 silly audit report       id: 1114940,
+691 silly audit report       url: 'https://github.com/advisories/GHSA-3x4c-7xq6-9pq8',
+691 silly audit report       title: 'Next.js: Unbounded next/image disk cache growth can exhaust storage',
+691 silly audit report       severity: 'moderate',
+691 silly audit report       vulnerable_versions: '>=10.0.0 <15.5.14',
+691 silly audit report       cwe: [Array],
+691 silly audit report       cvss: [Object]
+691 silly audit report     },
+691 silly audit report     {
+691 silly audit report       id: 1116376,
+691 silly audit report       url: 'https://github.com/advisories/GHSA-q4gf-8mx6-v5v3',
+691 silly audit report       title: 'Next.js has a Denial of Service with Server Components',
+691 silly audit report       severity: 'high',
+691 silly audit report       vulnerable_versions: '>=13.0.0 <15.5.15',
+691 silly audit report       cwe: [Array],
+691 silly audit report       cvss: [Object]
+691 silly audit report     }
+691 silly audit report   ]
+691 silly audit report }
+692 silly packumentCache corgi:https://registry.npmjs.org/next cache-miss
+693 http cache https://registry.npmjs.org/next 2405ms (cache hit)
+694 silly packumentCache corgi:https://registry.npmjs.org/next set size:24657972 disposed:false
+695 silly CHANGE node_modules/@nodelib/fs.stat
+696 silly CHANGE node_modules/@nodelib/fs.scandir
+697 silly CHANGE node_modules/@nodelib/fs.walk
+698 silly CHANGE node_modules/@swc/helpers
+699 silly CHANGE node_modules/@swc/counter
+700 silly CHANGE node_modules/@next/swc-win32-x64-msvc
+701 silly CHANGE node_modules/@next/env
+702 silly CHANGE node_modules/fast-glob
+703 silly CHANGE node_modules/fast-glob/node_modules/glob-parent
+704 silly CHANGE node_modules/chokidar
+705 silly CHANGE node_modules/chokidar/node_modules/glob-parent
+706 silly CHANGE node_modules/tailwindcss
+707 silly CHANGE node_modules/tailwindcss/node_modules/jiti
+708 silly CHANGE node_modules/tinyglobby
+709 silly CHANGE node_modules/tinyglobby/node_modules/fdir
+710 silly CHANGE node_modules/tinyglobby/node_modules/picomatch
+711 silly CHANGE node_modules/escalade
+712 silly CHANGE node_modules/is-number
+713 silly CHANGE node_modules/object-assign
+714 silly CHANGE node_modules/thenify-all
+715 silly CHANGE node_modules/thenify
+716 silly CHANGE node_modules/any-promise
+717 silly CHANGE node_modules/ts-interface-checker
+718 silly CHANGE node_modules/pirates
+719 silly CHANGE node_modules/mz
+720 silly CHANGE node_modules/lines-and-columns
+721 silly CHANGE node_modules/queue-microtask
+722 silly CHANGE node_modules/commander
+723 silly CHANGE node_modules/supports-preserve-symlinks-flag
+724 silly CHANGE node_modules/path-parse
+725 silly CHANGE node_modules/util-deprecate
+726 silly CHANGE node_modules/is-core-module
+727 silly CHANGE node_modules/pify
+728 silly CHANGE node_modules/camelcase-css
+729 silly CHANGE node_modules/cssesc
+730 silly CHANGE node_modules/is-extglob
+731 silly CHANGE node_modules/read-cache
+732 silly CHANGE node_modules/binary-extensions
+733 silly CHANGE node_modules/to-regex-range
+734 silly CHANGE node_modules/fastq
+735 silly CHANGE node_modules/run-parallel
+736 silly CHANGE node_modules/reusify
+737 silly CHANGE node_modules/fill-range
+738 silly CHANGE node_modules/merge2
+739 silly CHANGE node_modules/anymatch
+740 silly CHANGE node_modules/picomatch
+741 silly CHANGE node_modules/readdirp
+742 silly CHANGE node_modules/braces
+743 silly CHANGE node_modules/is-binary-path
+744 silly CHANGE node_modules/resolve
+745 silly CHANGE node_modules/sucrase
+746 silly CHANGE node_modules/postcss-selector-parser
+747 silly CHANGE node_modules/postcss-load-config
+748 silly CHANGE node_modules/postcss-nested
+749 silly CHANGE node_modules/postcss-js
+750 silly CHANGE node_modules/postcss-import
+751 silly CHANGE node_modules/object-hash
+752 silly CHANGE node_modules/micromatch
+753 silly CHANGE node_modules/normalize-path
+754 silly CHANGE node_modules/lilconfig
+755 silly CHANGE node_modules/is-glob
+756 silly CHANGE node_modules/glob-parent
+757 silly CHANGE node_modules/js-tokens
+758 silly CHANGE node_modules/didyoumean
+759 silly CHANGE node_modules/dlv
+760 silly CHANGE node_modules/arg
+761 silly CHANGE node_modules/busboy
+762 silly CHANGE node_modules/streamsearch
+763 silly CHANGE node_modules/node-releases
+764 silly CHANGE node_modules/loose-envify
+765 silly CHANGE node_modules/update-browserslist-db
+766 silly CHANGE node_modules/baseline-browser-mapping
+767 silly CHANGE node_modules/postcss-value-parser
+768 silly CHANGE node_modules/electron-to-chromium
+769 silly CHANGE node_modules/browserslist
+770 silly CHANGE node_modules/fraction.js
+771 silly CHANGE node_modules/autoprefixer
+772 silly CHANGE node_modules/styled-jsx
+773 silly CHANGE node_modules/scheduler
+774 silly CHANGE node_modules/next
+775 silly CHANGE node_modules/react
+776 silly CHANGE node_modules/react-dom
+777 verbose cwd D:\Coding\careers-backend-repair\frontend
+778 verbose os Windows_NT 10.0.22621
+779 verbose node v24.14.1
+780 verbose npm  v11.11.0
+781 verbose exit 0
+782 info ok

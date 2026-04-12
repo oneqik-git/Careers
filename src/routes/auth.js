@@ -1,9 +1,13 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { body, validationResult } = require('express-validator');
+const axios = require('axios');
+const { body } = require('express-validator');
 const { query, queryOne, transaction } = require('../../config/database');
 const { v4: uuid } = require('uuid');
+const { asyncHandler, handleValidationErrors, sendError, sendSuccess } = require('../utils/api');
+const { normalizeCareerScore } = require('../utils/normalize');
+
 const router = express.Router();
 
 function generateTokens(userId, role) {
@@ -12,21 +16,75 @@ function generateTokens(userId, role) {
   return { access, refresh };
 }
 
-// ── POST /api/auth/register/candidate ─────────────────────────────
+async function getUserLinks(userId, role) {
+  if (role === 'candidate') {
+    const candidate = await queryOne('SELECT id FROM candidates WHERE user_id = ?', [userId]);
+    return { candidate_id: candidate?.id || null };
+  }
+
+  if (role === 'employer' || role === 'admin') {
+    const employer = await queryOne('SELECT id, company_id FROM employers WHERE user_id = ?', [userId]);
+    return {
+      employer_id: employer?.id || null,
+      company_id: employer?.company_id || null,
+    };
+  }
+
+  return {};
+}
+
+async function buildAuthPayload(user) {
+  const tokens = generateTokens(user.id, user.role);
+  const links = await getUserLinks(user.id, user.role);
+
+  return {
+    user: {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    },
+    tokens,
+    links,
+  };
+}
+
+function sendAuthPayload(res, payload, status = 200, message) {
+  return sendSuccess(res, {
+    status,
+    message,
+    data: payload,
+    legacy: {
+      role: payload.user.role,
+      tokens: payload.tokens,
+      user: payload.user,
+      links: payload.links,
+    },
+  });
+}
+
+// POST /api/auth/register/candidate
 router.post('/register/candidate', [
-  body('email').isEmail().normalizeEmail(),
-  body('phone').isMobilePhone('en-IN'),
-  body('password').isLength({ min: 8 }),
-  body('full_name').isLength({ min: 2 }),
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).json({ success: false, errors: errors.array() });
+  body('email').isEmail().withMessage('A valid email is required').normalizeEmail(),
+  body('phone').isMobilePhone('en-IN').withMessage('A valid Indian mobile number is required'),
+  body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
+  body('full_name').isLength({ min: 2 }).withMessage('Full name must be at least 2 characters long'),
+], asyncHandler(async (req, res) => {
+  if (handleValidationErrors(req, res)) {
+    return;
+  }
 
   const { email, phone, password, full_name } = req.body;
-  try {
-    const existing = await queryOne('SELECT id FROM users WHERE email = ? OR phone = ?', [email, phone]);
-    if (existing) return res.status(409).json({ success: false, message: 'Email or phone already registered' });
+  const existing = await queryOne('SELECT id FROM users WHERE email = ? OR phone = ?', [email, phone]);
 
+  if (existing) {
+    return sendError(res, {
+      status: 409,
+      code: 'USER_ALREADY_EXISTS',
+      message: 'Email or phone already registered',
+    });
+  }
+
+  try {
     await transaction(async (conn) => {
       const userId = uuid();
       const candidateId = uuid();
@@ -40,33 +98,50 @@ router.post('/register/candidate', [
         'INSERT INTO candidates (id, user_id, full_name) VALUES (?, ?, ?)',
         [candidateId, userId, full_name]
       );
-      // Init empty score row
       await conn.execute(
         'INSERT INTO career_scores (candidate_id, total_score) VALUES (?, 300)',
         [candidateId]
       );
     });
 
-    const user = await queryOne('SELECT id, role FROM users WHERE email = ?', [email]);
-    const { access, refresh } = generateTokens(user.id, 'candidate');
-    res.status(201).json({ success: true, tokens: { access, refresh } });
+    const user = await queryOne('SELECT id, email, role FROM users WHERE email = ?', [email]);
+    const payload = await buildAuthPayload(user);
+
+    return sendAuthPayload(res, payload, 201);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: 'Registration failed' });
+    return sendError(res, {
+      status: 500,
+      code: 'REGISTRATION_FAILED',
+      message: 'Registration failed',
+    });
   }
-});
+}));
 
-// ── POST /api/auth/register/employer ──────────────────────────────
+// POST /api/auth/register/employer
 router.post('/register/employer', [
-  body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 8 }),
-  body('full_name').isLength({ min: 2 }),
-  body('company_name').isLength({ min: 2 }),
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).json({ success: false, errors: errors.array() });
+  body('email').isEmail().withMessage('A valid email is required').normalizeEmail(),
+  body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
+  body('full_name').isLength({ min: 2 }).withMessage('Full name must be at least 2 characters long'),
+  body('company_name').isLength({ min: 2 }).withMessage('Company name must be at least 2 characters long'),
+], asyncHandler(async (req, res) => {
+  if (handleValidationErrors(req, res)) {
+    return;
+  }
 
   const { email, phone, password, full_name, company_name, designation } = req.body;
+  const existing = phone
+    ? await queryOne('SELECT id FROM users WHERE email = ? OR phone = ?', [email, phone])
+    : await queryOne('SELECT id FROM users WHERE email = ?', [email]);
+
+  if (existing) {
+    return sendError(res, {
+      status: 409,
+      code: 'USER_ALREADY_EXISTS',
+      message: 'Email or phone already registered',
+    });
+  }
+
   try {
     await transaction(async (conn) => {
       const userId = uuid();
@@ -93,57 +168,101 @@ router.post('/register/employer', [
       );
     });
 
-    const user = await queryOne('SELECT id FROM users WHERE email = ?', [email]);
-    const { access, refresh } = generateTokens(user.id, 'employer');
-    res.status(201).json({ success: true, tokens: { access, refresh } });
+    const user = await queryOne('SELECT id, email, role FROM users WHERE email = ?', [email]);
+    const payload = await buildAuthPayload(user);
+
+    return sendAuthPayload(res, payload, 201);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ success: false, message: 'Registration failed' });
+    return sendError(res, {
+      status: 500,
+      code: 'REGISTRATION_FAILED',
+      message: 'Registration failed',
+    });
   }
-});
+}));
 
-// ── POST /api/auth/login ──────────────────────────────────────────
+// POST /api/auth/login
 router.post('/login', [
-  body('email').isEmail().normalizeEmail(),
-  body('password').notEmpty(),
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) return res.status(400).json({ success: false, errors: errors.array() });
+  body('email').isEmail().withMessage('A valid email is required').normalizeEmail(),
+  body('password').notEmpty().withMessage('Password is required'),
+], asyncHandler(async (req, res) => {
+  if (handleValidationErrors(req, res)) {
+    return;
+  }
 
   const { email, password } = req.body;
+
   try {
     const user = await queryOne('SELECT * FROM users WHERE email = ? AND is_active = 1', [email]);
-    if (!user) return res.status(401).json({ success: false, message: 'Invalid credentials' });
+
+    if (!user) {
+      return sendError(res, {
+        status: 401,
+        code: 'INVALID_CREDENTIALS',
+        message: 'Invalid credentials',
+      });
+    }
 
     const match = await bcrypt.compare(password, user.password_hash);
-    if (!match) return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    if (!match) {
+      return sendError(res, {
+        status: 401,
+        code: 'INVALID_CREDENTIALS',
+        message: 'Invalid credentials',
+      });
+    }
 
     await query('UPDATE users SET last_login = NOW() WHERE id = ?', [user.id]);
-    const { access, refresh } = generateTokens(user.id, user.role);
-    res.json({ success: true, role: user.role, tokens: { access, refresh } });
+    const payload = await buildAuthPayload(user);
+
+    return sendAuthPayload(res, payload);
   } catch (err) {
-    res.status(500).json({ success: false, message: 'Login failed' });
+    return sendError(res, {
+      status: 500,
+      code: 'LOGIN_FAILED',
+      message: 'Login failed',
+    });
   }
-});
+}));
 
-// ── POST /api/auth/refresh ────────────────────────────────────────
-router.post('/refresh', async (req, res) => {
-  const { refresh_token } = req.body;
-  if (!refresh_token) return res.status(401).json({ success: false, message: 'No refresh token' });
+// POST /api/auth/refresh
+router.post('/refresh', asyncHandler(async (req, res) => {
+  const refreshToken = req.body.refresh_token || req.body.refreshToken;
+
+  if (!refreshToken) {
+    return sendError(res, {
+      status: 401,
+      code: 'REFRESH_TOKEN_REQUIRED',
+      message: 'No refresh token provided',
+    });
+  }
+
   try {
-    const decoded = jwt.verify(refresh_token, process.env.JWT_REFRESH_SECRET);
-    const user = await queryOne('SELECT id, role, is_active FROM users WHERE id = ?', [decoded.userId]);
-    if (!user || !user.is_active) return res.status(401).json({ success: false, message: 'Invalid user' });
-    const { access, refresh } = generateTokens(user.id, user.role);
-    res.json({ success: true, tokens: { access, refresh } });
-  } catch {
-    res.status(401).json({ success: false, message: 'Invalid or expired refresh token' });
-  }
-});
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+    const user = await queryOne('SELECT id, email, role, is_active FROM users WHERE id = ?', [decoded.userId]);
 
-// ── GET /api/auth/digilocker/initiate ─────────────────────────────
-// Redirects to DigiLocker OAuth
-router.get('/digilocker/initiate', async (req, res) => {
+    if (!user || !user.is_active) {
+      return sendError(res, {
+        status: 401,
+        code: 'INVALID_USER',
+        message: 'Invalid user',
+      });
+    }
+
+    const payload = await buildAuthPayload(user);
+    return sendAuthPayload(res, payload);
+  } catch {
+    return sendError(res, {
+      status: 401,
+      code: 'REFRESH_TOKEN_INVALID',
+      message: 'Invalid or expired refresh token',
+    });
+  }
+}));
+
+// GET /api/auth/digilocker/initiate
+router.get('/digilocker/initiate', asyncHandler(async (req, res) => {
   const params = new URLSearchParams({
     response_type: 'code',
     client_id: process.env.DIGILOCKER_CLIENT_ID,
@@ -151,17 +270,23 @@ router.get('/digilocker/initiate', async (req, res) => {
     scope: 'openid aadhaar_number DOB FULLNAME',
     state: req.query.candidateId || '',
   });
-  res.redirect(`https://api.digitallocker.gov.in/public/oauth2/1/authorize?${params}`);
-});
 
-// ── GET /api/auth/digilocker/callback ────────────────────────────
-router.get('/digilocker/callback', async (req, res) => {
+  return res.redirect(`https://api.digitallocker.gov.in/public/oauth2/1/authorize?${params}`);
+}));
+
+// GET /api/auth/digilocker/callback
+router.get('/digilocker/callback', asyncHandler(async (req, res) => {
   const { code, state: candidateId } = req.query;
-  if (!code) return res.status(400).json({ success: false, message: 'DigiLocker auth failed' });
+
+  if (!code) {
+    return sendError(res, {
+      status: 400,
+      code: 'DIGILOCKER_AUTH_FAILED',
+      message: 'DigiLocker auth failed',
+    });
+  }
 
   try {
-    // Exchange code for token
-    const axios = require('axios');
     const tokenRes = await axios.post('https://api.digitallocker.gov.in/public/oauth2/1/token', {
       code,
       grant_type: 'authorization_code',
@@ -171,38 +296,58 @@ router.get('/digilocker/callback', async (req, res) => {
     });
 
     const { access_token } = tokenRes.data;
-
-    // Fetch Aadhaar details
     const userRes = await axios.get('https://api.digitallocker.gov.in/public/oauth2/1/user', {
-      headers: { Authorization: `Bearer ${access_token}` }
+      headers: { Authorization: `Bearer ${access_token}` },
     });
 
     const crypto = require('crypto');
     const aadhaarHash = crypto.createHash('sha256').update(userRes.data.masked_aadhaar || '').digest('hex');
 
-    // Check for duplicate profile
     const duplicate = await queryOne(
       'SELECT id FROM candidates WHERE aadhaar_hash = ? AND id != ?',
       [aadhaarHash, candidateId]
     );
+
     if (duplicate) {
-      return res.status(409).json({ success: false, message: 'A profile with this Aadhaar already exists', code: 'DUPLICATE_PROFILE' });
+      return sendError(res, {
+        status: 409,
+        code: 'DUPLICATE_PROFILE',
+        message: 'A profile with this Aadhaar already exists',
+      });
     }
 
-    await query(
+    const updateResult = await query(
       'UPDATE candidates SET aadhaar_hash = ?, digilocker_linked = 1 WHERE id = ?',
       [aadhaarHash, candidateId]
     );
 
-    // Trigger score recalculation
-    const { calculateAndSave } = require('../services/careerScore');
-    await calculateAndSave(candidateId);
+    if (!updateResult.affectedRows) {
+      return sendError(res, {
+        status: 404,
+        code: 'CANDIDATE_NOT_FOUND',
+        message: 'Candidate profile not found',
+      });
+    }
 
-    res.json({ success: true, message: 'DigiLocker linked successfully' });
+    const { calculateAndSave } = require('../services/careerScore');
+    const score = await calculateAndSave(candidateId);
+
+    return sendSuccess(res, {
+      message: 'DigiLocker linked successfully',
+      data: {
+        candidate_id: candidateId,
+        digilocker_linked: true,
+        score: normalizeCareerScore(score),
+      },
+    });
   } catch (err) {
     console.error('DigiLocker error:', err.message);
-    res.status(500).json({ success: false, message: 'DigiLocker linking failed' });
+    return sendError(res, {
+      status: 500,
+      code: 'DIGILOCKER_LINK_FAILED',
+      message: 'DigiLocker linking failed',
+    });
   }
-});
+}));
 
 module.exports = router;

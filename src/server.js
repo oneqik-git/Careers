@@ -6,6 +6,7 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const { testConnection } = require('../config/database');
 const { checkTATBreaches } = require('./routes/jobs');
+const { sendError } = require('./utils/api');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,7 +23,11 @@ app.use(cors({
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 15 * 60 * 1000,
   max: parseInt(process.env.RATE_LIMIT_MAX) || 100,
-  message: { success: false, message: 'Too many requests, please slow down' },
+  handler: (req, res) => sendError(res, {
+    status: 429,
+    code: 'RATE_LIMITED',
+    message: 'Too many requests, please slow down',
+  }),
   standardHeaders: true,
 });
 app.use('/api/', limiter);
@@ -50,17 +55,22 @@ app.use('/api/companies',  companyRoutes);
 
 // ── 404 ───────────────────────────────────────────────────────────
 app.use((req, res) => {
-  res.status(404).json({ success: false, message: `Route ${req.method} ${req.path} not found` });
+  return sendError(res, {
+    status: 404,
+    code: 'ROUTE_NOT_FOUND',
+    message: `Route ${req.method} ${req.path} not found`,
+  });
 });
 
 // ── ERROR HANDLER ─────────────────────────────────────────────────
 app.use((err, req, res, next) => {
   console.error('Unhandled error:', err);
-  res.status(err.status || 500).json({
-    success: false,
+  return sendError(res, {
+    status: err.status || 500,
+    code: err.code || (err.status && err.status < 500 ? 'REQUEST_FAILED' : 'INTERNAL_ERROR'),
     message: process.env.NODE_ENV === 'production'
       ? 'Internal server error'
-      : err.message,
+      : (err.message || 'Internal server error'),
   });
 });
 
