@@ -1,20 +1,18 @@
 'use client';
 
+import Link from 'next/link';
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ApplicationTimeline from '@/components/ApplicationTimeline';
 import DashboardShell from '@/components/DashboardShell';
 import EmptyState from '@/components/EmptyState';
 import MessageBanner from '@/components/MessageBanner';
+import PageHero from '@/components/PageHero';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { fetchApplicationHistory } from '@/services/jobs';
 import { clearAuthStorage } from '@/utils/authStorage';
-
-const employerNavItems = [
-  { label: 'Dashboard', href: '/employer/dashboard' },
-  { label: 'Post Job', href: '/employer/jobs/new' },
-  { label: 'Posted Jobs', href: '/employer/jobs' },
-];
+import { formatStatus } from '@/utils/formatters';
+import { employerNavItems } from '@/utils/navigation';
 
 function EmployerApplicationHistoryContent() {
   const searchParams = useSearchParams();
@@ -58,7 +56,7 @@ function EmployerApplicationHistoryContent() {
   return (
     <DashboardShell
       title="Application History"
-      subtitle="Timeline entries from GET /api/jobs/applications/{applicationId}/history."
+      subtitle="Review the full status change history for a candidate application."
       onRefresh={loadHistory}
       navItems={employerNavItems}
     >
@@ -67,11 +65,34 @@ function EmployerApplicationHistoryContent() {
       ) : error ? (
         <MessageBanner tone="error" message={error.message || 'Unable to load history.'} />
       ) : entries.length ? (
-        <ApplicationTimeline entries={entries} />
+        <div className="space-y-6">
+          <PageHero
+            eyebrow="Employer timeline"
+            title="Application history"
+            description="Each timeline step stays readable at a glance so employers can reconstruct the applicant journey quickly."
+            badges={[
+              `${entries.length} timeline event${entries.length === 1 ? '' : 's'}`,
+              `Latest status: ${formatStatus(entries[entries.length - 1]?.to_status)}`,
+            ]}
+            actions={[
+              { label: 'Back to posted jobs', href: '/employer/jobs' },
+              { label: 'Post Job', href: '/employer/jobs/new', variant: 'secondary' },
+            ]}
+          />
+          <ApplicationTimeline entries={entries} />
+        </div>
       ) : (
         <EmptyState
           title="No history entries"
           description="This application does not have any recorded timeline events yet."
+          action={
+            <Link
+              className="inline-flex rounded-2xl bg-slate-950 px-4 py-2.5 text-sm text-white transition hover:bg-slate-800"
+              href="/employer/jobs"
+            >
+              Back to posted jobs
+            </Link>
+          }
         />
       )}
     </DashboardShell>

@@ -1,20 +1,18 @@
 'use client';
 
+import Link from 'next/link';
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import ApplicationTimeline from '@/components/ApplicationTimeline';
 import DashboardShell from '@/components/DashboardShell';
 import EmptyState from '@/components/EmptyState';
 import MessageBanner from '@/components/MessageBanner';
+import PageHero from '@/components/PageHero';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { fetchApplicationHistory } from '@/services/jobs';
 import { clearAuthStorage } from '@/utils/authStorage';
-
-const candidateNavItems = [
-  { label: 'Dashboard', href: '/candidate/dashboard' },
-  { label: 'Browse Jobs', href: '/candidate/jobs' },
-  { label: 'My Applications', href: '/candidate/applications' },
-];
+import { formatStatus } from '@/utils/formatters';
+import { candidateNavItems } from '@/utils/navigation';
 
 function CandidateApplicationHistoryContent() {
   const searchParams = useSearchParams();
@@ -58,7 +56,7 @@ function CandidateApplicationHistoryContent() {
   return (
     <DashboardShell
       title="Application History"
-      subtitle="Timeline entries from GET /api/jobs/applications/{applicationId}/history."
+      subtitle="Review the timeline of status changes for a single application in a clearer step-by-step view."
       onRefresh={loadHistory}
       navItems={candidateNavItems}
     >
@@ -67,11 +65,34 @@ function CandidateApplicationHistoryContent() {
       ) : error ? (
         <MessageBanner tone="error" message={error.message || 'Unable to load history.'} />
       ) : entries.length ? (
-        <ApplicationTimeline entries={entries} />
+        <div className="space-y-6">
+          <PageHero
+            eyebrow="Application history"
+            title="Status timeline"
+            description="Each change is shown as a simple sequence so candidates can understand how the application progressed over time."
+            badges={[
+              `${entries.length} timeline event${entries.length === 1 ? '' : 's'}`,
+              `Latest status: ${formatStatus(entries[entries.length - 1]?.to_status)}`,
+            ]}
+            actions={[
+              { label: 'Back to applications', href: '/candidate/applications' },
+              { label: 'Browse Jobs', href: '/candidate/jobs', variant: 'secondary' },
+            ]}
+          />
+          <ApplicationTimeline entries={entries} />
+        </div>
       ) : (
         <EmptyState
           title="No history entries"
           description="This application does not have any recorded timeline events yet."
+          action={
+            <Link
+              className="inline-flex rounded-2xl bg-slate-950 px-4 py-2.5 text-sm text-white transition hover:bg-slate-800"
+              href="/candidate/applications"
+            >
+              Back to applications
+            </Link>
+          }
         />
       )}
     </DashboardShell>

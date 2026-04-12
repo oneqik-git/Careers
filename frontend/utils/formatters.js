@@ -52,3 +52,33 @@ export function formatStatus(value) {
     .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
     .join(' ');
 }
+
+export function formatExperienceRange(minYears, maxYears) {
+  const min = minYears ?? 0;
+  const max = maxYears ?? null;
+
+  if (max) {
+    return `${min}-${max} years`;
+  }
+
+  if (min) {
+    return `${min}+ years`;
+  }
+
+  return 'Open to varied experience';
+}
+
+export function formatExperienceMonths(totalMonths) {
+  if (totalMonths === null || totalMonths === undefined) {
+    return '-';
+  }
+
+  const years = totalMonths / 12;
+
+  if (years < 1) {
+    return `${totalMonths} months`;
+  }
+
+  const rounded = Number.isInteger(years) ? years : years.toFixed(1);
+  return `${rounded} years`;
+}

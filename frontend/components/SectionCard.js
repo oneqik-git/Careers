@@ -1,14 +1,14 @@
 export default function SectionCard({ title, description, children, action }) {
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-5">
+    <section className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
       <div className="flex flex-col gap-3 border-b border-slate-200 pb-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-slate-950">{title}</h2>
+          <h2 className="text-lg font-semibold tracking-tight text-slate-950">{title}</h2>
           {description ? <p className="mt-1 text-sm text-slate-600">{description}</p> : null}
         </div>
         {action}
       </div>
-      <div className="pt-4">{children}</div>
+      <div className="pt-5">{children}</div>
     </section>
   );
 }
