@@ -5,10 +5,10 @@
  * Tables:
  *   Core:        users, candidates, employers, companies
  *   Jobs:        job_postings, job_applications, prescreening_questions, prescreening_answers
- *   Score:       career_scores, score_events, company_scores, company_score_events
- *   Identity:    digilocker_documents, verifications
- *   Work:        work_experiences, achievements, certifications
- *   Skills:      skill_assessments, courses, course_enrollments, course_modules, module_completions
+ *   Score:       career_scores, score_events, company_scores
+ *   Identity:    digilocker_documents
+ *   Work:        work_experiences, achievements
+ *   Skills:      skill_assessments, courses, course_enrollments, course_modules
  *   Community:   posts, post_votes, comments, polls, poll_votes
  *   HRM:         hrm_connections, employee_records, performance_records, leave_records
  *   Company:     company_intel, career_ladders, appraisal_data, company_history
@@ -432,6 +432,30 @@ const migrations = [
     FOREIGN KEY (candidate_id) REFERENCES candidates(id),
     FOREIGN KEY (employer_id) REFERENCES employers(id),
     INDEX idx_candidate (candidate_id)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // —— SKILL ASSESSMENTS (used by scoring and employer candidate views) ————————
+  `CREATE TABLE IF NOT EXISTS skill_assessments (
+    id               VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    candidate_id     VARCHAR(36) NOT NULL,
+    skill_name       VARCHAR(100) NOT NULL,
+    score            DECIMAL(5,2) DEFAULT 0,
+    max_score        DECIMAL(5,2) DEFAULT 100,
+    status           ENUM('draft','completed','invalidated') DEFAULT 'completed',
+    source           ENUM('self_reported','assessment','employer_verified','imported') DEFAULT 'assessment',
+    ai_summary       TEXT,
+    ai_tags          JSON,
+    parsed_text      LONGTEXT,
+    parsed_json      JSON,
+    index_status     ENUM('pending','ready','failed') DEFAULT 'pending',
+    embedding_status ENUM('pending','ready','failed') DEFAULT 'pending',
+    assessed_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (candidate_id) REFERENCES candidates(id) ON DELETE CASCADE,
+    INDEX idx_candidate (candidate_id),
+    INDEX idx_status (status),
+    INDEX idx_skill_name (skill_name)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
   // ── COURSES ────────────────────────────────────────────────────────

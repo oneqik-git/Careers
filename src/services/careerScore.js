@@ -222,6 +222,15 @@ async function calculateAndSave(candidateId) {
   return { total, band, skillPts, credPts, engPts, valPts, idPts, identityCapActive };
 }
 
+async function ensureCareerScore(candidateId) {
+  let score = await queryOne('SELECT * FROM career_scores WHERE candidate_id = ?', [candidateId]);
+  if (score) return score;
+
+  await calculateAndSave(candidateId);
+  score = await queryOne('SELECT * FROM career_scores WHERE candidate_id = ?', [candidateId]);
+  return score;
+}
+
 // Add a score event for a specific action
 async function addScoreEvent(candidateId, eventType, pillar, delta, referenceId = null, note = null) {
   const current = await queryOne('SELECT total_score FROM career_scores WHERE candidate_id = ?', [candidateId]);
@@ -234,4 +243,4 @@ async function addScoreEvent(candidateId, eventType, pillar, delta, referenceId 
   return calculateAndSave(candidateId);
 }
 
-module.exports = { calculateAndSave, addScoreEvent, getBand };
+module.exports = { calculateAndSave, ensureCareerScore, addScoreEvent, getBand };

@@ -2,8 +2,16 @@ const express = require('express');
 const { body, query: qv, validationResult } = require('express-validator');
 const { query, queryOne, transaction } = require('../../config/database');
 const { auth, requireCandidate, requireEmployer } = require('../middleware/auth');
+const { calculateAndSave, ensureCareerScore } = require('../services/careerScore');
 const { v4: uuid } = require('uuid');
 const router = express.Router();
+
+function normalizeAnswerType(questionType, answer) {
+  if (questionType === 'video') {
+    return answer.video_url ? 'video' : 'text';
+  }
+  return 'text';
+}
 
 // ══════════════════════════════════════════════════════════════════
 //  EMPLOYER: POST A JOB (progressive dropdowns supported by data)
@@ -65,6 +73,13 @@ router.post('/', auth, requireEmployer, [
     prescreening_questions = []
   } = req.body;
 
+  const invalidQuestion = prescreening_questions.find((question) =>
+    !question?.question_text || String(question.question_text).trim().length < 3
+  );
+  if (invalidQuestion) {
+    return res.status(400).json({ success: false, message: 'Each prescreening question must include question_text' });
+  }
+
   try {
     const jobId = uuid();
     await transaction(async (conn) => {
@@ -101,7 +116,7 @@ router.post('/', auth, requireEmployer, [
       }
     });
 
-    res.status(201).json({ success: true, job_id: jobId });
+    res.status(201).json({ success: true, data: { job_id: jobId, prescreening_question_count: prescreening_questions.length } });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: 'Failed to create job posting' });
@@ -111,8 +126,11 @@ router.post('/', auth, requireEmployer, [
 // GET /api/jobs/employer — all jobs posted by this employer (no time limit, all statuses)
 router.get('/employer', auth, requireEmployer, async (req, res) => {
   const employer = await queryOne('SELECT id, company_id FROM employers WHERE user_id = ?', [req.user.id]);
+  if (!employer) return res.status(404).json({ success: false, message: 'Employer profile not found' });
   const { status, department, page = 1, limit = 20 } = req.query;
-  const offset = (page - 1) * limit;
+  const safePage = Math.max(parseInt(page, 10) || 1, 1);
+  const safeLimit = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 100);
+  const offset = (safePage - 1) * safeLimit;
 
   let sql = `SELECT jp.*, 
     (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = jp.id) as total_applications,
@@ -123,8 +141,7 @@ router.get('/employer', auth, requireEmployer, async (req, res) => {
 
   if (status) { sql += ' AND jp.status = ?'; params.push(status); }
   if (department) { sql += ' AND jp.department = ?'; params.push(department); }
-  sql += ' ORDER BY jp.created_at DESC LIMIT ? OFFSET ?';
-  params.push(parseInt(limit), parseInt(offset));
+  sql += ` ORDER BY jp.created_at DESC LIMIT ${safeLimit} OFFSET ${offset}`;
 
   const jobs = await query(sql, params);
   res.json({ success: true, data: jobs });
@@ -166,6 +183,7 @@ router.get('/:id', auth, async (req, res) => {
 // PATCH /api/jobs/:id — update job (status, close, etc.)
 router.patch('/:id', auth, requireEmployer, async (req, res) => {
   const employer = await queryOne('SELECT company_id FROM employers WHERE user_id = ?', [req.user.id]);
+  if (!employer) return res.status(404).json({ success: false, message: 'Employer profile not found' });
   const job = await queryOne('SELECT id, company_id FROM job_postings WHERE id = ?', [req.params.id]);
   if (!job || job.company_id !== employer.company_id) {
     return res.status(403).json({ success: false, message: 'Not your job posting' });
@@ -202,7 +220,9 @@ router.get('/', auth, async (req, res) => {
     q, domain, level, work_mode, salary_min, salary_max,
     experience_max, location, page = 1, limit = 20, sort = 'match'
   } = req.query;
-  const offset = (page - 1) * limit;
+  const safePage = Math.max(parseInt(page, 10) || 1, 1);
+  const safeLimit = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 100);
+  const offset = (safePage - 1) * safeLimit;
 
   // Get candidate's career score for match calculation
   let candidateId = null;
@@ -211,7 +231,7 @@ router.get('/', auth, async (req, res) => {
     const cand = await queryOne('SELECT id FROM candidates WHERE user_id = ?', [req.user.id]);
     if (cand) {
       candidateId = cand.id;
-      const sc = await queryOne('SELECT total_score FROM career_scores WHERE candidate_id = ?', [cand.id]);
+      const sc = await ensureCareerScore(cand.id);
       careerScore = sc?.total_score || 300;
     }
   }
@@ -247,8 +267,7 @@ router.get('/', auth, async (req, res) => {
     ? ' ORDER BY jp.created_at DESC'
     : ' ORDER BY cs.total_score DESC, jp.created_at DESC';
 
-  sql += ' LIMIT ? OFFSET ?';
-  params.push(parseInt(limit), parseInt(offset));
+  sql += ` LIMIT ${safeLimit} OFFSET ${offset}`;
 
   const jobs = await query(sql, params);
 
@@ -263,7 +282,7 @@ router.get('/', auth, async (req, res) => {
     jobs.forEach(j => { j.applied_status = appliedMap[j.id] || null; });
   }
 
-  res.json({ success: true, data: jobs, page: parseInt(page), limit: parseInt(limit) });
+  res.json({ success: true, data: jobs, page: safePage, limit: safeLimit });
 });
 
 // ══════════════════════════════════════════════════════════════════
@@ -281,7 +300,7 @@ router.post('/:id/apply', auth, requireCandidate, async (req, res) => {
   }
 
   // Check career score gate
-  const scoreRow = await queryOne('SELECT total_score FROM career_scores WHERE candidate_id = ?', [candidate.id]);
+  const scoreRow = await ensureCareerScore(candidate.id);
   if (scoreRow && scoreRow.total_score < job.min_career_score) {
     return res.status(400).json({
       success: false,
@@ -297,6 +316,37 @@ router.post('/:id/apply', auth, requireCandidate, async (req, res) => {
   if (existing) return res.status(409).json({ success: false, message: 'Already applied' });
 
   const { cover_note, answers = [] } = req.body;
+  const questions = await query(
+    'SELECT id, question_type, is_required FROM prescreening_questions WHERE job_id = ? ORDER BY display_order',
+    [job.id]
+  );
+  const questionMap = new Map(questions.map((question) => [question.id, question]));
+  const seenQuestionIds = new Set();
+
+  for (const answer of answers) {
+    if (!questionMap.has(answer.question_id)) {
+      return res.status(400).json({ success: false, message: 'One or more answers do not match this job\'s pre-screen questions' });
+    }
+    if (seenQuestionIds.has(answer.question_id)) {
+      return res.status(400).json({ success: false, message: 'Duplicate answers for the same pre-screen question are not allowed' });
+    }
+
+    const question = questionMap.get(answer.question_id);
+    const hasContent = Boolean(answer.video_url || (typeof answer.answer_text === 'string' && answer.answer_text.trim()));
+    if (!hasContent) {
+      return res.status(400).json({ success: false, message: 'Each pre-screen answer must include answer_text or video_url' });
+    }
+    if (question.question_type === 'video' && !answer.video_url && !answer.answer_text) {
+      return res.status(400).json({ success: false, message: 'Video questions require a response payload' });
+    }
+
+    seenQuestionIds.add(answer.question_id);
+  }
+
+  const missingRequiredQuestion = questions.find((question) => question.is_required && !seenQuestionIds.has(question.id));
+  if (missingRequiredQuestion) {
+    return res.status(400).json({ success: false, message: 'All required pre-screen questions must be answered' });
+  }
 
   try {
     const appId = uuid();
@@ -310,10 +360,11 @@ router.post('/:id/apply', auth, requireCandidate, async (req, res) => {
 
       // Insert pre-screen answers
       for (const ans of answers) {
+        const question = questionMap.get(ans.question_id);
         await conn.execute(
           `INSERT INTO prescreening_answers (id, application_id, question_id, answer_type, answer_text, video_url)
            VALUES (?, ?, ?, ?, ?, ?)`,
-          [uuid(), appId, ans.question_id, ans.answer_type || 'text',
+          [uuid(), appId, ans.question_id, normalizeAnswerType(question.question_type, ans),
            ans.answer_text || null, ans.video_url || null]
         );
       }
@@ -343,7 +394,8 @@ router.post('/:id/apply', auth, requireCandidate, async (req, res) => {
       );
     }
 
-    res.status(201).json({ success: true, application_id: appId });
+    await calculateAndSave(candidate.id);
+    res.status(201).json({ success: true, data: { application_id: appId, status: 'submitted' } });
   } catch (err) {
     console.error(err);
     res.status(500).json({ success: false, message: 'Application failed' });
@@ -353,7 +405,7 @@ router.post('/:id/apply', auth, requireCandidate, async (req, res) => {
 // GET /api/jobs/my/applications — candidate's full application history with progress
 router.get('/my/applications', auth, requireCandidate, async (req, res) => {
   const candidate = await queryOne('SELECT id FROM candidates WHERE user_id = ?', [req.user.id]);
-  if (!candidate) return res.status(404).json({ success: false });
+  if (!candidate) return res.status(404).json({ success: false, message: 'Candidate profile not found' });
 
   const apps = await query(
     `SELECT ja.id, ja.status, ja.career_score_at_apply, ja.ai_match_score, ja.applied_at, ja.status_updated_at,
@@ -378,13 +430,16 @@ router.get('/my/applications', auth, requireCandidate, async (req, res) => {
 // GET /api/jobs/:id/applications — employer views applications for a job
 router.get('/:id/applications', auth, requireEmployer, async (req, res) => {
   const employer = await queryOne('SELECT company_id FROM employers WHERE user_id = ?', [req.user.id]);
+  if (!employer) return res.status(404).json({ success: false, message: 'Employer profile not found' });
   const job = await queryOne('SELECT id, company_id FROM job_postings WHERE id = ?', [req.params.id]);
   if (!job || job.company_id !== employer.company_id) {
     return res.status(403).json({ success: false, message: 'Not your job' });
   }
 
   const { status, sort = 'score', page = 1, limit = 50 } = req.query;
-  const offset = (page - 1) * limit;
+  const safePage = Math.max(parseInt(page, 10) || 1, 1);
+  const safeLimit = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 100);
+  const offset = (safePage - 1) * safeLimit;
   const params = [req.params.id];
 
   let sql = `SELECT ja.id, ja.status, ja.career_score_at_apply, ja.ai_match_score, ja.applied_at,
@@ -407,8 +462,7 @@ router.get('/:id/applications', auth, requireEmployer, async (req, res) => {
   params.unshift(employer.company_id, employer.company_id);
   if (status) { sql += ' AND ja.status = ?'; params.push(status); }
   sql += sort === 'date' ? ' ORDER BY ja.applied_at DESC' : ' ORDER BY cs.total_score DESC, ja.applied_at ASC';
-  sql += ' LIMIT ? OFFSET ?';
-  params.push(parseInt(limit), parseInt(offset));
+  sql += ` LIMIT ${safeLimit} OFFSET ${offset}`;
 
   const apps = await query(sql, params);
   res.json({ success: true, data: apps });
@@ -417,6 +471,7 @@ router.get('/:id/applications', auth, requireEmployer, async (req, res) => {
 // PATCH /api/jobs/applications/:appId — employer updates application status (TAT tracked)
 router.patch('/applications/:appId', auth, requireEmployer, async (req, res) => {
   const employer = await queryOne('SELECT company_id FROM employers WHERE user_id = ?', [req.user.id]);
+  if (!employer) return res.status(404).json({ success: false, message: 'Employer profile not found' });
   const app = await queryOne(
     `SELECT ja.*, jp.company_id FROM job_applications ja JOIN job_postings jp ON ja.job_id = jp.id WHERE ja.id = ?`,
     [req.params.appId]
@@ -443,6 +498,10 @@ router.patch('/applications/:appId', auth, requireEmployer, async (req, res) => 
   if (rejection_reason) { updates.push('rejection_reason = ?'); params.push(rejection_reason); }
   if (employer_notes) { updates.push('employer_notes = ?'); params.push(employer_notes); }
   if (hold_until) { updates.push('hold_until = ?'); params.push(hold_until); }
+
+  if (!updates.length) {
+    return res.status(400).json({ success: false, message: 'No valid application fields to update' });
+  }
 
   params.push(req.params.appId);
   await query(`UPDATE job_applications SET ${updates.join(', ')} WHERE id = ?`, params);
@@ -480,18 +539,33 @@ router.patch('/applications/:appId', auth, requireEmployer, async (req, res) => 
     await addScoreEvent(app.candidate_id, 'offer_accepted_and_joined', 'credibility', +10, req.params.appId, 'Successfully joined');
   }
 
-  res.json({ success: true });
+  res.json({ success: true, data: { application_id: req.params.appId, status: status || app.status } });
 });
 
 // GET /api/jobs/applications/:appId/history — full status timeline
 router.get('/applications/:appId/history', auth, async (req, res) => {
-  const app = await queryOne('SELECT id, candidate_id, company_id FROM job_applications ja JOIN job_postings jp ON ja.job_id = jp.id WHERE ja.id = ?', [req.params.appId]);
+  const app = await queryOne(
+    `SELECT ja.id as application_id, ja.candidate_id, jp.company_id
+     FROM job_applications ja
+     JOIN job_postings jp ON ja.job_id = jp.id
+     WHERE ja.id = ?`,
+    [req.params.appId]
+  );
   if (!app) return res.status(404).json({ success: false });
 
   // Verify access
   if (req.user.role === 'candidate') {
     const cand = await queryOne('SELECT id FROM candidates WHERE user_id = ?', [req.user.id]);
-    if (cand?.id !== app.candidate_id) return res.status(403).json({ success: false });
+    if (cand?.id !== app.candidate_id) {
+      return res.status(403).json({ success: false, message: 'Not your application history' });
+    }
+  } else if (req.user.role === 'employer' || req.user.role === 'admin') {
+    const employer = await queryOne('SELECT company_id FROM employers WHERE user_id = ?', [req.user.id]);
+    if (!employer || employer.company_id !== app.company_id) {
+      return res.status(403).json({ success: false, message: 'Not your company application history' });
+    }
+  } else {
+    return res.status(403).json({ success: false, message: 'Forbidden' });
   }
 
   const history = await query(

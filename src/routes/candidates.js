@@ -1,7 +1,7 @@
 const express = require('express');
 const { query, queryOne, transaction } = require('../../config/database');
 const { auth, requireCandidate, requireEmployer } = require('../middleware/auth');
-const { calculateAndSave } = require('../services/careerScore');
+const { calculateAndSave, ensureCareerScore } = require('../services/careerScore');
 const { v4: uuid } = require('uuid');
 const router = express.Router();
 
@@ -11,7 +11,7 @@ router.get('/me', auth, requireCandidate, async (req, res) => {
   if (!candidate) return res.status(404).json({ success: false });
 
   const [score, experiences, documents, certs, scoreHistory] = await Promise.all([
-    queryOne('SELECT * FROM career_scores WHERE candidate_id = ?', [candidate.id]),
+    ensureCareerScore(candidate.id),
     query(`SELECT we.*, 
       (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', a.id, 'title', a.title, 'description', a.description, 
         'is_employer_verified', a.is_employer_verified, 'verified_at', a.verified_at, 'is_editable', a.is_editable))
@@ -32,6 +32,7 @@ router.get('/me', auth, requireCandidate, async (req, res) => {
 // PATCH /api/candidates/me — update profile fields
 router.patch('/me', auth, requireCandidate, async (req, res) => {
   const candidate = await queryOne('SELECT id FROM candidates WHERE user_id = ?', [req.user.id]);
+  if (!candidate) return res.status(404).json({ success: false, message: 'Candidate profile not found' });
   const allowed = ['full_name','headline','summary','location','city','state',
     'current_role','current_company','domains','preferred_locations',
     'expected_salary_min','expected_salary_max','notice_period_days','open_to_work'];
@@ -46,13 +47,14 @@ router.patch('/me', auth, requireCandidate, async (req, res) => {
   if (!updates.length) return res.status(400).json({ success: false, message: 'Nothing to update' });
   params.push(candidate.id);
   await query(`UPDATE candidates SET ${updates.join(', ')} WHERE id = ?`, params);
-  await calculateAndSave(candidate.id);
-  res.json({ success: true });
+  const score = await calculateAndSave(candidate.id);
+  res.json({ success: true, data: { candidate_id: candidate.id, score } });
 });
 
 // POST /api/candidates/me/experience — add work experience
 router.post('/me/experience', auth, requireCandidate, async (req, res) => {
   const candidate = await queryOne('SELECT id FROM candidates WHERE user_id = ?', [req.user.id]);
+  if (!candidate) return res.status(404).json({ success: false, message: 'Candidate profile not found' });
   const { company_name, job_title, department, start_date, end_date, is_current, description } = req.body;
 
   const expId = uuid();
@@ -68,6 +70,7 @@ router.post('/me/experience', auth, requireCandidate, async (req, res) => {
 // POST /api/candidates/me/experience/:expId/achievement — add achievement
 router.post('/me/experience/:expId/achievement', auth, requireCandidate, async (req, res) => {
   const candidate = await queryOne('SELECT id FROM candidates WHERE user_id = ?', [req.user.id]);
+  if (!candidate) return res.status(404).json({ success: false, message: 'Candidate profile not found' });
   const exp = await queryOne('SELECT id FROM work_experiences WHERE id = ? AND candidate_id = ?', [req.params.expId, candidate.id]);
   if (!exp) return res.status(404).json({ success: false });
 
@@ -85,6 +88,7 @@ router.post('/me/experience/:expId/achievement', auth, requireCandidate, async (
 // POST /api/candidates/me/experience/:expId/request-verification — employer verification request
 router.post('/me/experience/:expId/request-verification', auth, requireCandidate, async (req, res) => {
   const candidate = await queryOne('SELECT id, full_name FROM candidates WHERE user_id = ?', [req.user.id]);
+  if (!candidate) return res.status(404).json({ success: false, message: 'Candidate profile not found' });
   const exp = await queryOne(
     'SELECT we.*, c.id as company_id FROM work_experiences we LEFT JOIN companies c ON we.company_id = c.id WHERE we.id = ? AND we.candidate_id = ?',
     [req.params.expId, candidate.id]
@@ -110,8 +114,39 @@ router.post('/me/experience/:expId/request-verification', auth, requireCandidate
   res.json({ success: true, message: 'Verification request sent to employer' });
 });
 
+// GET /api/candidates/search — employer searches candidate database
+router.get('/search', auth, requireEmployer, async (req, res) => {
+  const { q, domain, min_score, max_score, career_stage, location, experience_min, experience_max, page = 1, limit = 20 } = req.query;
+  const safePage = Math.max(parseInt(page, 10) || 1, 1);
+  const safeLimit = Math.min(Math.max(parseInt(limit, 10) || 20, 1), 100);
+  const offset = (safePage - 1) * safeLimit;
+
+  let sql = `SELECT c.id, c.full_name, c.headline, c.current_role, c.location, c.total_experience_months,
+    c.domains, c.career_stage, c.open_to_work,
+    cs.total_score, cs.band, cs.offer_reliability_pct
+    FROM candidates c
+    LEFT JOIN career_scores cs ON c.id = cs.candidate_id
+    WHERE c.open_to_work = 1`;
+  const params = [];
+
+  if (q) { sql += ' AND (c.full_name LIKE ? OR c.headline LIKE ? OR c.current_role LIKE ?)'; params.push(`%${q}%`,`%${q}%`,`%${q}%`); }
+  if (domain) { sql += ' AND JSON_CONTAINS(c.domains, ?)'; params.push(JSON.stringify(domain)); }
+  if (min_score) { sql += ' AND cs.total_score >= ?'; params.push(min_score); }
+  if (max_score) { sql += ' AND cs.total_score <= ?'; params.push(max_score); }
+  if (career_stage) { sql += ' AND c.career_stage = ?'; params.push(career_stage); }
+  if (location) { sql += ' AND c.city LIKE ?'; params.push(`%${location}%`); }
+  if (experience_min) { sql += ' AND c.total_experience_months >= ?'; params.push(experience_min * 12); }
+  if (experience_max) { sql += ' AND c.total_experience_months <= ?'; params.push(experience_max * 12); }
+
+  sql += ` ORDER BY cs.total_score DESC LIMIT ${safeLimit} OFFSET ${offset}`;
+
+  const results = await query(sql, params);
+  res.json({ success: true, data: results });
+});
+
 // GET /api/candidates/:id — public profile (for employers)
 router.get('/:id', auth, requireEmployer, async (req, res) => {
+  await ensureCareerScore(req.params.id);
   const candidate = await queryOne(
     `SELECT c.id, c.full_name, c.headline, c.location, c.current_role, c.current_company,
      c.total_experience_months, c.domains, c.career_stage, c.generation,
@@ -145,35 +180,6 @@ router.get('/:id', auth, requireEmployer, async (req, res) => {
   );
 
   res.json({ success: true, data: { ...candidate, experiences, skill_scores: skillScores, applications_to_this_company: appsToUs } });
-});
-
-// GET /api/candidates/search — employer searches candidate database
-router.get('/search', auth, requireEmployer, async (req, res) => {
-  const { q, domain, min_score, max_score, career_stage, location, experience_min, experience_max, page = 1, limit = 20 } = req.query;
-  const offset = (page - 1) * limit;
-
-  let sql = `SELECT c.id, c.full_name, c.headline, c.current_role, c.location, c.total_experience_months,
-    c.domains, c.career_stage, c.open_to_work,
-    cs.total_score, cs.band, cs.offer_reliability_pct
-    FROM candidates c
-    LEFT JOIN career_scores cs ON c.id = cs.candidate_id
-    WHERE c.open_to_work = 1`;
-  const params = [];
-
-  if (q) { sql += ' AND (c.full_name LIKE ? OR c.headline LIKE ? OR c.current_role LIKE ?)'; params.push(`%${q}%`,`%${q}%`,`%${q}%`); }
-  if (domain) { sql += ' AND JSON_CONTAINS(c.domains, ?)'; params.push(JSON.stringify(domain)); }
-  if (min_score) { sql += ' AND cs.total_score >= ?'; params.push(min_score); }
-  if (max_score) { sql += ' AND cs.total_score <= ?'; params.push(max_score); }
-  if (career_stage) { sql += ' AND c.career_stage = ?'; params.push(career_stage); }
-  if (location) { sql += ' AND c.city LIKE ?'; params.push(`%${location}%`); }
-  if (experience_min) { sql += ' AND c.total_experience_months >= ?'; params.push(experience_min * 12); }
-  if (experience_max) { sql += ' AND c.total_experience_months <= ?'; params.push(experience_max * 12); }
-
-  sql += ' ORDER BY cs.total_score DESC LIMIT ? OFFSET ?';
-  params.push(parseInt(limit), parseInt(offset));
-
-  const results = await query(sql, params);
-  res.json({ success: true, data: results });
 });
 
 module.exports = router;

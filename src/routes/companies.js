@@ -4,6 +4,25 @@ const { auth, requireEmployer } = require('../middleware/auth');
 const { v4: uuid } = require('uuid');
 const router = express.Router();
 
+// GET /api/companies/me — employer profile and company linkage
+router.get('/me', auth, requireEmployer, async (req, res) => {
+  const employer = await queryOne(
+    `SELECT e.id as employer_id, e.company_id, e.full_name, e.designation, e.department, e.is_admin,
+            c.name as company_name, c.slug as company_slug
+     FROM employers e
+     JOIN companies c ON e.company_id = c.id
+     WHERE e.user_id = ?`,
+    [req.user.id]
+  );
+
+  if (!employer) {
+    return res.status(404).json({ success: false, message: 'Employer profile not found' });
+  }
+
+  const company = await queryOne('SELECT * FROM companies WHERE id = ?', [employer.company_id]);
+  res.json({ success: true, data: { employer, company } });
+});
+
 // GET /api/companies/:slug — public company intel page
 router.get('/:slug', auth, async (req, res) => {
   const company = await queryOne('SELECT * FROM companies WHERE slug = ?', [req.params.slug]);
@@ -39,13 +58,11 @@ router.get('/:slug', auth, async (req, res) => {
       [req.user.id, company.id]
     );
     if (isEmployee) {
-      // Fetch leave policy, reimbursements, travel policy
-      const empData = await queryOne('SELECT * FROM companies WHERE id = ?', [company.id]);
-      // In production these would be separate tables; using company JSON fields for now
+      // These fields are reserved for future HR policy tables and are intentionally null for now.
       employeeOnly = {
-        leave_policy: empData.leave_policy || null,
-        reimbursements: empData.reimbursements || null,
-        travel_policy: empData.travel_policy || null,
+        leave_policy: null,
+        reimbursements: null,
+        travel_policy: null,
       };
     }
   }
