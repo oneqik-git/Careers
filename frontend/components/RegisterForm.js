@@ -7,7 +7,7 @@ import { registerUser } from '@/services/auth';
 import { setAuthSession } from '@/utils/authStorage';
 import { getPostAuthRoute } from '@/utils/roles';
 
-const initialCandidate = {
+const initialForm = {
   role: 'candidate',
   full_name: '',
   email: '',
@@ -17,22 +17,33 @@ const initialCandidate = {
   designation: '',
 };
 
-export default function RegisterForm() {
+export default function RegisterForm({
+  fixedRole = null,
+  submitLabel = 'Create account',
+  emailLabel = 'Email',
+  emailPlaceholder = 'name@example.com',
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [form, setForm] = useState(initialCandidate);
+  const [form, setForm] = useState(initialForm);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const isEmployer = useMemo(() => form.role === 'employer', [form.role]);
+  const activeRole = fixedRole || form.role;
+  const isEmployer = useMemo(() => activeRole === 'employer', [activeRole]);
 
   useEffect(() => {
+    if (fixedRole === 'candidate' || fixedRole === 'employer') {
+      setForm((current) => ({ ...current, role: fixedRole }));
+      return;
+    }
+
     const requestedRole = searchParams.get('role');
 
     if (requestedRole === 'candidate' || requestedRole === 'employer') {
       setForm((current) => ({ ...current, role: requestedRole }));
     }
-  }, [searchParams]);
+  }, [fixedRole, searchParams]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -45,7 +56,7 @@ export default function RegisterForm() {
     setIsSubmitting(true);
 
     try {
-      const payload = await registerUser(form);
+      const payload = await registerUser({ ...form, role: activeRole });
       setAuthSession(payload);
       router.push(getPostAuthRoute(payload?.user?.role, searchParams.get('next')));
     } catch (requestError) {
@@ -57,44 +68,48 @@ export default function RegisterForm() {
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
-      <label className="block">
-        <span className="mb-2 block text-sm font-medium text-[var(--text-soft)]">Role</span>
-        <select
-          className="oq-select text-sm"
-          name="role"
-          value={form.role}
-          onChange={handleChange}
-        >
-          <option value="candidate">Candidate</option>
-          <option value="employer">Employer</option>
-        </select>
-      </label>
+      {!fixedRole ? (
+        <label className="block">
+          <span className="mb-2 block text-sm font-medium text-[var(--text-soft)]">Role</span>
+          <select
+            className="oq-select text-sm"
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+          >
+            <option value="candidate">Candidate</option>
+            <option value="employer">Employer</option>
+          </select>
+        </label>
+      ) : null}
 
       <FormField
         label="Full name"
         name="full_name"
         value={form.full_name}
         onChange={handleChange}
-        placeholder="Your full name"
+        placeholder={isEmployer ? 'Your full name' : 'Your full name'}
         required
       />
       <FormField
-        label="Email"
+        label={emailLabel}
         name="email"
         type="email"
         value={form.email}
         onChange={handleChange}
-        placeholder="name@example.com"
+        placeholder={emailPlaceholder}
         required
       />
-      <FormField
-        label="Phone"
-        name="phone"
-        value={form.phone}
-        onChange={handleChange}
-        placeholder="Optional for employer, required for candidate"
-        required={!isEmployer}
-      />
+      {!isEmployer ? (
+        <FormField
+          label="Phone"
+          name="phone"
+          value={form.phone}
+          onChange={handleChange}
+          placeholder="Indian mobile number"
+          required
+        />
+      ) : null}
       <FormField
         label="Password"
         name="password"
@@ -120,19 +135,19 @@ export default function RegisterForm() {
             name="designation"
             value={form.designation}
             onChange={handleChange}
-            placeholder="Optional"
+            placeholder="Talent lead, founder, hiring manager..."
           />
         </>
       ) : null}
 
-      {error ? <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="rounded-[1.2rem] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p> : null}
 
       <button
         className="oq-button-primary w-full"
         type="submit"
         disabled={isSubmitting}
       >
-        {isSubmitting ? 'Creating account...' : 'Create account'}
+        {isSubmitting ? 'Creating account...' : submitLabel}
       </button>
     </form>
   );

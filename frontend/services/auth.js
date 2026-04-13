@@ -21,7 +21,6 @@ export async function registerUser(payload) {
   const body = payload.role === 'employer'
     ? {
         email: payload.email,
-        phone: payload.phone || undefined,
         password: payload.password,
         full_name: payload.full_name,
         company_name: payload.company_name,

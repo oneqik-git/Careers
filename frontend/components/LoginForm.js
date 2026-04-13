@@ -12,7 +12,16 @@ const initialState = {
   password: '',
 };
 
-export default function LoginForm() {
+const roleLabels = {
+  candidate: 'candidate',
+  employer: 'employer',
+};
+
+export default function LoginForm({
+  expectedRole = null,
+  submitLabel = 'Sign in',
+  emailPlaceholder = 'name@example.com',
+}) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [form, setForm] = useState(initialState);
@@ -31,6 +40,11 @@ export default function LoginForm() {
 
     try {
       const payload = await loginUser(form);
+
+      if (expectedRole && payload?.user?.role !== expectedRole) {
+        throw new Error(`This sign-in page is for ${roleLabels[expectedRole] || expectedRole} accounts.`);
+      }
+
       setAuthSession(payload);
       router.push(getPostAuthRoute(payload?.user?.role, searchParams.get('next')));
     } catch (requestError) {
@@ -48,7 +62,7 @@ export default function LoginForm() {
         type="email"
         value={form.email}
         onChange={handleChange}
-        placeholder="name@example.com"
+        placeholder={emailPlaceholder}
         required
       />
       <FormField
@@ -61,14 +75,14 @@ export default function LoginForm() {
         required
       />
 
-      {error ? <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p> : null}
+      {error ? <p className="rounded-[1.2rem] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p> : null}
 
       <button
         className="oq-button-primary w-full"
         type="submit"
         disabled={isSubmitting}
       >
-        {isSubmitting ? 'Signing in...' : 'Sign in'}
+        {isSubmitting ? 'Signing in...' : submitLabel}
       </button>
     </form>
   );

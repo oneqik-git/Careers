@@ -1,18 +1,28 @@
 import Link from 'next/link';
 
-export default function PageHero({ eyebrow, title, description, badges = [], actions = [], aside }) {
+export default function PageHero({
+  eyebrow,
+  title,
+  description,
+  badges = [],
+  actions = [],
+  aside,
+  children,
+  className = '',
+}) {
   return (
-    <section className="oq-hero rounded-[32px] p-6 text-white lg:p-8">
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-start">
+    <section className={`oq-hero rounded-[2.2rem] p-6 text-white lg:p-8 ${className}`.trim()}>
+      <div className="oq-grid-overlay absolute inset-0 opacity-30" aria-hidden="true" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,0.08),transparent_24%),radial-gradient(circle_at_82%_30%,rgba(239,138,36,0.16),transparent_18%)]" aria-hidden="true" />
+
+      <div className="relative grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
         <div>
-          {eyebrow ? (
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/78">{eyebrow}</p>
-          ) : null}
-          <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white">{title}</h2>
-          {description ? <p className="mt-3 max-w-3xl text-sm text-slate-100/86 sm:text-base">{description}</p> : null}
+          {eyebrow ? <p className="oq-kicker text-white/82">{eyebrow}</p> : null}
+          <h2 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight text-white sm:text-5xl">{title}</h2>
+          {description ? <p className="mt-4 max-w-3xl text-base leading-8 text-white/82">{description}</p> : null}
 
           {badges.length ? (
-            <div className="mt-5 flex flex-wrap gap-2">
+            <div className="mt-6 flex flex-wrap gap-2.5">
               {badges.map((badge, index) => {
                 const label = typeof badge === 'string' ? badge : badge?.label;
 
@@ -23,7 +33,7 @@ export default function PageHero({ eyebrow, title, description, badges = [], act
                 return (
                   <span
                     key={`${label}-${index}`}
-                    className="rounded-full border border-white/12 bg-white/10 px-3 py-1.5 text-sm text-slate-100"
+                    className="rounded-full border border-white/12 bg-white/10 px-3.5 py-2 text-sm font-medium text-white/90 backdrop-blur"
                   >
                     {label}
                   </span>
@@ -33,38 +43,37 @@ export default function PageHero({ eyebrow, title, description, badges = [], act
           ) : null}
 
           {actions.length ? (
-            <div className="mt-6 flex flex-wrap gap-3">
+            <div className="mt-7 flex flex-wrap gap-3">
               {actions.map((action) => {
-                const className = `${
-                  action.variant === 'secondary'
-                    ? 'oq-button-secondary border-white/10 bg-white/10 text-white hover:bg-white/15'
-                    : 'oq-button-primary'
-                }`;
+                const className = action.variant === 'secondary'
+                  ? 'oq-button-secondary border-white/14 bg-white/10 text-white hover:bg-white/14'
+                  : 'oq-button-primary';
 
                 if (action.href) {
                   return (
-                    <Link key={action.href} className={className} href={action.href}>
+                    <Link key={`${action.href}-${action.label}`} className={className} href={action.href}>
                       {action.label}
                     </Link>
                   );
                 }
 
                 return (
-                  <button
-                    key={action.label}
-                    className={className}
-                    onClick={action.onClick}
-                    type="button"
-                  >
+                  <button key={action.label} className={className} onClick={action.onClick} type="button">
                     {action.label}
                   </button>
                 );
               })}
             </div>
           ) : null}
+
+          {children ? <div className="mt-8">{children}</div> : null}
         </div>
 
-        {aside ? <div className="rounded-[28px] border border-white/12 bg-white/10 p-5">{aside}</div> : null}
+        {aside ? (
+          <div className="relative rounded-[1.8rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.13),rgba(255,255,255,0.06))] p-5 shadow-[0_20px_42px_rgba(3,10,20,0.22)] backdrop-blur">
+            {aside}
+          </div>
+        ) : null}
       </div>
     </section>
   );

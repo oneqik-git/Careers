@@ -366,6 +366,7 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
   let sql = `SELECT jp.id, jp.title, jp.department, jp.job_function, jp.level,
     jp.work_mode, jp.location, jp.salary_min, jp.salary_max, jp.salary_disclosed,
     jp.experience_min_years, jp.experience_max_years, jp.openings, jp.applications_count,
+    jp.is_featured,
     jp.created_at, jp.tat_hours, jp.required_skills, jp.preferred_skills,
     c.name as company_name, c.logo_url, c.industry, c.employee_count_min, c.employee_count_max,
     cs.total_score as company_score,

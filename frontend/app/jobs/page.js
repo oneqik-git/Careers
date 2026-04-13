@@ -37,7 +37,7 @@ function PublicJobsContent() {
           q: searchParams.get('q') || undefined,
           domain: searchParams.get('domain') || undefined,
           sort: 'date',
-          limit: 20,
+          limit: 24,
         });
         setJobs(response?.data || []);
       } catch (requestError) {
@@ -86,25 +86,29 @@ function PublicJobsContent() {
     <PublicShell>
       <div className="space-y-8">
         <PageHero
-          eyebrow="Public jobs"
-          title="Browse open roles without signing in."
-          description="Jobs list and job detail are now public read surfaces. Protected action starts when candidates apply or employers move into workflow steps."
+          eyebrow="Open roles"
+          title="Explore roles that are easier to take seriously."
+          description="Browse publicly, narrow by area, and move into sign-in only when you want to apply. The front door stays open. The workflow stays protected."
           badges={[
             activeDomain ? `Cluster: ${activeDomain}` : 'All departments',
             `${jobs.length} visible role${jobs.length === 1 ? '' : 's'}`,
           ]}
           actions={[
-            { label: 'Candidate sign up', href: '/register?role=candidate' },
-            { label: 'Employer sign in', href: '/login', variant: 'secondary' },
+            { label: 'Create Profile', href: '/register' },
+            { label: 'Employer Entry', href: '/employers', variant: 'secondary' },
           ]}
           aside={(
-            <form className="space-y-3" onSubmit={handleSearchSubmit}>
+            <form className="space-y-4" onSubmit={handleSearchSubmit}>
+              <div>
+                <p className="text-xs uppercase tracking-[0.28em] text-white/72">Find your next role</p>
+                <p className="mt-2 text-sm leading-6 text-white/82">Search by title, team, or keyword and move straight into the public job layer.</p>
+              </div>
               <label className="block">
                 <span className="mb-2 block text-sm font-medium text-white/84">Search jobs</span>
                 <input
-                  className="oq-input border-white/10 bg-white/12 text-white placeholder:text-white/58"
+                  className="oq-input border-white/12 bg-white/10 text-white placeholder:text-white/58"
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Role, company, or keyword"
+                  placeholder="Product, sales, support, operations..."
                   value={query}
                 />
               </label>
@@ -151,10 +155,10 @@ function PublicJobsContent() {
                 footer={(
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-sm text-[var(--text-soft)]">
-                      Public browsing is open. Protected apply starts from the role page.
+                      Browse openly now. Candidate-only apply starts from the role page.
                     </p>
-                    <Link className="text-sm font-semibold text-[var(--brand-accent)]" href={`/jobs/${job.id}`}>
-                      Review job detail
+                    <Link className="oq-link text-sm" href={`/jobs/${job.id}`}>
+                      Review full role
                     </Link>
                   </div>
                 )}

@@ -26,7 +26,7 @@ export default function PublicApplyAction({ jobId }) {
   }
 
   function handleRegister() {
-    router.push(`/register?role=candidate&next=${encodeURIComponent(`/candidate/jobs/detail?jobId=${jobId}`)}`);
+    router.push(`/register?next=${encodeURIComponent(`/candidate/jobs/detail?jobId=${jobId}`)}`);
   }
 
   return (

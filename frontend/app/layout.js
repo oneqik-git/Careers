@@ -2,8 +2,8 @@ import './globals.css';
 import ThemeProvider from '@/components/ThemeProvider';
 
 export const metadata = {
-  title: 'OQ Career | OneQik',
-  description: 'Public-first careers discovery with protected candidate and employer workflows.',
+  title: 'Careers by OneQik',
+  description: 'Candidate-first career discovery with protected candidate and employer workflows.',
 };
 
 export default function RootLayout({ children }) {

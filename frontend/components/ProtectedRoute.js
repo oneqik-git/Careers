@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { getStoredRole, getStoredToken } from '@/utils/authStorage';
 import { getDashboardRoute } from '@/utils/roles';
 
 export default function ProtectedRoute({ allowedRoles, children }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
@@ -14,7 +15,10 @@ export default function ProtectedRoute({ allowedRoles, children }) {
     const role = getStoredRole();
 
     if (!token || !role) {
-      router.replace('/login');
+      const prefersEmployerEntry = allowedRoles.every((allowedRole) => allowedRole === 'employer' || allowedRole === 'admin');
+      const loginPath = prefersEmployerEntry ? '/employer/login' : '/login';
+      const next = pathname && pathname.startsWith('/') ? `?next=${encodeURIComponent(pathname)}` : '';
+      router.replace(`${loginPath}${next}`);
       return;
     }
 
@@ -24,7 +28,7 @@ export default function ProtectedRoute({ allowedRoles, children }) {
     }
 
     setIsReady(true);
-  }, [allowedRoles, router]);
+  }, [allowedRoles, pathname, router]);
 
   if (!isReady) {
     return <div className="flex min-h-screen items-center justify-center text-sm text-slate-600">Checking access...</div>;

@@ -9,6 +9,21 @@ const { asyncHandler, handleValidationErrors, sendError, sendSuccess } = require
 const { normalizeCareerScore } = require('../utils/normalize');
 
 const router = express.Router();
+const blockedEmployerDomains = new Set([
+  'gmail.com',
+  'yahoo.com',
+  'yahoo.co.in',
+  'outlook.com',
+  'hotmail.com',
+  'live.com',
+  'icloud.com',
+  'aol.com',
+  'proton.me',
+  'protonmail.com',
+  'gmx.com',
+  'mail.com',
+  'rediffmail.com',
+]);
 
 function generateTokens(userId, role) {
   const access = jwt.sign({ userId, role }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
@@ -120,7 +135,19 @@ router.post('/register/candidate', [
 
 // POST /api/auth/register/employer
 router.post('/register/employer', [
-  body('email').isEmail().withMessage('A valid email is required').normalizeEmail(),
+  body('email')
+    .isEmail()
+    .withMessage('A valid work email is required')
+    .normalizeEmail()
+    .custom((value) => {
+      const domain = String(value).split('@')[1]?.toLowerCase();
+
+      if (!domain || blockedEmployerDomains.has(domain)) {
+        throw new Error('Use your work email. Personal email providers are not allowed for employer registration.');
+      }
+
+      return true;
+    }),
   body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
   body('full_name').isLength({ min: 2 }).withMessage('Full name must be at least 2 characters long'),
   body('company_name').isLength({ min: 2 }).withMessage('Company name must be at least 2 characters long'),
@@ -129,16 +156,14 @@ router.post('/register/employer', [
     return;
   }
 
-  const { email, phone, password, full_name, company_name, designation } = req.body;
-  const existing = phone
-    ? await queryOne('SELECT id FROM users WHERE email = ? OR phone = ?', [email, phone])
-    : await queryOne('SELECT id FROM users WHERE email = ?', [email]);
+  const { email, password, full_name, company_name, designation } = req.body;
+  const existing = await queryOne('SELECT id FROM users WHERE email = ?', [email]);
 
   if (existing) {
     return sendError(res, {
       status: 409,
       code: 'USER_ALREADY_EXISTS',
-      message: 'Email or phone already registered',
+      message: 'Email already registered',
     });
   }
 
@@ -152,7 +177,7 @@ router.post('/register/employer', [
 
       await conn.execute(
         'INSERT INTO users (id, email, phone, password_hash, role) VALUES (?, ?, ?, ?, ?)',
-        [userId, email, phone || null, hash, 'employer']
+        [userId, email, null, hash, 'employer']
       );
       await conn.execute(
         'INSERT INTO companies (id, name, slug) VALUES (?, ?, ?)',

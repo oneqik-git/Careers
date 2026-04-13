@@ -10,14 +10,20 @@ export default function LoginPage() {
 
   return (
     <AuthLayout
-      title="Sign in to OQ Career"
-      subtitle="Use your existing candidate or employer account to continue."
+      variant="candidate"
+      eyebrow="Candidate sign in"
+      title="Sign in"
+      subtitle="Pick up where you left off."
       footerLabel="Need an account?"
       footerHref="/register"
-      footerText="Register"
+      footerText="Create your profile"
+      sidePoints={[
+        'Browse publicly before you sign in.',
+        'Continue applications and track progress after auth.',
+      ]}
     >
       <Suspense fallback={<div className="text-sm text-[var(--text-soft)]">Loading sign-in...</div>}>
-        <LoginForm />
+        <LoginForm submitLabel="Sign in" />
       </Suspense>
     </AuthLayout>
   );
