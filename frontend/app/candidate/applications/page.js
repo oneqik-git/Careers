@@ -26,8 +26,8 @@ export default function CandidateApplicationsPage() {
     setError(null);
 
     try {
-      const response = await fetchMyApplications();
-      setApplications(response?.data || []);
+      const applicationsData = await fetchMyApplications();
+      setApplications(applicationsData || []);
     } catch (requestError) {
       setError(requestError);
     } finally {

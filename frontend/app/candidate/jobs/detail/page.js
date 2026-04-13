@@ -41,6 +41,8 @@ function CandidateJobDetailContent() {
   const [successMessage, setSuccessMessage] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const currentApplication = job?.current_application || null;
+  const hasApplied = Boolean(currentApplication?.id);
 
   async function loadJob() {
     if (!jobId) {
@@ -56,9 +58,10 @@ function CandidateJobDetailContent() {
       const response = await fetchJobDetail(jobId);
       const nextJob = response?.data || null;
       setJob(nextJob);
-      setAnswers(
-        Object.fromEntries((nextJob?.questions || []).map((question) => [question.id, '']))
-      );
+      setAnswers((current) => {
+        const nextAnswers = Object.fromEntries((nextJob?.questions || []).map((question) => [question.id, current[question.id] || '']));
+        return nextAnswers;
+      });
     } catch (requestError) {
       setError(requestError);
     } finally {
@@ -90,6 +93,14 @@ function CandidateJobDetailContent() {
     event.preventDefault();
     setSubmitError(null);
     setSuccessMessage('');
+
+    if (hasApplied) {
+      setSubmitError({
+        message: 'You have already applied to this role. Open My Applications to track the current status.',
+      });
+      return;
+    }
+
     const requiredQuestion = (job?.questions || []).find(
       (question) => question.is_required && !answers[question.id]?.trim()
     );
@@ -104,7 +115,7 @@ function CandidateJobDetailContent() {
     setIsSubmitting(true);
 
     try {
-      const response = await applyToJob(jobId, {
+      const application = await applyToJob(jobId, {
         cover_note: coverNote.trim() || null,
         answers: (job?.questions || [])
           .filter((question) => answers[question.id]?.trim())
@@ -114,7 +125,15 @@ function CandidateJobDetailContent() {
           })),
       });
 
-      setSuccessMessage(`Application submitted. Application ID: ${response?.data?.application_id}`);
+      setSuccessMessage(`Application submitted successfully. Current status: ${formatStatus(application?.status || 'submitted')}.`);
+      setJob((current) => current ? ({
+        ...current,
+        current_application: {
+          id: application?.application_id,
+          status: application?.status || 'submitted',
+          applied_at: new Date().toISOString(),
+        },
+      }) : current);
     } catch (requestError) {
       setSubmitError(requestError);
     } finally {
@@ -167,6 +186,12 @@ function CandidateJobDetailContent() {
                   <div>
                     <p className="text-xs uppercase tracking-[0.24em] text-sky-100/80">Prescreening</p>
                     <p className="mt-1 text-sm text-slate-100">{job.questions?.length ?? 0} question(s)</p>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.24em] text-sky-100/80">Your status</p>
+                    <p className="mt-1 text-sm text-slate-100">
+                      {hasApplied ? formatStatus(currentApplication.status) : 'Not applied yet'}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -263,9 +288,23 @@ function CandidateJobDetailContent() {
             <div className="space-y-6">
               <SectionCard
                 title="Apply to this role"
-                description="The current prototype uses text responses for the cover note and all prescreen prompts."
+                description={hasApplied
+                  ? 'You already applied to this role. Review the current status below or open My Applications for the full tracker.'
+                  : 'The current prototype uses text responses for the cover note and all prescreen prompts.'}
               >
                 <form className="space-y-4" onSubmit={handleApply}>
+                  {hasApplied ? (
+                    <div className="rounded-[24px] border border-emerald-200 bg-emerald-50 px-4 py-4">
+                      <p className="text-sm font-semibold text-emerald-700">Already applied</p>
+                      <p className="mt-2 text-sm text-emerald-700">
+                        Current application status: {formatStatus(currentApplication.status)}.
+                      </p>
+                      <p className="mt-2 text-sm text-emerald-700">
+                        {currentApplication.applied_at ? `Applied ${new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(currentApplication.applied_at))}.` : 'Your application is already on file.'}
+                      </p>
+                    </div>
+                  ) : null}
+
                   <div>
                     <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor="cover-note">
                       Cover note
@@ -273,6 +312,7 @@ function CandidateJobDetailContent() {
                     <textarea
                       id="cover-note"
                       className="min-h-28 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-500"
+                      disabled={hasApplied}
                       onChange={(event) => setCoverNote(event.target.value)}
                       placeholder="Optional note to the employer"
                       value={coverNote}
@@ -288,6 +328,7 @@ function CandidateJobDetailContent() {
                       <textarea
                         id={question.id}
                         className="min-h-24 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-500"
+                        disabled={hasApplied}
                         onChange={(event) => handleAnswerChange(question.id, event.target.value)}
                         placeholder="Enter your answer"
                         value={answers[question.id] || ''}
@@ -308,11 +349,19 @@ function CandidateJobDetailContent() {
                     ) : null}
                     <button
                       className="w-full rounded-2xl bg-slate-950 px-5 py-3 text-sm text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || hasApplied}
                       type="submit"
                     >
-                      {isSubmitting ? 'Submitting...' : 'Submit application'}
+                      {hasApplied ? 'Already applied' : isSubmitting ? 'Submitting...' : 'Submit application'}
                     </button>
+                    {hasApplied ? (
+                      <Link
+                        className="inline-flex w-full items-center justify-center rounded-2xl border border-slate-300 px-4 py-2.5 text-sm text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
+                        href="/candidate/applications"
+                      >
+                        Go to My Applications
+                      </Link>
+                    ) : null}
                   </div>
                 </form>
               </SectionCard>

@@ -33,8 +33,8 @@ function CandidateApplicationHistoryContent() {
     setError(null);
 
     try {
-      const response = await fetchApplicationHistory(applicationId);
-      setEntries(response?.data || []);
+      const historyEntries = await fetchApplicationHistory(applicationId);
+      setEntries(historyEntries || []);
     } catch (requestError) {
       setError(requestError);
     } finally {

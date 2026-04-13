@@ -245,6 +245,19 @@ router.get('/:id', optionalAuth, asyncHandler(async (req, res) => {
     [req.params.id]
   );
 
+  let currentApplication = null;
+  if (req.user?.role === 'candidate') {
+    const candidate = await queryOne('SELECT id FROM candidates WHERE user_id = ?', [req.user.id]);
+    if (candidate?.id) {
+      currentApplication = await queryOne(
+        `SELECT id, status, applied_at, status_updated_at
+         FROM job_applications
+         WHERE job_id = ? AND candidate_id = ?`,
+        [req.params.id, candidate.id]
+      );
+    }
+  }
+
   if (req.user?.role === 'employer') {
     const employer = await queryOne('SELECT company_id FROM employers WHERE user_id = ?', [req.user.id]);
     if (employer?.company_id === job.company_id) {
@@ -257,6 +270,7 @@ router.get('/:id', optionalAuth, asyncHandler(async (req, res) => {
         data: {
           ...normalizeJob(job),
           questions: fullQuestions,
+          current_application: currentApplication,
         },
       });
     }
@@ -266,6 +280,7 @@ router.get('/:id', optionalAuth, asyncHandler(async (req, res) => {
     data: {
       ...normalizeJob(job),
       questions,
+      current_application: currentApplication,
     },
   });
 }));
@@ -653,7 +668,7 @@ router.get('/:id/applications', auth, requireEmployer, asyncHandler(async (req, 
   const params = [employer.company_id, employer.company_id, req.params.id];
 
   let sql = `SELECT ja.id, ja.status, ja.career_score_at_apply, ja.ai_match_score, ja.applied_at,
-     ja.employer_notes, ja.tat_breach,
+     ja.cover_note, ja.employer_notes, ja.tat_breach,
      c.id as candidate_id, c.full_name, c.headline, c.location, c.total_experience_months,
      cs.total_score as current_career_score, cs.offer_reliability_pct, cs.no_show_count,
      (SELECT COUNT(*) FROM job_applications ja2
@@ -677,8 +692,43 @@ router.get('/:id/applications', auth, requireEmployer, asyncHandler(async (req, 
   const apps = await query(sql, params);
   const items = apps.map((application) => ({
     ...application,
+    cover_note: application.cover_note || null,
     other_roles_applied_list: splitCsv(application.other_roles_applied),
   }));
+
+  if (items.length) {
+    const answerRows = await query(
+      `SELECT pa.application_id, pa.answer_type, pa.answer_text, pa.video_url, pa.submitted_at,
+       pq.question_text, pq.question_type, pq.display_order
+       FROM prescreening_answers pa
+       JOIN prescreening_questions pq ON pq.id = pa.question_id
+       WHERE pa.application_id IN (${items.map(() => '?').join(',')})
+       ORDER BY pa.application_id, pq.display_order ASC`,
+      items.map((application) => application.id)
+    );
+
+    const answersByApplicationId = answerRows.reduce((accumulator, answer) => {
+      if (!accumulator[answer.application_id]) {
+        accumulator[answer.application_id] = [];
+      }
+
+      accumulator[answer.application_id].push({
+        answer_type: answer.answer_type,
+        answer_text: answer.answer_text,
+        video_url: answer.video_url,
+        submitted_at: answer.submitted_at,
+        question_text: answer.question_text,
+        question_type: answer.question_type,
+        display_order: answer.display_order,
+      });
+
+      return accumulator;
+    }, {});
+
+    items.forEach((application) => {
+      application.prescreen_answers = answersByApplicationId[application.id] || [];
+    });
+  }
 
   return sendSuccess(res, {
     data: items,

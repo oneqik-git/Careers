@@ -30,6 +30,18 @@ const statusOptions = [
   'withdrawn',
 ];
 
+function renderAnswerValue(answer) {
+  if (answer.answer_text) {
+    return answer.answer_text;
+  }
+
+  if (answer.video_url) {
+    return answer.video_url;
+  }
+
+  return 'No answer content provided.';
+}
+
 function ApplicantsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -53,11 +65,11 @@ function ApplicantsContent() {
     setError(null);
 
     try {
-      const [applicationsResponse, jobResponse] = await Promise.all([
+      const [applicationsData, jobResponse] = await Promise.all([
         fetchJobApplications(jobId),
         fetchJobDetail(jobId),
       ]);
-      const items = applicationsResponse?.data || [];
+      const items = applicationsData || [];
       setApplications(items);
       setJobDetails(jobResponse?.data || null);
       setDrafts(
@@ -243,6 +255,58 @@ function ApplicantsContent() {
                       {application.other_roles_applied_list?.length
                         ? `Also applied to: ${application.other_roles_applied_list.join(', ')}`
                         : 'No other applications to your company are shown for this candidate.'}
+                    </div>
+
+                    {application.cover_note ? (
+                      <div className="rounded-[24px] border border-slate-200 bg-slate-50 px-4 py-4">
+                        <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Cover note</p>
+                        <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-700">{application.cover_note}</p>
+                      </div>
+                    ) : null}
+
+                    <div className="rounded-[24px] border border-slate-200 bg-slate-50 px-4 py-4">
+                      <div className="flex items-center justify-between gap-3">
+                        <div>
+                          <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Prescreen answers</p>
+                          <p className="mt-2 text-sm text-slate-600">
+                            {application.prescreen_answers?.length
+                              ? `${application.prescreen_answers.length} submitted response${application.prescreen_answers.length === 1 ? '' : 's'}`
+                              : 'No prescreen answers were submitted for this application.'}
+                          </p>
+                        </div>
+                      </div>
+
+                      {application.prescreen_answers?.length ? (
+                        <div className="mt-4 space-y-3">
+                          {application.prescreen_answers.map((answer, index) => (
+                            <div key={`${application.id}-answer-${index}`} className="rounded-2xl border border-slate-200 bg-white px-4 py-4">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">
+                                  Question {answer.display_order || index + 1}
+                                </span>
+                                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">
+                                  {formatStatus(answer.question_type || answer.answer_type || 'text')}
+                                </span>
+                                <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-600">
+                                  {formatStatus(answer.answer_type || 'text')} answer
+                                </span>
+                              </div>
+                              <p className="mt-3 text-sm font-medium text-slate-900">{answer.question_text}</p>
+                              <p className="mt-3 whitespace-pre-wrap text-sm leading-6 text-slate-700">{renderAnswerValue(answer)}</p>
+                              {answer.video_url ? (
+                                <a
+                                  className="mt-3 inline-flex text-sm font-semibold text-[var(--brand-accent)]"
+                                  href={answer.video_url}
+                                  rel="noreferrer"
+                                  target="_blank"
+                                >
+                                  Open video response
+                                </a>
+                              ) : null}
+                            </div>
+                          ))}
+                        </div>
+                      ) : null}
                     </div>
                   </div>
 
