@@ -1,11 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import FormField from '@/components/FormField';
 import { registerUser } from '@/services/auth';
 import { setAuthSession } from '@/utils/authStorage';
-import { getDashboardRoute } from '@/utils/roles';
+import { getPostAuthRoute } from '@/utils/roles';
 
 const initialCandidate = {
   role: 'candidate',
@@ -19,11 +19,20 @@ const initialCandidate = {
 
 export default function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [form, setForm] = useState(initialCandidate);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const isEmployer = useMemo(() => form.role === 'employer', [form.role]);
+
+  useEffect(() => {
+    const requestedRole = searchParams.get('role');
+
+    if (requestedRole === 'candidate' || requestedRole === 'employer') {
+      setForm((current) => ({ ...current, role: requestedRole }));
+    }
+  }, [searchParams]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -38,7 +47,7 @@ export default function RegisterForm() {
     try {
       const payload = await registerUser(form);
       setAuthSession(payload);
-      router.push(getDashboardRoute(payload?.user?.role));
+      router.push(getPostAuthRoute(payload?.user?.role, searchParams.get('next')));
     } catch (requestError) {
       setError(requestError.message || 'Unable to register.');
     } finally {
@@ -49,9 +58,9 @@ export default function RegisterForm() {
   return (
     <form className="space-y-4" onSubmit={handleSubmit}>
       <label className="block">
-        <span className="mb-2 block text-sm font-medium text-slate-700">Role</span>
+        <span className="mb-2 block text-sm font-medium text-[var(--text-soft)]">Role</span>
         <select
-          className="w-full rounded-2xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-sky-600 focus:ring-2 focus:ring-sky-100"
+          className="oq-select text-sm"
           name="role"
           value={form.role}
           onChange={handleChange}
@@ -119,7 +128,7 @@ export default function RegisterForm() {
       {error ? <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p> : null}
 
       <button
-        className="w-full rounded-2xl bg-slate-950 px-4 py-3 text-sm font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+        className="oq-button-primary w-full"
         type="submit"
         disabled={isSubmitting}
       >

@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import FormField from '@/components/FormField';
 import { loginUser } from '@/services/auth';
 import { setAuthSession } from '@/utils/authStorage';
-import { getDashboardRoute } from '@/utils/roles';
+import { getPostAuthRoute } from '@/utils/roles';
 
 const initialState = {
   email: '',
@@ -14,6 +14,7 @@ const initialState = {
 
 export default function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [form, setForm] = useState(initialState);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,7 +32,7 @@ export default function LoginForm() {
     try {
       const payload = await loginUser(form);
       setAuthSession(payload);
-      router.push(getDashboardRoute(payload?.user?.role));
+      router.push(getPostAuthRoute(payload?.user?.role, searchParams.get('next')));
     } catch (requestError) {
       setError(requestError.message || 'Unable to sign in.');
     } finally {
@@ -63,7 +64,7 @@ export default function LoginForm() {
       {error ? <p className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p> : null}
 
       <button
-        className="w-full rounded-2xl bg-sky-700 px-4 py-3 text-sm font-medium text-white transition hover:bg-sky-800 disabled:cursor-not-allowed disabled:bg-slate-400"
+        className="oq-button-primary w-full"
         type="submit"
         disabled={isSubmitting}
       >

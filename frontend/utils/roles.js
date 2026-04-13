@@ -9,3 +9,21 @@ export function getDashboardRoute(role) {
 
   return '/login';
 }
+
+export function getPostAuthRoute(role, nextPath) {
+  const dashboardRoute = getDashboardRoute(role);
+
+  if (!nextPath || typeof nextPath !== 'string' || !nextPath.startsWith('/')) {
+    return dashboardRoute;
+  }
+
+  if (nextPath.startsWith('/candidate') && role !== 'candidate') {
+    return dashboardRoute;
+  }
+
+  if (nextPath.startsWith('/employer') && role !== 'employer' && role !== 'admin') {
+    return dashboardRoute;
+  }
+
+  return nextPath;
+}

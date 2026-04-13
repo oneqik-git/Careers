@@ -1,5 +1,6 @@
 'use client';
 
+import { Suspense } from 'react';
 import AuthLayout from '@/components/AuthLayout';
 import LoginForm from '@/components/LoginForm';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
@@ -15,7 +16,9 @@ export default function LoginPage() {
       footerHref="/register"
       footerText="Register"
     >
-      <LoginForm />
+      <Suspense fallback={<div className="text-sm text-[var(--text-soft)]">Loading sign-in...</div>}>
+        <LoginForm />
+      </Suspense>
     </AuthLayout>
   );
 }

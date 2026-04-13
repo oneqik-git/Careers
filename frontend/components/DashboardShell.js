@@ -3,29 +3,31 @@
 import { useRouter } from 'next/navigation';
 import { clearAuthStorage, getStoredRole } from '@/utils/authStorage';
 import DashboardNav from '@/components/DashboardNav';
+import ThemeToggle from '@/components/ThemeToggle';
 
 export default function DashboardShell({ title, subtitle, onRefresh, navItems = [], children }) {
   const router = useRouter();
 
   function handleLogout() {
     clearAuthStorage();
-    router.push('/login');
+    router.push('/');
   }
 
   return (
     <main className="min-h-screen px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
-        <div className="rounded-[32px] border border-white/70 bg-white/90 p-5 shadow-[0_24px_80px_rgba(15,23,42,0.10)] backdrop-blur sm:p-6">
-          <div className="flex flex-col gap-4 border-b border-slate-200 pb-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="oq-shell rounded-[32px] p-5 sm:p-6">
+          <div className="flex flex-col gap-4 border-b border-[var(--border)] pb-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-sky-700">{getStoredRole() || 'dashboard'}</p>
-              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">{title}</h1>
-              <p className="mt-2 max-w-2xl text-sm text-slate-600">{subtitle}</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-[var(--text-muted)]">{getStoredRole() || 'dashboard'}</p>
+              <h1 className="mt-2 text-3xl font-semibold tracking-tight text-[var(--text)]">{title}</h1>
+              <p className="mt-2 max-w-2xl text-sm text-[var(--text-soft)]">{subtitle}</p>
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-wrap gap-3">
+              <ThemeToggle />
               {onRefresh ? (
                 <button
-                  className="rounded-2xl border border-slate-300 px-4 py-2 text-sm text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
+                  className="oq-button-secondary"
                   type="button"
                   onClick={onRefresh}
                 >
@@ -33,7 +35,7 @@ export default function DashboardShell({ title, subtitle, onRefresh, navItems = 
                 </button>
               ) : null}
               <button
-                className="rounded-2xl bg-slate-950 px-4 py-2 text-sm text-white transition hover:bg-slate-800"
+                className="oq-button-primary"
                 type="button"
                 onClick={handleLogout}
               >

@@ -1,7 +1,7 @@
 const express = require('express');
 const { body } = require('express-validator');
 const { query, queryOne, transaction } = require('../../config/database');
-const { auth, requireCandidate, requireEmployer } = require('../middleware/auth');
+const { auth, optionalAuth, requireCandidate, requireEmployer } = require('../middleware/auth');
 const { calculateAndSave, ensureCareerScore } = require('../services/careerScore');
 const { v4: uuid } = require('uuid');
 const {
@@ -221,7 +221,7 @@ router.get('/employer', auth, requireEmployer, asyncHandler(async (req, res) => 
 }));
 
 // GET /api/jobs/:id
-router.get('/:id', auth, asyncHandler(async (req, res) => {
+router.get('/:id', optionalAuth, asyncHandler(async (req, res) => {
   const job = await queryOne(
     `SELECT jp.*, c.name as company_name, c.logo_url, c.industry,
      cs.total_score as company_score, cs.process_fairness, cs.employee_experience
@@ -245,7 +245,7 @@ router.get('/:id', auth, asyncHandler(async (req, res) => {
     [req.params.id]
   );
 
-  if (req.user.role === 'employer') {
+  if (req.user?.role === 'employer') {
     const employer = await queryOne('SELECT company_id FROM employers WHERE user_id = ?', [req.user.id]);
     if (employer?.company_id === job.company_id) {
       const fullQuestions = await query(
@@ -327,7 +327,7 @@ router.patch('/:id', auth, requireEmployer, asyncHandler(async (req, res) => {
 }));
 
 // GET /api/jobs
-router.get('/', auth, asyncHandler(async (req, res) => {
+router.get('/', optionalAuth, asyncHandler(async (req, res) => {
   const {
     q, domain, level, work_mode, salary_min, salary_max,
     experience_max, location, sort = 'match',
@@ -335,14 +335,16 @@ router.get('/', auth, asyncHandler(async (req, res) => {
   const { page, limit, offset } = getPagination(req.query);
 
   let candidateId = null;
-  let careerScore = 0;
+  let careerScore = null;
+  let scoreGateValue = 0;
 
-  if (req.user.role === 'candidate') {
+  if (req.user?.role === 'candidate') {
     const candidate = await queryOne('SELECT id FROM candidates WHERE user_id = ?', [req.user.id]);
     if (candidate) {
       candidateId = candidate.id;
       const score = await ensureCareerScore(candidate.id);
       careerScore = score?.total_score || 300;
+      scoreGateValue = careerScore;
     }
   }
 
@@ -359,7 +361,7 @@ router.get('/', auth, asyncHandler(async (req, res) => {
     WHERE jp.status = 'active'
     AND (? = 0 OR jp.min_career_score <= ?)`;
 
-  const params = [careerScore, careerScore, careerScore];
+  const params = [careerScore, scoreGateValue, scoreGateValue];
 
   if (q) {
     sql += ' AND (MATCH(jp.title, jp.description, jp.responsibilities) AGAINST(? IN BOOLEAN MODE) OR jp.title LIKE ?)';
@@ -837,7 +839,9 @@ router.get('/applications/:appId/history', auth, asyncHandler(async (req, res) =
   }
 
   const history = await query(
-    'SELECT * FROM application_status_history WHERE application_id = ? ORDER BY created_at ASC',
+    `SELECT * FROM application_status_history
+     WHERE application_id = ?
+     ORDER BY created_at ASC, CASE WHEN from_status IS NULL THEN 0 ELSE 1 END ASC`,
     [req.params.appId]
   );
 

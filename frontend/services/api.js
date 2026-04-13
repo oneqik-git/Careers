@@ -13,7 +13,7 @@ function getApiBaseUrl() {
     return configuredBaseUrl;
   }
 
-  return process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : undefined;
+  return process.env.NODE_ENV === 'development' ? 'http://localhost:3001' : undefined;
 }
 
 const api = axios.create({

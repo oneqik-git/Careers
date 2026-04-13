@@ -2,14 +2,14 @@ import Link from 'next/link';
 
 export default function PageHero({ eyebrow, title, description, badges = [], actions = [], aside }) {
   return (
-    <section className="rounded-[32px] border border-slate-200 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.22),_transparent_42%),linear-gradient(135deg,_#0f172a_0%,_#1e293b_55%,_#334155_100%)] p-6 text-white shadow-[0_28px_80px_rgba(15,23,42,0.18)] lg:p-8">
+    <section className="oq-hero rounded-[32px] p-6 text-white lg:p-8">
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_260px] lg:items-start">
         <div>
           {eyebrow ? (
-            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-sky-100/90">{eyebrow}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.32em] text-white/78">{eyebrow}</p>
           ) : null}
           <h2 className="mt-3 text-3xl font-semibold tracking-tight text-white">{title}</h2>
-          {description ? <p className="mt-3 max-w-3xl text-sm text-slate-200 sm:text-base">{description}</p> : null}
+          {description ? <p className="mt-3 max-w-3xl text-sm text-slate-100/86 sm:text-base">{description}</p> : null}
 
           {badges.length ? (
             <div className="mt-5 flex flex-wrap gap-2">
@@ -23,7 +23,7 @@ export default function PageHero({ eyebrow, title, description, badges = [], act
                 return (
                   <span
                     key={`${label}-${index}`}
-                    className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-sm text-slate-100"
+                    className="rounded-full border border-white/12 bg-white/10 px-3 py-1.5 text-sm text-slate-100"
                   >
                     {label}
                   </span>
@@ -35,10 +35,10 @@ export default function PageHero({ eyebrow, title, description, badges = [], act
           {actions.length ? (
             <div className="mt-6 flex flex-wrap gap-3">
               {actions.map((action) => {
-                const className = `inline-flex items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-medium transition ${
+                const className = `${
                   action.variant === 'secondary'
-                    ? 'border border-white/20 bg-white/10 text-white hover:bg-white/15'
-                    : 'bg-white text-slate-950 hover:bg-slate-100'
+                    ? 'oq-button-secondary border-white/10 bg-white/10 text-white hover:bg-white/15'
+                    : 'oq-button-primary'
                 }`;
 
                 if (action.href) {
@@ -64,7 +64,7 @@ export default function PageHero({ eyebrow, title, description, badges = [], act
           ) : null}
         </div>
 
-        {aside ? <div className="rounded-[28px] border border-white/15 bg-white/10 p-5">{aside}</div> : null}
+        {aside ? <div className="rounded-[28px] border border-white/12 bg-white/10 p-5">{aside}</div> : null}
       </div>
     </section>
   );
