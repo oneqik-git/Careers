@@ -19,6 +19,15 @@
 require('dotenv').config({ path: '../.env' });
 const { pool } = require('../config/database');
 
+function prepareMigrationSql(sql) {
+  return sql
+    .replace(/\s+DEFAULT\s*\(UUID\(\)\)/gi, '')
+    .replace(/\/\*[\s\S]*?\*\//g, '')
+    .replace(/--.*$/gm, '')
+    .replace(/\n\s*\n/g, '\n')
+    .trim();
+}
+
 const migrations = [
 
   // ── USERS (base auth for both roles) ────────────────────────────
@@ -27,14 +36,14 @@ const migrations = [
     email         VARCHAR(255) UNIQUE NOT NULL,
     phone         VARCHAR(20) UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
-    role          ENUM('candidate','employer','admin') NOT NULL,
+    \`role\`      ENUM('candidate','employer','admin') NOT NULL,
     is_verified   BOOLEAN DEFAULT FALSE,
     is_active     BOOLEAN DEFAULT TRUE,
     last_login    TIMESTAMP NULL,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_email (email),
-    INDEX idx_role (role)
+    INDEX idx_role (\`role\`)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
   // ── CANDIDATES ───────────────────────────────────────────────────
@@ -52,7 +61,7 @@ const migrations = [
     aadhaar_hash       VARCHAR(64) UNIQUE,  -- SHA-256 of Aadhaar, never raw
     digilocker_linked  BOOLEAN DEFAULT FALSE,
     profile_photo_url  VARCHAR(500),
-    current_role       VARCHAR(255),
+    \`current_role\`   VARCHAR(255),
     current_company    VARCHAR(255),
     total_experience_months INT DEFAULT 0,
     domains            JSON,               -- ['Sales','Tech','Marketing']
@@ -612,8 +621,8 @@ const migrations = [
 async function runMigrations() {
   console.log('🚀 Running migrations...\n');
   for (let i = 0; i < migrations.length; i++) {
-    const sql = migrations[i];
-    const tableName = sql.match(/CREATE TABLE IF NOT EXISTS (\w+)/)?.[1] || `migration_${i}`;
+    const sql = prepareMigrationSql(migrations[i]);
+    const tableName = sql.match(/CREATE TABLE IF NOT EXISTS\s+`?(\w+)`?/i)?.[1] || `migration_${i}`;
     try {
       await pool.execute(sql);
       console.log(`  ✅ ${tableName}`);

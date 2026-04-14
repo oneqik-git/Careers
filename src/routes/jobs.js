@@ -312,7 +312,7 @@ router.patch('/:id', auth, requireEmployer, asyncHandler(async (req, res) => {
 
   for (const key of allowed) {
     if (req.body[key] !== undefined) {
-      updates.push(`${key} = ?`);
+      updates.push(`\`${key}\` = ?`);
       params.push(req.body[key]);
       updatedFields.push(key);
 

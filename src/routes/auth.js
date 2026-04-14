@@ -106,7 +106,7 @@ router.post('/register/candidate', [
       const hash = await bcrypt.hash(password, 12);
 
       await conn.execute(
-        'INSERT INTO users (id, email, phone, password_hash, role) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO users (id, email, phone, password_hash, `role`) VALUES (?, ?, ?, ?, ?)',
         [userId, email, phone, hash, 'candidate']
       );
       await conn.execute(
@@ -114,12 +114,12 @@ router.post('/register/candidate', [
         [candidateId, userId, full_name]
       );
       await conn.execute(
-        'INSERT INTO career_scores (candidate_id, total_score) VALUES (?, 300)',
-        [candidateId]
+        'INSERT INTO career_scores (id, candidate_id, total_score) VALUES (?, ?, 300)',
+        [uuid(), candidateId]
       );
     });
 
-    const user = await queryOne('SELECT id, email, role FROM users WHERE email = ?', [email]);
+    const user = await queryOne('SELECT id, email, `role` as role FROM users WHERE email = ?', [email]);
     const payload = await buildAuthPayload(user);
 
     return sendAuthPayload(res, payload, 201);
@@ -176,7 +176,7 @@ router.post('/register/employer', [
       const slug = company_name.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Date.now();
 
       await conn.execute(
-        'INSERT INTO users (id, email, phone, password_hash, role) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO users (id, email, phone, password_hash, `role`) VALUES (?, ?, ?, ?, ?)',
         [userId, email, null, hash, 'employer']
       );
       await conn.execute(
@@ -184,8 +184,8 @@ router.post('/register/employer', [
         [companyId, company_name, slug]
       );
       await conn.execute(
-        'INSERT INTO company_scores (company_id) VALUES (?)',
-        [companyId]
+        'INSERT INTO company_scores (id, company_id) VALUES (?, ?)',
+        [uuid(), companyId]
       );
       await conn.execute(
         'INSERT INTO employers (id, user_id, company_id, full_name, designation, is_admin) VALUES (?, ?, ?, ?, ?, 1)',
@@ -193,7 +193,7 @@ router.post('/register/employer', [
       );
     });
 
-    const user = await queryOne('SELECT id, email, role FROM users WHERE email = ?', [email]);
+    const user = await queryOne('SELECT id, email, `role` as role FROM users WHERE email = ?', [email]);
     const payload = await buildAuthPayload(user);
 
     return sendAuthPayload(res, payload, 201);
@@ -219,7 +219,10 @@ router.post('/login', [
   const { email, password } = req.body;
 
   try {
-    const user = await queryOne('SELECT * FROM users WHERE email = ? AND is_active = 1', [email]);
+    const user = await queryOne(
+      'SELECT id, email, phone, password_hash, `role` as role, is_verified, is_active, last_login, created_at, updated_at FROM users WHERE email = ? AND is_active = 1',
+      [email]
+    );
 
     if (!user) {
       return sendError(res, {
@@ -265,7 +268,7 @@ router.post('/refresh', asyncHandler(async (req, res) => {
 
   try {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-    const user = await queryOne('SELECT id, email, role, is_active FROM users WHERE id = ?', [decoded.userId]);
+    const user = await queryOne('SELECT id, email, `role` as role, is_active FROM users WHERE id = ?', [decoded.userId]);
 
     if (!user || !user.is_active) {
       return sendError(res, {

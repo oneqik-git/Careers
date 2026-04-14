@@ -135,7 +135,7 @@ router.patch('/me', auth, requireEmployer, asyncHandler(async (req, res) => {
 
   for (const key of allowed) {
     if (req.body[key] !== undefined && req.body[key] !== current[key]) {
-      updates.push(`${key} = ?`);
+      updates.push(`\`${key}\` = ?`);
       params.push(Array.isArray(req.body[key]) ? JSON.stringify(req.body[key]) : req.body[key]);
       historyEntries.push({
         field: key,

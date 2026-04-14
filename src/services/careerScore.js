@@ -4,6 +4,7 @@
  * based on all five pillars with configurable weights
  */
 const { query, queryOne } = require('../../config/database');
+const { v4: uuid } = require('uuid');
 
 const WEIGHTS = {
   skill_impact:  parseFloat(process.env.WEIGHT_SKILL_IMPACT)  || 0.30,
@@ -211,25 +212,25 @@ async function calculateAndSave(candidateId) {
 
   await query(
     `INSERT INTO career_scores
-      (candidate_id, total_score, skill_impact_pts, credibility_pts, engagement_pts, values_pts,
+      (id, candidate_id, total_score, skill_impact_pts, credibility_pts, engagement_pts, values_pts,
        identity_pts, band, identity_verified, identity_cap_active, last_calculated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
      ON DUPLICATE KEY UPDATE
        total_score=VALUES(total_score), skill_impact_pts=VALUES(skill_impact_pts),
        credibility_pts=VALUES(credibility_pts), engagement_pts=VALUES(engagement_pts),
        values_pts=VALUES(values_pts), identity_pts=VALUES(identity_pts),
        band=VALUES(band), identity_verified=VALUES(identity_verified),
        identity_cap_active=VALUES(identity_cap_active), last_calculated_at=NOW()`,
-    [candidateId, total, skillPts, credPts, engPts, valPts, idPts, band,
+    [uuid(), candidateId, total, skillPts, credPts, engPts, valPts, idPts, band,
      !identityCapActive, identityCapActive]
   );
 
   // Log score event if changed
   if (prevScore !== total) {
     await query(
-      `INSERT INTO score_events (candidate_id, event_type, pillar, delta, score_before, score_after, note)
-       VALUES (?, 'recalculation', 'all', ?, ?, ?, 'Periodic recalculation')`,
-      [candidateId, total - prevScore, prevScore, total]
+      `INSERT INTO score_events (id, candidate_id, event_type, pillar, delta, score_before, score_after, note)
+       VALUES (?, ?, 'recalculation', 'all', ?, ?, ?, 'Periodic recalculation')`,
+      [uuid(), candidateId, total - prevScore, prevScore, total]
     );
   }
 
@@ -250,9 +251,9 @@ async function addScoreEvent(candidateId, eventType, pillar, delta, referenceId 
   const current = await queryOne('SELECT total_score FROM career_scores WHERE candidate_id = ?', [candidateId]);
   const before = current?.total_score || BASE_SCORE;
   await query(
-    `INSERT INTO score_events (candidate_id, event_type, pillar, delta, score_before, score_after, reference_id, note)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
-    [candidateId, eventType, pillar, delta, before, before + delta, referenceId, note]
+    `INSERT INTO score_events (id, candidate_id, event_type, pillar, delta, score_before, score_after, reference_id, note)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [uuid(), candidateId, eventType, pillar, delta, before, before + delta, referenceId, note]
   );
   return calculateAndSave(candidateId);
 }

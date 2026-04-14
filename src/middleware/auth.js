@@ -17,7 +17,7 @@ const auth = async (req, res, next) => {
     const token = header.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await queryOne(
-      'SELECT id, email, role, is_active FROM users WHERE id = ?',
+      'SELECT id, email, `role` as role, is_active FROM users WHERE id = ?',
       [decoded.userId]
     );
 
@@ -60,7 +60,7 @@ const optionalAuth = async (req, res, next) => {
     const token = header.split(' ')[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await queryOne(
-      'SELECT id, email, role, is_active FROM users WHERE id = ?',
+      'SELECT id, email, `role` as role, is_active FROM users WHERE id = ?',
       [decoded.userId]
     );
 

@@ -38,7 +38,7 @@ router.get('/me', auth, requireCandidate, asyncHandler(async (req, res) => {
       FROM work_experiences we WHERE we.candidate_id = ? ORDER BY we.start_date DESC`,
       [candidate.id]),
     query('SELECT * FROM digilocker_documents WHERE candidate_id = ? ORDER BY created_at DESC', [candidate.id]),
-    query('SELECT * FROM course_enrollments ce JOIN courses c ON ce.course_id = c.id WHERE ce.candidate_id = ? AND ce.status = "completed"', [candidate.id]),
+    query("SELECT * FROM course_enrollments ce JOIN courses c ON ce.course_id = c.id WHERE ce.candidate_id = ? AND ce.status = 'completed'", [candidate.id]),
     query('SELECT * FROM score_events WHERE candidate_id = ? ORDER BY created_at DESC LIMIT 10', [candidate.id]),
   ]);
 
@@ -77,7 +77,7 @@ router.patch('/me', auth, requireCandidate, asyncHandler(async (req, res) => {
 
   for (const key of allowed) {
     if (req.body[key] !== undefined) {
-      updates.push(`${key} = ?`);
+      updates.push(`\`${key}\` = ?`);
       params.push(Array.isArray(req.body[key]) ? JSON.stringify(req.body[key]) : req.body[key]);
     }
   }
@@ -242,7 +242,7 @@ router.get('/search', auth, requireEmployer, asyncHandler(async (req, res) => {
   const { q, domain, min_score, max_score, career_stage, location, experience_min, experience_max } = req.query;
   const { page, limit, offset } = getPagination(req.query);
 
-  let sql = `SELECT c.id, c.full_name, c.headline, c.current_role, c.location, c.total_experience_months,
+  let sql = `SELECT c.id, c.full_name, c.headline, c.\`current_role\`, c.location, c.total_experience_months,
     c.domains, c.career_stage, c.open_to_work,
     cs.total_score, cs.band, cs.offer_reliability_pct
     FROM candidates c
@@ -251,7 +251,7 @@ router.get('/search', auth, requireEmployer, asyncHandler(async (req, res) => {
   const params = [];
 
   if (q) {
-    sql += ' AND (c.full_name LIKE ? OR c.headline LIKE ? OR c.current_role LIKE ?)';
+    sql += ' AND (c.full_name LIKE ? OR c.headline LIKE ? OR c.`current_role` LIKE ?)';
     params.push(`%${q}%`, `%${q}%`, `%${q}%`);
   }
   if (domain) {
@@ -309,7 +309,7 @@ router.get('/:id', auth, requireEmployer, asyncHandler(async (req, res) => {
   await ensureCareerScore(req.params.id);
 
   const candidate = await queryOne(
-    `SELECT c.id, c.full_name, c.headline, c.location, c.current_role, c.current_company,
+    `SELECT c.id, c.full_name, c.headline, c.location, c.\`current_role\`, c.current_company,
      c.total_experience_months, c.domains, c.career_stage, c.generation,
      cs.total_score, cs.band, cs.offer_reliability_pct, cs.no_show_count, cs.ghosting_count, cs.avg_employer_rating
      FROM candidates c

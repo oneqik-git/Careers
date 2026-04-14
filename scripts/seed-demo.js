@@ -274,7 +274,7 @@ async function ensureUser(conn, { email, role }) {
 
   if (existingUser) {
     await conn.execute(
-      'UPDATE users SET password_hash = ?, role = ?, is_active = 1 WHERE id = ?',
+      'UPDATE users SET password_hash = ?, `role` = ?, is_active = 1 WHERE id = ?',
       [passwordHash, role, existingUser.id]
     );
     return existingUser.id;
@@ -282,7 +282,7 @@ async function ensureUser(conn, { email, role }) {
 
   const userId = uuid();
   await conn.execute(
-    'INSERT INTO users (id, email, phone, password_hash, role, is_active) VALUES (?, ?, ?, ?, ?, 1)',
+    'INSERT INTO users (id, email, phone, password_hash, `role`, is_active) VALUES (?, ?, ?, ?, ?, 1)',
     [userId, email, null, passwordHash, role]
   );
   return userId;
