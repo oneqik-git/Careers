@@ -11,6 +11,7 @@ import SectionCard from '@/components/SectionCard';
 import { applyToJob, fetchJobDetail } from '@/services/jobs';
 import { clearAuthStorage } from '@/utils/authStorage';
 import { formatExperienceRange, formatSalaryRange, formatStatus } from '@/utils/formatters';
+import { markJobViewed } from '@/utils/jobViewState';
 import { candidateNavItems } from '@/utils/navigation';
 
 function renderSkillGroup(skills, emptyLabel) {
@@ -71,6 +72,12 @@ function CandidateJobDetailContent() {
 
   useEffect(() => {
     loadJob();
+  }, [jobId]);
+
+  useEffect(() => {
+    if (jobId) {
+      markJobViewed(jobId);
+    }
   }, [jobId]);
 
   useEffect(() => {
@@ -167,7 +174,7 @@ function CandidateJobDetailContent() {
               formatExperienceRange(job.experience_min_years, job.experience_max_years),
             ].filter(Boolean)}
             actions={[
-              { label: 'Back to jobs', href: '/candidate/jobs', variant: 'secondary' },
+              { label: 'Back to jobs', href: '/jobs', variant: 'secondary' },
               { label: 'My Applications', href: '/candidate/applications' },
             ]}
             aside={

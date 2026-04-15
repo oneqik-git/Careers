@@ -10,6 +10,7 @@ import PublicShell from '@/components/PublicShell';
 import SectionCard from '@/components/SectionCard';
 import { fetchJobDetail } from '@/services/jobs';
 import { formatExperienceRange, formatSalaryRange, formatStatus } from '@/utils/formatters';
+import { markJobViewed } from '@/utils/jobViewState';
 
 function renderSkillGroup(skills, emptyLabel) {
   if (!skills?.length) {
@@ -56,6 +57,12 @@ export default function PublicJobDetailPage() {
     }
 
     loadJob();
+  }, [jobId]);
+
+  useEffect(() => {
+    if (jobId) {
+      markJobViewed(jobId);
+    }
   }, [jobId]);
 
   return (

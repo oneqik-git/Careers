@@ -70,7 +70,7 @@ export default function CandidateApplicationsPage() {
                 `${applications.filter((item) => ['offer_sent', 'offer_accepted', 'joined'].includes(item.status)).length} offer or join outcomes`,
               ]}
               actions={[
-                { label: 'Browse Jobs', href: '/candidate/jobs' },
+                { label: 'Browse Jobs', href: '/jobs' },
                 { label: 'Dashboard', href: '/candidate/dashboard', variant: 'secondary' },
               ]}
             />
@@ -133,7 +133,7 @@ export default function CandidateApplicationsPage() {
             action={
               <Link
                 className="inline-flex rounded-2xl bg-slate-950 px-4 py-2.5 text-sm text-white transition hover:bg-slate-800"
-                href="/candidate/jobs"
+                href="/jobs"
               >
                 Browse jobs
               </Link>

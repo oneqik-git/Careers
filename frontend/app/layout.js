@@ -1,5 +1,13 @@
+import { Outfit } from 'next/font/google';
 import './globals.css';
 import ThemeProvider from '@/components/ThemeProvider';
+
+const outfit = Outfit({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+  variable: '--font-outfit',
+});
 
 export const metadata = {
   title: 'Careers by OneQik',
@@ -8,8 +16,8 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body>
+    <html className={outfit.variable} lang="en" suppressHydrationWarning>
+      <body className={outfit.className}>
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

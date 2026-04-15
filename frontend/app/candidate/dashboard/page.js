@@ -51,7 +51,7 @@ export default function CandidateDashboardPage() {
                 data?.open_to_work ? 'Open to work' : 'Not marked open to work',
               ].filter(Boolean)}
               actions={[
-                { label: 'Browse Jobs', href: '/candidate/jobs' },
+                { label: 'Browse Jobs', href: '/jobs' },
                 { label: 'My Applications', href: '/candidate/applications', variant: 'secondary' },
               ]}
               aside={
@@ -123,7 +123,7 @@ export default function CandidateDashboardPage() {
                 <div className="space-y-3">
                   <Link
                     className="flex items-center justify-between rounded-2xl bg-slate-950 px-4 py-3 text-sm font-medium text-white transition hover:bg-slate-800"
-                    href="/candidate/jobs"
+                    href="/jobs"
                   >
                     <span>Browse Jobs</span>
                     <span>Open roles</span>

@@ -76,7 +76,7 @@ function CandidateApplicationHistoryContent() {
             ]}
             actions={[
               { label: 'Back to applications', href: '/candidate/applications' },
-              { label: 'Browse Jobs', href: '/candidate/jobs', variant: 'secondary' },
+              { label: 'Browse Jobs', href: '/jobs', variant: 'secondary' },
             ]}
           />
           <ApplicationTimeline entries={entries} />

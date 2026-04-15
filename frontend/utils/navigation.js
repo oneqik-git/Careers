@@ -1,6 +1,6 @@
 export const candidateNavItems = [
   { label: 'Dashboard', href: '/candidate/dashboard' },
-  { label: 'Browse Jobs', href: '/candidate/jobs' },
+  { label: 'Browse Jobs', href: '/jobs' },
   { label: 'My Applications', href: '/candidate/applications' },
 ];
 

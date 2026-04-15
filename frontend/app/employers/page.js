@@ -4,79 +4,96 @@ import PublicShell from '@/components/PublicShell';
 import SectionCard from '@/components/SectionCard';
 
 const employerPoints = [
-  'Post roles without blending employer access into the candidate sign-in experience.',
-  'Review applicants in protected workflows once candidates move past public browsing.',
-  'Start with a work email so company identity is clearer from the first step.',
+  'Separate employer entry from the candidate journey.',
+  'Start with work-email-first company identity.',
+  'Move into protected hiring workflows after sign-in.',
 ];
 
 const hiringCards = [
   {
-    title: 'Dedicated employer entry',
-    description: 'The employer journey now starts from its own page instead of a shared role-tab auth pattern.',
+    title: 'Dedicated employer route',
+    description: 'Hiring teams should not have to enter through candidate-first messaging or shared role tabs.',
   },
   {
-    title: 'Work-email signup',
-    description: 'Registration focuses on company-linked identity and blocks obvious personal email providers.',
+    title: 'Operational messaging',
+    description: 'The employer side should feel more focused on hiring clarity, workflow, and company identity.',
   },
   {
-    title: 'Protected hiring flows',
-    description: 'Job posting, applicant review, and employer dashboards stay behind auth exactly where they belong.',
+    title: 'Protected workflow',
+    description: 'Posting roles, reviewing applicants, and managing pipeline activity stay inside employer-owned routes.',
   },
 ];
 
 export default function EmployersPage() {
   return (
     <PublicShell>
-      <div className="space-y-8">
+      <div className="space-y-12 lg:space-y-16">
         <PageHero
+          titleAs="h1"
+          align="center"
+          layout="stacked"
           eyebrow="For Employers"
-          title="A cleaner front door for hiring teams."
-          description="Create employer access with a work email, step into posting and applicant review faster, and keep your hiring workflow separate from the candidate journey."
+          title="A separate front door for hiring teams."
+          description="Employers get a more operational public entry, work-email-first account setup, and a cleaner path into protected hiring workflows."
+          titleClassName="max-w-[14ch]"
+          descriptionClassName="max-w-3xl"
           actions={[
             { label: 'Employer Sign In', href: '/employer/login' },
             { label: 'Create Employer Account', href: '/employer/register', variant: 'secondary' },
           ]}
           aside={(
-            <div className="space-y-3">
+            <div className="grid gap-3 md:grid-cols-3">
               {employerPoints.map((point) => (
-                <div key={point} className="rounded-[1.3rem] border border-white/10 bg-white/8 px-4 py-3">
-                  <p className="text-sm leading-6 text-white/84">{point}</p>
+                <div key={point} className="rounded-[15px] border border-[var(--dark-1)] bg-[rgba(4,18,44,0.56)] px-4 py-4">
+                  <p className="text-sm font-light leading-7 text-[var(--secondary-1)]">{point}</p>
                 </div>
               ))}
             </div>
           )}
+          asideClassName="p-0"
         />
 
-        <SectionCard eyebrow="Why this route exists" title="Employers should not enter through a candidate-first sign-in">
+        <SectionCard eyebrow="Employer Entry" title="Why this route exists">
           <div className="grid gap-4 md:grid-cols-3">
             {hiringCards.map((card) => (
-              <div key={card.title} className="oq-card-muted rounded-[1.7rem] p-5">
-                <p className="text-lg font-semibold tracking-tight text-[var(--text)]">{card.title}</p>
+              <div key={card.title} className="oq-card-muted rounded-[1.9rem] p-5">
+                <p className="text-xl font-semibold tracking-[-0.03em] text-[var(--text)]">{card.title}</p>
                 <p className="mt-3 text-sm leading-7 text-[var(--text-soft)]">{card.description}</p>
               </div>
             ))}
           </div>
         </SectionCard>
 
-        <SectionCard
-          eyebrow="Next step"
-          title="Start with company identity, then move into hiring."
-          description="This implementation keeps the existing employer dashboard and internal flows intact while giving the public product a better employer entry point."
-          action={<Link className="oq-button-primary" href="/employer/register">Create Employer Account</Link>}
-        >
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-[1.6rem] border border-[var(--border)] bg-[var(--surface-muted)] p-5">
-              <p className="text-sm font-semibold text-[var(--text)]">Already have employer access?</p>
-              <p className="mt-3 text-sm leading-7 text-[var(--text-soft)]">Use the employer sign-in page to reach posting, applicant review, and company-owned workflows.</p>
-              <Link className="oq-link mt-4 inline-flex text-sm" href="/employer/login">Go to employer sign in</Link>
+        <section className="oq-card rounded-[2.4rem] p-6 sm:p-8">
+          <div className="grid gap-5 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
+            <div>
+              <p className="oq-kicker">Work Email First</p>
+              <h2 className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-[var(--text)]">Employer identity should start with the company, not a personal inbox.</h2>
+              <p className="mt-4 max-w-2xl text-sm leading-8 text-[var(--text-soft)]">
+                This page intentionally pushes employers into their own sign-in and registration routes, where company identity and hiring ownership are clearer from the first step.
+              </p>
+              <div className="mt-6 flex flex-wrap gap-3">
+                <Link className="oq-button-primary" href="/employer/register">
+                  Create Employer Account
+                </Link>
+                <Link className="oq-button-secondary" href="/employer/login">
+                  Employer Sign In
+                </Link>
+              </div>
             </div>
-            <div className="rounded-[1.6rem] border border-[var(--border)] bg-[var(--surface-muted)] p-5">
-              <p className="text-sm font-semibold text-[var(--text)]">Need the public candidate side?</p>
-              <p className="mt-3 text-sm leading-7 text-[var(--text-soft)]">Job seekers can continue from the homepage, public jobs list, and lightweight candidate auth flow.</p>
-              <Link className="oq-link mt-4 inline-flex text-sm" href="/">Go to Careers homepage</Link>
+
+            <div className="grid gap-3">
+              <div className="rounded-[1.7rem] border border-[var(--border)] bg-[var(--surface-muted)] p-5">
+                <p className="text-[0.72rem] uppercase tracking-[0.22em] text-[var(--text-muted)]">Account rule</p>
+                <p className="mt-2 text-sm leading-7 text-[var(--text-soft)]">Use a company-linked work email wherever possible. Personal mailbox validation stays part of the employer auth flow.</p>
+              </div>
+              <div className="rounded-[1.7rem] border border-[var(--border)] bg-[var(--surface-muted)] p-5">
+                <p className="text-[0.72rem] uppercase tracking-[0.22em] text-[var(--text-muted)]">Candidate side</p>
+                <p className="mt-2 text-sm leading-7 text-[var(--text-soft)]">Job seekers still browse publicly from the homepage and jobs routes without mixing the two entry modes together.</p>
+              </div>
             </div>
           </div>
-        </SectionCard>
+        </section>
       </div>
     </PublicShell>
   );
