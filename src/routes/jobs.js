@@ -24,6 +24,46 @@ function normalizeAnswerType(questionType, answer) {
   return 'text';
 }
 
+function buildStatusHistoryNote({ status, history_note, rejection_reason, employer_notes, hold_until }) {
+  const explicitNote = typeof history_note === 'string' ? history_note.trim() : '';
+  if (explicitNote) {
+    return explicitNote;
+  }
+
+  if (status === 'rejected' && rejection_reason) {
+    return rejection_reason;
+  }
+
+  if (status === 'on_hold' && hold_until) {
+    return `Application placed on hold until ${hold_until}.`;
+  }
+
+  const defaultNotes = {
+    under_review: 'Application moved into active recruiter review.',
+    shortlisted: 'Candidate shortlisted for the next step.',
+    relevancy_test: 'Candidate moved into additional screening.',
+    interview_scheduled: 'Interview scheduled with the hiring team.',
+    interview_done: 'Interview completed and feedback captured.',
+    on_hold: 'Application placed on hold pending internal alignment.',
+    offer_sent: 'Offer shared with the candidate.',
+    offer_accepted: 'Candidate accepted the offer.',
+    offer_declined: 'Candidate declined the offer.',
+    joined: 'Candidate joined successfully.',
+    rejected: 'Application closed after evaluation.',
+    withdrawn: 'Application withdrawn from the process.',
+  };
+
+  if (status && defaultNotes[status]) {
+    return defaultNotes[status];
+  }
+
+  if (typeof employer_notes === 'string' && employer_notes.trim()) {
+    return 'Employer notes updated.';
+  }
+
+  return 'Application details updated.';
+}
+
 // GET /api/jobs/form-meta
 router.get('/form-meta', auth, requireEmployer, asyncHandler(async (req, res) => {
   const { department } = req.query;
@@ -195,8 +235,15 @@ router.get('/employer', auth, requireEmployer, asyncHandler(async (req, res) => 
 
   let sql = `SELECT jp.*,
     (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = jp.id) as total_applications,
-    (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = jp.id AND ja.status = 'shortlisted') as shortlisted,
-    (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = jp.id AND ja.status = 'joined') as hired
+    (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = jp.id AND ja.status = 'submitted') as submitted_count,
+    (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = jp.id AND ja.status = 'under_review') as under_review_count,
+    (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = jp.id AND ja.status IN ('shortlisted', 'interview_scheduled', 'interview_done', 'offer_sent', 'offer_accepted', 'joined')) as shortlisted,
+    (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = jp.id AND ja.status IN ('interview_scheduled', 'interview_done')) as interview_pipeline_count,
+    (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = jp.id AND ja.status IN ('offer_sent', 'offer_accepted')) as offers_count,
+    (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = jp.id AND ja.status = 'on_hold') as on_hold_count,
+    (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = jp.id AND ja.status = 'rejected') as rejected_count,
+    (SELECT COUNT(*) FROM job_applications ja WHERE ja.job_id = jp.id AND ja.status = 'joined') as hired,
+    (SELECT MAX(COALESCE(ja.status_updated_at, ja.applied_at)) FROM job_applications ja WHERE ja.job_id = jp.id) as latest_activity_at
     FROM job_postings jp WHERE jp.company_id = ?`;
   const params = [employer.company_id];
 
@@ -212,6 +259,33 @@ router.get('/employer', auth, requireEmployer, asyncHandler(async (req, res) => 
 
   const jobs = await query(sql, params);
   const items = jobs.map(normalizeJob);
+
+  if (items.length) {
+    const recentApplicationRows = await query(
+      `SELECT ja.id as application_id, ja.job_id, ja.status, ja.applied_at, ja.status_updated_at,
+       c.full_name
+       FROM job_applications ja
+       JOIN candidates c ON c.id = ja.candidate_id
+       WHERE ja.job_id IN (${items.map(() => '?').join(',')})
+       ORDER BY COALESCE(ja.status_updated_at, ja.applied_at) DESC`,
+      items.map((job) => job.id)
+    );
+
+    const recentActivityByJobId = recentApplicationRows.reduce((accumulator, activity) => {
+      const collection = accumulator[activity.job_id] || [];
+
+      if (collection.length < 3) {
+        collection.push(activity);
+      }
+
+      accumulator[activity.job_id] = collection;
+      return accumulator;
+    }, {});
+
+    items.forEach((jobItem) => {
+      jobItem.recent_activity = recentActivityByJobId[jobItem.id] || [];
+    });
+  }
 
   return sendSuccess(res, {
     data: items,
@@ -669,10 +743,10 @@ router.get('/:id/applications', auth, requireEmployer, asyncHandler(async (req, 
   const { page, limit, offset } = getPagination(req.query, { defaultLimit: 50 });
   const params = [employer.company_id, employer.company_id, req.params.id];
 
-  let sql = `SELECT ja.id, ja.status, ja.career_score_at_apply, ja.ai_match_score, ja.applied_at,
-     ja.cover_note, ja.employer_notes, ja.tat_breach,
+  let sql = `SELECT ja.id, ja.status, ja.career_score_at_apply, ja.ai_match_score, ja.ai_summary, ja.applied_at,
+     ja.cover_note, ja.employer_notes, ja.rejection_reason, ja.hold_until, ja.reviewed_at, ja.status_updated_at, ja.tat_breach,
      c.id as candidate_id, c.full_name, c.headline, c.location, c.total_experience_months,
-     cs.total_score as current_career_score, cs.offer_reliability_pct, cs.no_show_count,
+     cs.total_score as current_career_score, cs.offer_reliability_pct, cs.no_show_count, cs.ghosting_count, cs.avg_employer_rating,
      (SELECT COUNT(*) FROM job_applications ja2
       JOIN job_postings jp2 ON ja2.job_id = jp2.id
       WHERE ja2.candidate_id = c.id AND jp2.company_id = ?) as times_applied_to_us,
@@ -700,7 +774,7 @@ router.get('/:id/applications', auth, requireEmployer, asyncHandler(async (req, 
 
   if (items.length) {
     const answerRows = await query(
-      `SELECT pa.application_id, pa.answer_type, pa.answer_text, pa.video_url, pa.submitted_at,
+      `SELECT pa.application_id, pa.answer_type, pa.answer_text, pa.video_url, pa.ai_score, pa.ai_feedback, pa.employer_viewed, pa.submitted_at,
        pq.question_text, pq.question_type, pq.display_order
        FROM prescreening_answers pa
        JOIN prescreening_questions pq ON pq.id = pa.question_id
@@ -718,6 +792,9 @@ router.get('/:id/applications', auth, requireEmployer, asyncHandler(async (req, 
         answer_type: answer.answer_type,
         answer_text: answer.answer_text,
         video_url: answer.video_url,
+        ai_score: answer.ai_score,
+        ai_feedback: answer.ai_feedback,
+        employer_viewed: Boolean(answer.employer_viewed),
         submitted_at: answer.submitted_at,
         question_text: answer.question_text,
         question_type: answer.question_type,
@@ -729,6 +806,29 @@ router.get('/:id/applications', auth, requireEmployer, asyncHandler(async (req, 
 
     items.forEach((application) => {
       application.prescreen_answers = answersByApplicationId[application.id] || [];
+    });
+
+    const historyRows = await query(
+      `SELECT id, application_id, from_status, to_status, note, created_at
+       FROM application_status_history
+       WHERE application_id IN (${items.map(() => '?').join(',')})
+       ORDER BY created_at ASC, CASE WHEN from_status IS NULL THEN 0 ELSE 1 END ASC`,
+      items.map((application) => application.id)
+    );
+
+    const historyByApplicationId = historyRows.reduce((accumulator, entry) => {
+      if (!accumulator[entry.application_id]) {
+        accumulator[entry.application_id] = [];
+      }
+
+      accumulator[entry.application_id].push(entry);
+      return accumulator;
+    }, {});
+
+    items.forEach((application) => {
+      const statusHistory = historyByApplicationId[application.id] || [];
+      application.status_history = statusHistory;
+      application.history_preview = statusHistory.slice(-4).reverse();
     });
   }
 
@@ -762,7 +862,7 @@ router.patch('/applications/:appId', auth, requireEmployer, asyncHandler(async (
     });
   }
 
-  const { status, rejection_reason, employer_notes, hold_until } = req.body;
+  const { status, rejection_reason, employer_notes, hold_until, history_note } = req.body;
   const validStatuses = [
     'under_review', 'shortlisted', 'relevancy_test', 'interview_scheduled',
     'interview_done', 'on_hold', 'offer_sent', 'offer_accepted',
@@ -808,10 +908,18 @@ router.patch('/applications/:appId', auth, requireEmployer, asyncHandler(async (
   params.push(req.params.appId);
   await query(`UPDATE job_applications SET ${updates.join(', ')} WHERE id = ?`, params);
 
+  const historyNote = buildStatusHistoryNote({
+    status: status || app.status,
+    history_note,
+    rejection_reason,
+    employer_notes,
+    hold_until,
+  });
+
   await query(
     `INSERT INTO application_status_history (id, application_id, from_status, to_status, note, changed_by)
      VALUES (?, ?, ?, ?, ?, ?)`,
-    [uuid(), req.params.appId, app.status, status || app.status, rejection_reason || null, req.user.id]
+    [uuid(), req.params.appId, app.status, status || app.status, historyNote, req.user.id]
   );
 
   const statusMessages = {
@@ -843,6 +951,7 @@ router.patch('/applications/:appId', auth, requireEmployer, asyncHandler(async (
     data: {
       application_id: req.params.appId,
       status: status || app.status,
+      message: historyNote,
     },
   });
 }));

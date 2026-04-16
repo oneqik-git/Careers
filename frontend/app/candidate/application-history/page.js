@@ -7,6 +7,7 @@ import ApplicationPipeline from '@/components/ApplicationPipeline';
 import ApplicationTimeline from '@/components/ApplicationTimeline';
 import DashboardShell from '@/components/DashboardShell';
 import EmptyState from '@/components/EmptyState';
+import LoadingState from '@/components/LoadingState';
 import MessageBanner from '@/components/MessageBanner';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import SectionCard from '@/components/SectionCard';
@@ -112,7 +113,11 @@ function CandidateApplicationHistoryContent() {
       navItems={candidateNavItems}
     >
       {isLoading ? (
-        <p className="text-sm text-[var(--text-soft)]">Loading history...</p>
+        <LoadingState
+          description="Loading the current status, full timeline, and tracker context."
+          label="Application history"
+          title="Preparing this timeline"
+        />
       ) : error ? (
         <MessageBanner tone="error" message={error.message || 'Unable to load history.'} />
       ) : !application ? (
@@ -134,7 +139,7 @@ function CandidateApplicationHistoryContent() {
                   className="inline-flex items-center text-xs font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)] transition hover:text-white"
                   href="/candidate/applications"
                 >
-                  Back to My Applications
+                  Back to Applications
                 </Link>
 
                 <div className="mt-4 flex min-w-0 gap-4">
@@ -152,7 +157,7 @@ function CandidateApplicationHistoryContent() {
                       </span>
                     </div>
                     <p className="mt-2 text-sm text-[var(--text-soft)]">
-                      {application.company_name} - Applied {formatRelativeTime(application.applied_at)}
+                      {application.company_name} | Applied {formatRelativeTime(application.applied_at)}
                     </p>
 
                     {contextChips.length ? (
@@ -229,7 +234,7 @@ function CandidateApplicationHistoryContent() {
                     <p className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">Latest recorded change</p>
                     <p className="mt-3 text-sm leading-7 text-[var(--text-soft)]">
                       {latestTimelineEntry
-                        ? `${formatStatus(latestTimelineEntry.to_status)} on ${formatDateTime(latestTimelineEntry.created_at)}${latestTimelineEntry.note ? ` - ${latestTimelineEntry.note}` : ''}.`
+                        ? `${formatStatus(latestTimelineEntry.to_status)} on ${formatDateTime(latestTimelineEntry.created_at)}${latestTimelineEntry.note ? ` | ${latestTimelineEntry.note}` : ''}.`
                         : 'No status-history note has been recorded yet.'}
                     </p>
                   </div>
@@ -238,13 +243,13 @@ function CandidateApplicationHistoryContent() {
 
               <SectionCard
                 className="px-5 py-5 sm:px-6 sm:py-6 lg:px-7 lg:py-7"
-                description="Graceful fallbacks where the current backend payload is still thin."
-                title="Tracker Limits"
+                description="A few details are still outside the current API payload, so this view stays focused on what is dependable now."
+                title="Current View Limits"
               >
                 <div className="space-y-3 text-sm leading-7 text-[var(--text-soft)]">
                   <p>Offer amount, offer expiry, and joining specifics are not exposed in the current application API payload.</p>
-                  <p>Employer review events like “HR viewed your pre-screen” are not recorded as structured candidate history yet.</p>
-                  <p>Candidate-visible pre-screen answers are not returned by the current history endpoint, so this page focuses on status movement and feedback instead.</p>
+                  <p>Employer review events such as recruiter views are not recorded as structured candidate history yet.</p>
+                  <p>Candidate-visible prescreen answers are not returned by the current history endpoint, so this page focuses on status movement and feedback instead.</p>
                 </div>
               </SectionCard>
             </div>

@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import ApplicationPipeline from '@/components/ApplicationPipeline';
 import DashboardShell from '@/components/DashboardShell';
 import EmptyState from '@/components/EmptyState';
+import LoadingState from '@/components/LoadingState';
 import MessageBanner from '@/components/MessageBanner';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import StatusBadge from '@/components/StatusBadge';
@@ -103,15 +104,19 @@ export default function CandidateApplicationsPage() {
   }, [applications]);
 
   return (
-    <ProtectedRoute allowedRoles={['candidate']}>
+        <ProtectedRoute allowedRoles={['candidate']}>
       <DashboardShell
         title="My Applications"
-        subtitle="Track every application as a real process, not a flat list."
+        subtitle="Track where each application stands, what changed last, and what likely comes next."
         onRefresh={loadApplications}
         navItems={candidateNavItems}
       >
         {isLoading ? (
-          <p className="text-sm text-[var(--text-soft)]">Loading applications...</p>
+          <LoadingState
+            description="Pulling the latest application statuses, feedback, and timeline context."
+            label="Applications"
+            title="Loading your tracker"
+          />
         ) : error ? (
           <MessageBanner tone="error" message={error.message || 'Unable to load applications.'} />
         ) : applications.length ? (
@@ -119,10 +124,10 @@ export default function CandidateApplicationsPage() {
             <section className="oq-shell rounded-[1.85rem] px-5 py-5 sm:px-6">
               <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
                 <div className="max-w-3xl">
-                  <p className="text-[0.76rem] uppercase tracking-[0.2em] text-[var(--text-muted)]">Applied flow</p>
+                  <p className="text-[0.76rem] uppercase tracking-[0.2em] text-[var(--text-muted)]">Application tracker</p>
                   <h2 className="mt-2 text-[1.9rem] font-medium tracking-[-0.05em] text-[var(--text)]">Your application tracker</h2>
                   <p className="mt-3 text-sm leading-7 text-[var(--text-soft)]">
-                    Open cards show live status progress, employer feedback when it exists, and what the current state means without forcing you into a detail view first.
+                    Each card keeps status progress, employer feedback, and timing context visible before you open the full timeline.
                   </p>
                 </div>
 
@@ -146,15 +151,28 @@ export default function CandidateApplicationsPage() {
               </div>
             </section>
 
-            <section className="rounded-[1.65rem] border border-[rgba(29,40,56,0.9)] bg-[linear-gradient(180deg,rgba(255,255,255,0.025),transparent_100%),rgba(5,18,43,0.94)] p-4 shadow-[0_18px_34px_rgba(0,0,0,0.18)]">
-              <div className="flex flex-wrap gap-3">
+            <section className="oq-toolbar-surface p-4">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-sm text-[var(--text-soft)]">
+                    Showing <span className="font-medium text-[var(--text)]">{visibleApplications.length}</span> application{visibleApplications.length === 1 ? '' : 's'}
+                    {activeFilter !== 'all' ? ` in ${filterDefinitions.find((item) => item.key === activeFilter)?.label || activeFilter}` : ''}.
+                  </p>
+                  {activeFilter !== 'all' ? (
+                    <button className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand-accent)] transition hover:text-white" onClick={() => setActiveFilter('all')} type="button">
+                      Clear filter
+                    </button>
+                  ) : null}
+                </div>
+
+                <div className="flex flex-wrap gap-3">
                 {filterDefinitions.map((filter) => {
                   const isActive = activeFilter === filter.key;
 
                   return (
                     <button
                       key={filter.key}
-                      className={`rounded-full border px-4 py-2 text-sm font-semibold uppercase tracking-[0.14em] transition ${isActive ? 'border-[rgba(93,224,230,0.28)] bg-[rgba(93,224,230,0.14)] text-white' : 'border-[rgba(29,40,56,0.9)] bg-[rgba(255,255,255,0.03)] text-[var(--text-soft)] hover:border-[rgba(93,224,230,0.22)] hover:text-white'}`.trim()}
+                      className={`oq-filter-pill ${isActive ? 'oq-filter-pill-active' : ''}`.trim()}
                       onClick={() => setActiveFilter(filter.key)}
                       type="button"
                     >
@@ -162,10 +180,12 @@ export default function CandidateApplicationsPage() {
                     </button>
                   );
                 })}
+                </div>
               </div>
             </section>
 
-            <div className="space-y-4">
+            {visibleApplications.length ? (
+              <div className="space-y-4">
               {visibleApplications.map((application) => {
                 const meta = getApplicationStatusMeta(application.status);
                 const feedback = getApplicationFeedback(application);
@@ -242,10 +262,20 @@ export default function CandidateApplicationsPage() {
                   </Link>
                 );
               })}
-            </div>
+              </div>
+            ) : (
+              <EmptyState
+                eyebrow="Filtered view"
+                title="No applications in this slice"
+                description="The tracker is working, but nothing currently matches this status filter. Switch back to All to review the full list."
+                action={<button className="oq-button-primary" onClick={() => setActiveFilter('all')} type="button">Show all applications</button>}
+                secondaryAction={<Link className="oq-button-ghost" href="/jobs">Browse jobs</Link>}
+              />
+            )}
           </div>
         ) : (
           <EmptyState
+            eyebrow="Application tracker"
             title="No applications yet"
             description="Apply to a role to unlock the application tracker and status pipeline here."
             action={

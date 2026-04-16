@@ -5,12 +5,14 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from '@/components/ThemeToggle';
 import { getStoredRole, getStoredUser } from '@/utils/authStorage';
+import { getDashboardRoute } from '@/utils/roles';
 
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Jobs', href: '/jobs' },
   { label: 'Community', href: '/community' },
   { label: 'Learn', href: '/learn' },
+  { label: 'For Employers', href: '/employers' },
   { label: 'About', href: '/about' },
 ];
 
@@ -59,18 +61,6 @@ function BrandLockup() {
   );
 }
 
-function getDashboardHref(role) {
-  if (role === 'candidate') {
-    return '/candidate/profile';
-  }
-
-  if (role === 'employer') {
-    return '/employer/dashboard';
-  }
-
-  return '/login';
-}
-
 export default function PublicShell({ children, utilityContent }) {
   const pathname = usePathname();
   const [session, setSession] = useState({ role: null, user: null });
@@ -83,7 +73,8 @@ export default function PublicShell({ children, utilityContent }) {
   }, []);
 
   const viewerName = String(session.user?.full_name || '').trim();
-  const dashboardHref = getDashboardHref(session.role);
+  const dashboardHref = getDashboardRoute(session.role);
+  const workspaceLabel = session.role === 'candidate' ? 'Candidate Workspace' : 'Employer Workspace';
 
   return (
     <main className="oq-public-root min-h-screen px-4 pb-5 pt-0 sm:px-6 lg:px-8">
@@ -121,8 +112,17 @@ export default function PublicShell({ children, utilityContent }) {
                           {viewerName}
                         </span>
                       ) : null}
+                      {session.role === 'candidate' ? (
+                        <Link className="oq-nav-utility-link" href="/candidate/applications">
+                          Applications
+                        </Link>
+                      ) : (
+                        <Link className="oq-nav-utility-link" href="/employer/jobs">
+                          Jobs
+                        </Link>
+                      )}
                       <Link className="oq-nav-cta oq-nav-cta-secondary" href={dashboardHref}>
-                        {session.role === 'candidate' ? 'My Profile' : 'Dashboard'}
+                        {workspaceLabel}
                       </Link>
                     </>
                   ) : (

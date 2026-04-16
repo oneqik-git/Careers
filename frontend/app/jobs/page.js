@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import EmptyState from '@/components/EmptyState';
 import JobsProductCard from '@/components/JobsProductCard';
+import LoadingState from '@/components/LoadingState';
 import MessageBanner from '@/components/MessageBanner';
 import PublicShell from '@/components/PublicShell';
 import SectionCard from '@/components/SectionCard';
@@ -170,6 +171,23 @@ export default function PublicJobsPage() {
   const [viewedJobs, setViewedJobs] = useState([]);
 
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const params = new URLSearchParams(window.location.search);
+    const queryParts = [
+      params.get('q'),
+      params.get('area'),
+      params.get('exp'),
+    ].filter(Boolean);
+    const nextCategory = params.get('domain');
+
+    setQuery(queryParts.join(' ').trim());
+    setActiveCategory(CATEGORY_PILLS.includes(nextCategory) ? nextCategory : 'All');
+  }, []);
+
+  useEffect(() => {
     let isActive = true;
 
     async function hydrateJobsPage() {
@@ -297,7 +315,7 @@ export default function PublicJobsPage() {
           <section className="oq-shell rounded-[1.75rem] px-5 py-5 sm:px-6">
             <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
               <div className="flex-1">
-                <p className="text-[0.78rem] uppercase tracking-[0.2em] text-[var(--text-muted)]">Candidate jobs workspace</p>
+                <p className="text-[0.78rem] uppercase tracking-[0.2em] text-[var(--text-muted)]">Candidate jobs</p>
                 <div className="mt-2 flex flex-wrap items-center gap-3">
                   <h1 className="text-[1.7rem] font-medium tracking-[-0.05em] text-[var(--text)]">
                     {`Good morning, ${getFirstName(viewer.user)}`}
@@ -307,7 +325,7 @@ export default function PublicJobsPage() {
                   </span>
                 </div>
                 <p className="mt-3 text-sm text-[var(--text-soft)]">
-                  {candidateContext ? `${candidateContext.strongMatches} strong matches available - ${candidateContext.activityMessage}` : 'Your job feed stays product-first once you sign in.'}
+                  {candidateContext ? `${candidateContext.strongMatches} strong matches available | ${candidateContext.activityMessage}` : 'Your jobs feed becomes trackable once you sign in as a candidate.'}
                 </p>
               </div>
 
@@ -342,10 +360,10 @@ export default function PublicJobsPage() {
               <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <p className="text-[0.74rem] uppercase tracking-[0.18em] text-[var(--text-muted)]">Browse by domain</p>
-                  <p className="mt-1 text-sm text-[var(--text-soft)]">Match score, company score, and your application state stay visible on every role card.</p>
+                  <p className="mt-1 text-sm text-[var(--text-soft)]">Match score, company score, and application state stay visible on every role card.</p>
                 </div>
                 <Link className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand-accent)] transition hover:text-white" href="/candidate/applications">
-                  Go to My Applications
+                  Open Applications
                 </Link>
               </div>
             ) : null}
@@ -395,7 +413,11 @@ export default function PublicJobsPage() {
         {error ? (
           <MessageBanner tone="error" message={error.message || 'Unable to load jobs.'} />
         ) : isLoading ? (
-          <p className="px-1 text-sm text-[var(--text-soft)]">Loading jobs...</p>
+          <LoadingState
+            description="Pulling the latest roles, filters, and application context."
+            label="Jobs"
+            title="Loading available roles"
+          />
         ) : jobsWithState.length ? (
           <div className="space-y-4">
             <div className="flex flex-col gap-2 px-1 sm:flex-row sm:items-center sm:justify-between">
@@ -404,7 +426,7 @@ export default function PublicJobsPage() {
                 {activeCategory !== 'All' ? ` in ${activeCategory}` : ''}.
               </p>
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">
-                {viewer.isCandidate ? 'Cards open the logged-in candidate detail flow.' : 'Sign in as a candidate to unlock Match % and application state.'}
+                {viewer.isCandidate ? 'Cards open the candidate role view with apply and tracker context.' : 'Sign in as a candidate to unlock match scoring and application state.'}
               </p>
             </div>
 
@@ -427,8 +449,9 @@ export default function PublicJobsPage() {
         ) : (
           <SectionCard title="No jobs found" description="Try a broader search or switch back to All to widen the current results.">
             <EmptyState
+              eyebrow="Current filters"
               title="Nothing matched this filter set"
-              description="The current search and category combination did not return any roles."
+              description="The current search and category combination did not return any roles. Clear the filters to get back to the full jobs view."
               action={(
                 <button
                   className="oq-button-primary"
@@ -441,6 +464,7 @@ export default function PublicJobsPage() {
                   Clear filters
                 </button>
               )}
+              secondaryAction={<Link className="oq-button-ghost" href="/">Back to home</Link>}
             />
           </SectionCard>
         )}

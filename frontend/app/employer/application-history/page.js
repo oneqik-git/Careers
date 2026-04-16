@@ -6,6 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import ApplicationTimeline from '@/components/ApplicationTimeline';
 import DashboardShell from '@/components/DashboardShell';
 import EmptyState from '@/components/EmptyState';
+import LoadingState from '@/components/LoadingState';
 import MessageBanner from '@/components/MessageBanner';
 import PageHero from '@/components/PageHero';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -61,7 +62,11 @@ function EmployerApplicationHistoryContent() {
       navItems={employerNavItems}
     >
       {isLoading ? (
-        <p className="text-sm text-slate-500">Loading history...</p>
+        <LoadingState
+          description="Loading the full employer-side application timeline."
+          label="Employer history"
+          title="Preparing this timeline"
+        />
       ) : error ? (
         <MessageBanner tone="error" message={error.message || 'Unable to load history.'} />
       ) : entries.length ? (
@@ -69,28 +74,26 @@ function EmployerApplicationHistoryContent() {
           <PageHero
             eyebrow="Employer timeline"
             title="Application history"
-            description="Each timeline step stays readable at a glance so employers can reconstruct the applicant journey quickly."
+            description="Each timeline step stays readable at a glance so the hiring team can reconstruct the applicant journey quickly."
             badges={[
               `${entries.length} timeline event${entries.length === 1 ? '' : 's'}`,
               `Latest status: ${formatStatus(entries[entries.length - 1]?.to_status)}`,
             ]}
             actions={[
-              { label: 'Back to posted jobs', href: '/employer/jobs' },
-              { label: 'Post Job', href: '/employer/jobs/new', variant: 'secondary' },
+              { label: 'Jobs', href: '/employer/jobs' },
+              { label: 'Dashboard', href: '/employer/dashboard', variant: 'secondary' },
             ]}
           />
           <ApplicationTimeline entries={entries} />
         </div>
       ) : (
         <EmptyState
+          eyebrow="Employer history"
           title="No history entries"
           description="This application does not have any recorded timeline events yet."
           action={
-            <Link
-              className="inline-flex rounded-2xl bg-slate-950 px-4 py-2.5 text-sm text-white transition hover:bg-slate-800"
-              href="/employer/jobs"
-            >
-              Back to posted jobs
+            <Link className="oq-button-primary" href="/employer/jobs">
+              Back to jobs
             </Link>
           }
         />

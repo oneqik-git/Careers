@@ -36,7 +36,7 @@ export default function ApplicationPipeline({ status, className = '' }) {
             <div key={step.id} className="flex items-start">
               <div className="flex min-w-[72px] flex-col items-center gap-3">
                 <div className={`flex h-8 w-8 items-center justify-center rounded-full border text-[0.68rem] font-semibold uppercase tracking-[0.16em] ${tone}`.trim()}>
-                  {step.state === 'done' ? '✓' : step.state === 'active' ? '•' : ''}
+                  {index + 1}
                 </div>
                 <p className={`max-w-[72px] text-center text-[0.68rem] font-medium leading-5 ${step.state === 'pending' ? 'text-[var(--text-muted)]' : 'text-[var(--text)]'}`.trim()}>
                   {step.label}

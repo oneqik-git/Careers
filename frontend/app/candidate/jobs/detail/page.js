@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import DashboardShell from '@/components/DashboardShell';
+import LoadingState from '@/components/LoadingState';
 import MessageBanner from '@/components/MessageBanner';
 import PageHero from '@/components/PageHero';
 import ProtectedRoute from '@/components/ProtectedRoute';
@@ -16,13 +17,13 @@ import { candidateNavItems } from '@/utils/navigation';
 
 function renderSkillGroup(skills, emptyLabel) {
   if (!skills?.length) {
-    return <p className="text-sm text-slate-600">{emptyLabel}</p>;
+    return <p className="text-sm text-[var(--text-soft)]">{emptyLabel}</p>;
   }
 
   return (
     <div className="flex flex-wrap gap-2">
       {skills.map((skill) => (
-        <span key={skill} className="rounded-full bg-slate-100 px-3 py-1.5 text-sm text-slate-700">
+        <span key={skill} className="oq-chip">
           {skill}
         </span>
       ))}
@@ -151,12 +152,16 @@ function CandidateJobDetailContent() {
   return (
     <DashboardShell
       title="Job Detail"
-      subtitle="Review the job clearly before applying, including responsibilities, requirements, and prescreen prompts."
+      subtitle="Review the role clearly before you apply, then move straight into the structured application flow."
       onRefresh={loadJob}
       navItems={candidateNavItems}
     >
       {isLoading ? (
-        <p className="text-sm text-slate-500">Loading job...</p>
+        <LoadingState
+          description="Loading the role details, prescreen questions, and your current application state."
+          label="Job detail"
+          title="Preparing this role"
+        />
       ) : error ? (
         <MessageBanner tone="error" message={error.message || 'Unable to load this job.'} />
       ) : !job ? (
@@ -173,33 +178,33 @@ function CandidateJobDetailContent() {
               job.work_mode ? formatStatus(job.work_mode) : null,
               formatExperienceRange(job.experience_min_years, job.experience_max_years),
             ].filter(Boolean)}
-            actions={[
-              { label: 'Back to jobs', href: '/jobs', variant: 'secondary' },
-              { label: 'My Applications', href: '/candidate/applications' },
-            ]}
-            aside={
-              <div className="space-y-4">
+              actions={[
+                { label: 'Back to jobs', href: '/jobs', variant: 'secondary' },
+                { label: 'Applications', href: '/candidate/applications' },
+              ]}
+              aside={
+                <div className="space-y-4">
                 <div>
                   <p className="text-xs uppercase tracking-[0.28em] text-sky-100/80">Salary</p>
                   <p className="mt-2 text-2xl font-semibold">
                     {formatSalaryRange(job.salary_min, job.salary_max, job.salary_disclosed)}
                   </p>
                 </div>
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-sky-100/80">Company score</p>
-                    <p className="mt-1 text-sm text-slate-100">{job.company_score ?? '-'}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-sky-100/80">Prescreening</p>
-                    <p className="mt-1 text-sm text-slate-100">{job.questions?.length ?? 0} question(s)</p>
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-sky-100/80">Your status</p>
-                    <p className="mt-1 text-sm text-slate-100">
-                      {hasApplied ? formatStatus(currentApplication.status) : 'Not applied yet'}
-                    </p>
-                  </div>
+                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.24em] text-sky-100/80">Company score</p>
+                      <p className="mt-1 text-sm text-[var(--text)]">{job.company_score ?? '-'}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.24em] text-sky-100/80">Prescreening</p>
+                      <p className="mt-1 text-sm text-[var(--text)]">{job.questions?.length ?? 0} question(s)</p>
+                    </div>
+                    <div>
+                      <p className="text-xs uppercase tracking-[0.24em] text-sky-100/80">Your status</p>
+                      <p className="mt-1 text-sm text-[var(--text)]">
+                        {hasApplied ? formatStatus(currentApplication.status) : 'Not applied yet'}
+                      </p>
+                    </div>
                 </div>
               </div>
             }
@@ -209,26 +214,26 @@ function CandidateJobDetailContent() {
             <div className="space-y-6">
               <SectionCard title="Role overview" description="The essentials come first so you can assess fit before reading every detail.">
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Department</p>
-                    <p className="mt-2 text-sm text-slate-800">{job.department || 'Not specified'}</p>
+                  <div className="oq-detail-panel">
+                    <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Department</p>
+                    <p className="mt-2 text-sm text-[var(--text)]">{job.department || 'Not specified'}</p>
                   </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Level</p>
-                    <p className="mt-2 text-sm text-slate-800">{job.level || 'Not specified'}</p>
+                  <div className="oq-detail-panel">
+                    <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Level</p>
+                    <p className="mt-2 text-sm text-[var(--text)]">{job.level || 'Not specified'}</p>
                   </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Work mode</p>
-                    <p className="mt-2 text-sm text-slate-800">{job.work_mode ? formatStatus(job.work_mode) : 'Not specified'}</p>
+                  <div className="oq-detail-panel">
+                    <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Work mode</p>
+                    <p className="mt-2 text-sm text-[var(--text)]">{job.work_mode ? formatStatus(job.work_mode) : 'Not specified'}</p>
                   </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Education</p>
-                    <p className="mt-2 text-sm text-slate-800">{job.education_requirement || 'Not specified'}</p>
+                  <div className="oq-detail-panel">
+                    <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Education</p>
+                    <p className="mt-2 text-sm text-[var(--text)]">{job.education_requirement || 'Not specified'}</p>
                   </div>
                 </div>
                 <div className="mt-5">
-                  <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Description</p>
-                  <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+                  <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Description</p>
+                  <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-[var(--text-soft)]">
                     {job.description || 'No description provided.'}
                   </p>
                 </div>
@@ -237,14 +242,14 @@ function CandidateJobDetailContent() {
               <SectionCard title="Responsibilities and benefits" description="Separate sections make the role expectations and offer details easier to compare.">
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Responsibilities</p>
-                    <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+                    <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Responsibilities</p>
+                    <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-[var(--text-soft)]">
                       {job.responsibilities || 'No responsibilities provided.'}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Benefits</p>
-                    <p className="mt-2 whitespace-pre-wrap text-sm leading-6 text-slate-700">
+                    <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Benefits</p>
+                    <p className="mt-2 whitespace-pre-wrap text-sm leading-7 text-[var(--text-soft)]">
                       {job.benefits || 'No benefits listed.'}
                     </p>
                   </div>
@@ -254,11 +259,11 @@ function CandidateJobDetailContent() {
               <SectionCard title="Requirements and fit" description="Required and preferred details are separated so candidates can judge fit without over-reading.">
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Required skills</p>
+                    <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Required skills</p>
                     <div className="mt-3">{renderSkillGroup(job.required_skills, 'No required skills listed.')}</div>
                   </div>
                   <div>
-                    <p className="text-xs uppercase tracking-[0.24em] text-slate-500">Preferred skills</p>
+                    <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Preferred skills</p>
                     <div className="mt-3">{renderSkillGroup(job.preferred_skills, 'No preferred skills listed.')}</div>
                   </div>
                 </div>
@@ -268,26 +273,26 @@ function CandidateJobDetailContent() {
                 {(job.questions || []).length ? (
                   <div className="space-y-3">
                     {job.questions.map((question, index) => (
-                      <div key={question.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                      <div key={question.id} className="rounded-[1.2rem] border border-[var(--border)] bg-[rgba(255,255,255,0.03)] p-4">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                          <span className="oq-chip">
                             Question {index + 1}
                           </span>
-                          <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                          <span className="oq-chip">
                             {formatStatus(question.question_type || 'text')}
                           </span>
                           {question.is_required ? (
-                            <span className="rounded-full bg-rose-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-rose-700">
+                            <span className="rounded-full border border-[rgba(244,63,94,0.24)] bg-[rgba(244,63,94,0.12)] px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-[var(--text)]">
                               Required
                             </span>
                           ) : null}
                         </div>
-                        <p className="mt-3 text-sm text-slate-700">{question.question_text}</p>
+                        <p className="mt-3 text-sm text-[var(--text)]">{question.question_text}</p>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-slate-600">No prescreen questions were added for this role.</p>
+                  <p className="text-sm text-[var(--text-soft)]">No prescreen questions were added for this role.</p>
                 )}
               </SectionCard>
             </div>
@@ -296,29 +301,29 @@ function CandidateJobDetailContent() {
               <SectionCard
                 title="Apply to this role"
                 description={hasApplied
-                  ? 'You already applied to this role. Review the current status below or open My Applications for the full tracker.'
+                  ? 'You already applied to this role. Review the current status below or open Applications for the full tracker.'
                   : 'The current prototype uses text responses for the cover note and all prescreen prompts.'}
               >
                 <form className="space-y-4" onSubmit={handleApply}>
                   {hasApplied ? (
-                    <div className="rounded-[24px] border border-emerald-200 bg-emerald-50 px-4 py-4">
-                      <p className="text-sm font-semibold text-emerald-700">Already applied</p>
-                      <p className="mt-2 text-sm text-emerald-700">
+                    <div className="rounded-[1.3rem] border border-[rgba(34,197,94,0.22)] bg-[rgba(34,197,94,0.12)] px-4 py-4">
+                      <p className="text-sm font-semibold text-[var(--text)]">Already applied</p>
+                      <p className="mt-2 text-sm text-[var(--text-soft)]">
                         Current application status: {formatStatus(currentApplication.status)}.
                       </p>
-                      <p className="mt-2 text-sm text-emerald-700">
+                      <p className="mt-2 text-sm text-[var(--text-soft)]">
                         {currentApplication.applied_at ? `Applied ${new Intl.DateTimeFormat('en-IN', { dateStyle: 'medium', timeStyle: 'short' }).format(new Date(currentApplication.applied_at))}.` : 'Your application is already on file.'}
                       </p>
                     </div>
                   ) : null}
 
                   <div>
-                    <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor="cover-note">
+                    <label className="mb-2 block text-sm font-medium text-[var(--text)]" htmlFor="cover-note">
                       Cover note
                     </label>
                     <textarea
                       id="cover-note"
-                      className="min-h-28 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-500"
+                      className="oq-textarea min-h-28"
                       disabled={hasApplied}
                       onChange={(event) => setCoverNote(event.target.value)}
                       placeholder="Optional note to the employer"
@@ -328,13 +333,13 @@ function CandidateJobDetailContent() {
 
                   {(job.questions || []).map((question, index) => (
                     <div key={question.id}>
-                      <label className="mb-2 block text-sm font-medium text-slate-700" htmlFor={question.id}>
+                      <label className="mb-2 block text-sm font-medium text-[var(--text)]" htmlFor={question.id}>
                         {index + 1}. {question.question_text}
                         {question.is_required ? ' *' : ''}
                       </label>
                       <textarea
                         id={question.id}
-                        className="min-h-24 w-full rounded-2xl border border-slate-300 px-4 py-3 text-sm outline-none transition focus:border-slate-500"
+                        className="oq-textarea min-h-24"
                         disabled={hasApplied}
                         onChange={(event) => handleAnswerChange(question.id, event.target.value)}
                         placeholder="Enter your answer"
@@ -348,14 +353,14 @@ function CandidateJobDetailContent() {
                     <MessageBanner tone="error" message={submitError?.message} />
                     {successMessage ? (
                       <Link
-                        className="inline-flex rounded-2xl border border-slate-300 px-4 py-2.5 text-sm text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
+                        className="oq-button-secondary"
                         href="/candidate/applications"
                       >
-                        View my applications
+                        View applications
                       </Link>
                     ) : null}
                     <button
-                      className="w-full rounded-2xl bg-slate-950 px-5 py-3 text-sm text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+                      className="oq-button-primary w-full justify-center disabled:cursor-not-allowed disabled:opacity-60"
                       disabled={isSubmitting || hasApplied}
                       type="submit"
                     >
@@ -363,10 +368,10 @@ function CandidateJobDetailContent() {
                     </button>
                     {hasApplied ? (
                       <Link
-                        className="inline-flex w-full items-center justify-center rounded-2xl border border-slate-300 px-4 py-2.5 text-sm text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
+                        className="oq-button-secondary w-full justify-center"
                         href="/candidate/applications"
                       >
-                        Go to My Applications
+                        Go to applications
                       </Link>
                     ) : null}
                   </div>
