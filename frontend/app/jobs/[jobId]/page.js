@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import MessageBanner from '@/components/MessageBanner';
 import PageHero from '@/components/PageHero';
 import PublicApplyAction from '@/components/PublicApplyAction';
 import PublicShell from '@/components/PublicShell';
 import SectionCard from '@/components/SectionCard';
 import { fetchJobDetail } from '@/services/jobs';
+import { getStoredRole, getStoredToken } from '@/utils/authStorage';
 import { formatExperienceRange, formatSalaryRange, formatStatus } from '@/utils/formatters';
 import { markJobViewed } from '@/utils/jobViewState';
 
@@ -30,6 +31,7 @@ function renderSkillGroup(skills, emptyLabel) {
 
 export default function PublicJobDetailPage() {
   const params = useParams();
+  const router = useRouter();
   const jobId = params?.jobId;
   const [job, setJob] = useState(null);
   const [error, setError] = useState(null);
@@ -40,6 +42,11 @@ export default function PublicJobDetailPage() {
       if (!jobId) {
         setError({ message: 'Missing job ID.' });
         setIsLoading(false);
+        return;
+      }
+
+      if (getStoredToken() && getStoredRole() === 'candidate') {
+        router.replace(`/candidate/jobs/detail?jobId=${jobId}`);
         return;
       }
 
@@ -57,7 +64,7 @@ export default function PublicJobDetailPage() {
     }
 
     loadJob();
-  }, [jobId]);
+  }, [jobId, router]);
 
   useEffect(() => {
     if (jobId) {

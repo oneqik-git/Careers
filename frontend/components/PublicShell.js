@@ -1,12 +1,16 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from '@/components/ThemeToggle';
+import { getStoredRole, getStoredUser } from '@/utils/authStorage';
 
 const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Jobs', href: '/jobs' },
+  { label: 'Community', href: '/community' },
+  { label: 'Learn', href: '/learn' },
   { label: 'About', href: '/about' },
 ];
 
@@ -15,6 +19,8 @@ const footerGroups = [
     title: 'Explore',
     links: [
       { label: 'Jobs', href: '/jobs' },
+      { label: 'Community', href: '/community' },
+      { label: 'Learn', href: '/learn' },
       { label: 'About', href: '/about' },
       { label: 'How it works', href: '/about#how-it-works' },
     ],
@@ -23,7 +29,7 @@ const footerGroups = [
     title: 'Company',
     links: [
       { label: 'OneQik', href: '/about#oneqik' },
-      { label: 'Community', href: '/about#community' },
+      { label: 'Community', href: '/community' },
       { label: 'Services', href: '/about#services' },
       { label: 'Contact', href: 'mailto:hello@oneqik.com' },
     ],
@@ -53,8 +59,31 @@ function BrandLockup() {
   );
 }
 
-export default function PublicShell({ children }) {
+function getDashboardHref(role) {
+  if (role === 'candidate') {
+    return '/candidate/profile';
+  }
+
+  if (role === 'employer') {
+    return '/employer/dashboard';
+  }
+
+  return '/login';
+}
+
+export default function PublicShell({ children, utilityContent }) {
   const pathname = usePathname();
+  const [session, setSession] = useState({ role: null, user: null });
+
+  useEffect(() => {
+    setSession({
+      role: getStoredRole(),
+      user: getStoredUser(),
+    });
+  }, []);
+
+  const viewerName = String(session.user?.full_name || '').trim();
+  const dashboardHref = getDashboardHref(session.role);
 
   return (
     <main className="oq-public-root min-h-screen px-4 pb-5 pt-0 sm:px-6 lg:px-8">
@@ -82,13 +111,32 @@ export default function PublicShell({ children }) {
             </nav>
 
             <div className="flex flex-wrap items-center gap-2.5 lg:justify-end">
-              <ThemeToggle className="shrink-0" tone="public" />
-              <Link className="oq-nav-utility-link" href="/login">
-                Login
-              </Link>
-              <Link className="oq-nav-cta oq-nav-cta-secondary" href="/employer/login">
-                Employer Login
-              </Link>
+              {utilityContent || (
+                <>
+                  <ThemeToggle className="shrink-0" tone="public" />
+                  {session.role ? (
+                    <>
+                      {viewerName ? (
+                        <span className="rounded-full border border-[var(--dark-1)] px-3 py-2 text-xs font-medium uppercase tracking-[0.16em] text-[var(--secondary-1)]">
+                          {viewerName}
+                        </span>
+                      ) : null}
+                      <Link className="oq-nav-cta oq-nav-cta-secondary" href={dashboardHref}>
+                        {session.role === 'candidate' ? 'My Profile' : 'Dashboard'}
+                      </Link>
+                    </>
+                  ) : (
+                    <>
+                      <Link className="oq-nav-utility-link" href="/login">
+                        Login
+                      </Link>
+                      <Link className="oq-nav-cta oq-nav-cta-secondary" href="/employer/login">
+                        Employer Login
+                      </Link>
+                    </>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </header>

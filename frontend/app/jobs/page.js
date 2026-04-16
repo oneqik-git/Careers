@@ -1,14 +1,16 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import EmptyState from '@/components/EmptyState';
 import JobsProductCard from '@/components/JobsProductCard';
 import MessageBanner from '@/components/MessageBanner';
 import PublicShell from '@/components/PublicShell';
 import SectionCard from '@/components/SectionCard';
+import ThemeToggle from '@/components/ThemeToggle';
 import { fetchJobs } from '@/services/jobs';
 import { clearAuthStorage, getStoredRole, getStoredToken, getStoredUser } from '@/utils/authStorage';
-import { formatStatus } from '@/utils/formatters';
+import { getApplicationStatusMeta, getJobsVisualState, isActiveApplication } from '@/utils/applicationStatus';
 import { getViewedJobs, markJobViewed } from '@/utils/jobViewState';
 
 const CATEGORY_PILLS = ['All', 'Sales', 'Tech', 'HR', 'Finance', 'Marketing', 'Product', 'BPO', 'Ops'];
@@ -96,23 +98,9 @@ function getVisualJobState(job, isCandidate, viewedJobIds) {
   const appliedStatus = String(job.applied_status || '').toLowerCase();
 
   if (isCandidate && appliedStatus) {
-    if (['offer_sent', 'offer_accepted', 'joined'].includes(appliedStatus)) {
-      return {
-        state: 'offer',
-        label: formatStatus(job.applied_status),
-      };
-    }
-
-    if (appliedStatus === 'submitted') {
-      return {
-        state: 'applied',
-        label: 'Applied',
-      };
-    }
-
     return {
-      state: 'in_review',
-      label: formatStatus(job.applied_status),
+      state: getJobsVisualState(appliedStatus),
+      label: getApplicationStatusMeta(appliedStatus).badgeLabel,
     };
   }
 
@@ -250,24 +238,40 @@ export default function PublicJobsPage() {
     });
   }, [viewedJobIds, viewer.isCandidate, visibleJobs]);
 
-  const candidateStats = useMemo(() => {
+  const candidateContext = useMemo(() => {
     if (!viewer.isCandidate) {
       return null;
     }
 
-    const allJobsWithState = jobs.map((job) => getVisualJobState(job, true, viewedJobIds));
-    const appliedCount = allJobsWithState.filter((item) => item.state === 'applied').length;
-    const reviewCount = allJobsWithState.filter((item) => item.state === 'in_review').length;
-    const offerCount = allJobsWithState.filter((item) => item.state === 'offer').length;
+    const totalApplications = jobs.filter((job) => job.applied_status).length;
+    const reviewCount = jobs.filter((job) => {
+      const status = String(job.applied_status || '').toLowerCase();
+      return Boolean(status) && isActiveApplication(status) && status !== 'submitted';
+    }).length;
+    const offerCount = jobs.filter((job) => ['offer_sent', 'offer_accepted', 'joined'].includes(String(job.applied_status || '').toLowerCase())).length;
+    const strongMatches = jobs
+      .filter((job) => !job.applied_status)
+      .map((job) => calculateMatchPercent(job))
+      .filter((score) => score >= 80).length;
     const score = jobs.find((job) => job.candidate_career_score !== null && job.candidate_career_score !== undefined)?.candidate_career_score ?? '-';
+    const activityMessage = offerCount
+      ? `${offerCount} offer${offerCount === 1 ? '' : 's'} waiting`
+      : reviewCount
+        ? `${reviewCount} role${reviewCount === 1 ? '' : 's'} in motion`
+        : 'No active applications yet';
 
-    return [
-      { label: 'Applied', value: appliedCount },
-      { label: 'In Review', value: reviewCount },
-      { label: 'Offers', value: offerCount },
-      { label: 'Score', value: score },
-    ];
-  }, [jobs, viewedJobIds, viewer.isCandidate]);
+    return {
+      score,
+      strongMatches,
+      activityMessage,
+      stats: [
+        { label: 'Applied', value: totalApplications },
+        { label: 'In Review', value: reviewCount },
+        { label: 'Offers', value: offerCount },
+        { label: 'Score', value: score },
+      ],
+    };
+  }, [jobs, viewer.isCandidate]);
 
   function handleCardOpen(jobId) {
     markJobViewed(jobId);
@@ -275,35 +279,77 @@ export default function PublicJobsPage() {
   }
 
   return (
-    <PublicShell>
+    <PublicShell
+      utilityContent={viewer.isCandidate ? (
+        <>
+          <ThemeToggle className="shrink-0" tone="public" />
+          <Link className="oq-nav-utility-link" href="/candidate/applications">
+            My Applications
+          </Link>
+          <Link className="oq-nav-cta oq-nav-cta-secondary" href="/candidate/dashboard">
+            Candidate Workspace
+          </Link>
+        </>
+      ) : null}
+    >
       <div className="space-y-6">
         {viewer.isCandidate ? (
-          <section className="oq-shell rounded-[1.65rem] px-5 py-5 sm:px-6">
+          <section className="oq-shell rounded-[1.75rem] px-5 py-5 sm:px-6">
             <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
-              <div>
-                <p className="text-[0.78rem] uppercase tracking-[0.2em] text-[var(--text-muted)]">Jobs workspace</p>
-                <h1 className="mt-2 text-[1.7rem] font-medium tracking-[-0.05em] text-[var(--text)]">
-                  {`Good morning, ${getFirstName(viewer.user)}`}
-                </h1>
+              <div className="flex-1">
+                <p className="text-[0.78rem] uppercase tracking-[0.2em] text-[var(--text-muted)]">Candidate jobs workspace</p>
+                <div className="mt-2 flex flex-wrap items-center gap-3">
+                  <h1 className="text-[1.7rem] font-medium tracking-[-0.05em] text-[var(--text)]">
+                    {`Good morning, ${getFirstName(viewer.user)}`}
+                  </h1>
+                  <span className="rounded-full border border-[rgba(249,115,22,0.22)] bg-[rgba(249,115,22,0.12)] px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.16em] text-orange-200">
+                    Career Score {candidateContext?.score ?? '-'}
+                  </span>
+                </div>
+                <p className="mt-3 text-sm text-[var(--text-soft)]">
+                  {candidateContext ? `${candidateContext.strongMatches} strong matches available - ${candidateContext.activityMessage}` : 'Your job feed stays product-first once you sign in.'}
+                </p>
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                {candidateStats?.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="rounded-[1.15rem] border border-[rgba(29,40,56,0.9)] bg-[rgba(255,255,255,0.03)] px-4 py-3 shadow-[0_18px_28px_rgba(0,0,0,0.16)]"
-                  >
-                    <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[var(--text-muted)]">{stat.label}</p>
-                    <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[var(--text)]">{stat.value}</p>
-                  </div>
-                ))}
+              <div className="flex items-center gap-4 self-start xl:self-center">
+                <div className="flex h-[88px] w-[88px] shrink-0 flex-col items-center justify-center rounded-full border border-[rgba(249,115,22,0.22)] bg-[radial-gradient(circle_at_30%_30%,rgba(249,115,22,0.16),transparent_58%),rgba(255,255,255,0.03)] shadow-[0_18px_28px_rgba(0,0,0,0.16)]">
+                  <span className="text-[0.62rem] uppercase tracking-[0.18em] text-[var(--text-muted)]">Score</span>
+                  <span className="mt-1 text-xl font-semibold text-orange-200">{candidateContext?.score ?? '-'}</span>
+                </div>
+                <Link className="oq-button-secondary" href="/candidate/applications">
+                  Open Tracker
+                </Link>
               </div>
+            </div>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+              {candidateContext?.stats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-[1.15rem] border border-[rgba(29,40,56,0.9)] bg-[rgba(255,255,255,0.03)] px-4 py-3 shadow-[0_18px_28px_rgba(0,0,0,0.16)]"
+                >
+                  <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[var(--text-muted)]">{stat.label}</p>
+                  <p className="mt-2 text-lg font-semibold tracking-[-0.03em] text-[var(--text)]">{stat.value}</p>
+                </div>
+              ))}
             </div>
           </section>
         ) : null}
 
         <section className="sticky top-[5.4rem] z-10 rounded-[1.55rem] border border-[rgba(29,40,56,0.9)] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_100%),rgba(5,18,43,0.95)] p-4 shadow-[0_18px_34px_rgba(0,0,0,0.2)] backdrop-blur sm:p-5 lg:top-[6.3rem]">
-          <div className="space-y-3">
+          <div className="space-y-4">
+            {viewer.isCandidate ? (
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="text-[0.74rem] uppercase tracking-[0.18em] text-[var(--text-muted)]">Browse by domain</p>
+                  <p className="mt-1 text-sm text-[var(--text-soft)]">Match score, company score, and your application state stay visible on every role card.</p>
+                </div>
+                <Link className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand-accent)] transition hover:text-white" href="/candidate/applications">
+                  Go to My Applications
+                </Link>
+              </div>
+            ) : null}
+
             <input
               className="oq-input w-full"
               onChange={(event) => setQuery(event.target.value)}
@@ -321,12 +367,23 @@ export default function PublicJobsPage() {
                   return (
                     <button
                       key={pill}
-                      className={`oq-jobs-tab ${isActive ? 'oq-jobs-tab-active' : ''}`.trim()}
+                      className={viewer.isCandidate
+                        ? `flex min-w-[92px] flex-col items-start rounded-[1.15rem] border px-4 py-3 text-left shadow-[0_14px_28px_rgba(0,0,0,0.16)] transition ${isActive ? 'border-[rgba(93,224,230,0.28)] bg-[linear-gradient(90deg,rgba(55,162,206,0.14)_0%,rgba(93,224,230,0.18)_100%),rgba(6,18,43,0.94)]' : 'border-[rgba(29,40,56,0.88)] bg-[linear-gradient(180deg,rgba(255,255,255,0.025),transparent_100%),rgba(6,18,43,0.92)] hover:border-[rgba(93,224,230,0.22)] hover:text-white'}`
+                        : `oq-jobs-tab ${isActive ? 'oq-jobs-tab-active' : ''}`.trim()}
                       onClick={() => setActiveCategory(pill)}
                       type="button"
                     >
-                      <span>{pill}</span>
-                      <span className="text-[var(--graytexts)]">({count})</span>
+                      {viewer.isCandidate ? (
+                        <>
+                          <span className={`text-[0.68rem] font-semibold uppercase tracking-[0.18em] ${isActive ? 'text-white' : 'text-[var(--text-muted)]'}`.trim()}>{pill}</span>
+                          <span className={`mt-2 text-lg font-semibold tracking-[-0.03em] ${isActive ? 'text-white' : 'text-[var(--text)]'}`.trim()}>{count}</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>{pill}</span>
+                          <span className="text-[var(--graytexts)]">({count})</span>
+                        </>
+                      )}
                     </button>
                   );
                 })}
@@ -347,7 +404,7 @@ export default function PublicJobsPage() {
                 {activeCategory !== 'All' ? ` in ${activeCategory}` : ''}.
               </p>
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">
-                {viewer.isCandidate ? 'Match % and application state are visible.' : 'Sign in as a candidate to unlock Match % and application state.'}
+                {viewer.isCandidate ? 'Cards open the logged-in candidate detail flow.' : 'Sign in as a candidate to unlock Match % and application state.'}
               </p>
             </div>
 
@@ -355,7 +412,7 @@ export default function PublicJobsPage() {
               {jobsWithState.map((job) => (
                 <JobsProductCard
                   key={job.id}
-                  href={`/jobs/${job.id}`}
+                  href={viewer.isCandidate ? `/candidate/jobs/detail?jobId=${job.id}` : `/jobs/${job.id}`}
                   job={job}
                   matchPercent={job.matchPercent}
                   onOpen={() => handleCardOpen(job.id)}

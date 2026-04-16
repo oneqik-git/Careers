@@ -586,6 +586,67 @@ const migrations = [
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
   // ── NOTIFICATIONS ────────────────────────────────────────────
+  // —— COMMUNITY POST VOTES ————————————————————————————————————————————————
+  `CREATE TABLE IF NOT EXISTS community_post_votes (
+    id            VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    post_id       VARCHAR(36) NOT NULL,
+    user_id       VARCHAR(36) NOT NULL,
+    vote_type     ENUM('upvote') DEFAULT 'upvote',
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uniq_post_vote (post_id, user_id, vote_type),
+    FOREIGN KEY (post_id) REFERENCES community_posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_post (post_id),
+    INDEX idx_user (user_id)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // —— COMMUNITY COMMENTS & REPLIES ———————————————————————————————————————
+  `CREATE TABLE IF NOT EXISTS community_comments (
+    id                 VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    post_id            VARCHAR(36) NOT NULL,
+    author_id          VARCHAR(36) NOT NULL,
+    author_role        ENUM('candidate','employer'),
+    parent_comment_id  VARCHAR(36) NULL,
+    content            TEXT NOT NULL,
+    upvote_count       INT DEFAULT 0,
+    status             ENUM('pending','approved','rejected','flagged') DEFAULT 'approved',
+    created_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES community_posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_comment_id) REFERENCES community_comments(id) ON DELETE CASCADE,
+    INDEX idx_post (post_id),
+    INDEX idx_parent (parent_comment_id),
+    INDEX idx_status (status)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // —— COMMUNITY POLL OPTIONS ——————————————————————————————————————————————
+  `CREATE TABLE IF NOT EXISTS community_poll_options (
+    id             VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    post_id        VARCHAR(36) NOT NULL,
+    option_text    VARCHAR(255) NOT NULL,
+    vote_count     INT DEFAULT 0,
+    display_order  INT DEFAULT 1,
+    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (post_id) REFERENCES community_posts(id) ON DELETE CASCADE,
+    INDEX idx_post (post_id)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  // —— COMMUNITY POLL VOTES ————————————————————————————————————————————————
+  `CREATE TABLE IF NOT EXISTS community_poll_votes (
+    id          VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    post_id     VARCHAR(36) NOT NULL,
+    option_id   VARCHAR(36) NOT NULL,
+    user_id     VARCHAR(36) NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uniq_poll_vote (post_id, user_id),
+    FOREIGN KEY (post_id) REFERENCES community_posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (option_id) REFERENCES community_poll_options(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_post (post_id),
+    INDEX idx_option (option_id),
+    INDEX idx_user (user_id)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   `CREATE TABLE IF NOT EXISTS notifications (
     id           VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
     user_id      VARCHAR(36) NOT NULL,

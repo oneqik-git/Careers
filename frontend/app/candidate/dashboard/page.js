@@ -51,7 +51,7 @@ export default function CandidateDashboardPage() {
                 data?.open_to_work ? 'Open to work' : 'Not marked open to work',
               ].filter(Boolean)}
               actions={[
-                { label: 'Browse Jobs', href: '/jobs' },
+                { label: 'View Profile', href: '/candidate/profile' },
                 { label: 'My Applications', href: '/candidate/applications', variant: 'secondary' },
               ]}
               aside={
@@ -123,10 +123,10 @@ export default function CandidateDashboardPage() {
                 <div className="space-y-3">
                   <Link
                     className="flex items-center justify-between rounded-2xl bg-slate-950 px-4 py-3 text-sm font-medium text-white transition hover:bg-slate-800"
-                    href="/jobs"
+                    href="/candidate/profile"
                   >
-                    <span>Browse Jobs</span>
-                    <span>Open roles</span>
+                    <span>View Profile</span>
+                    <span>Identity summary</span>
                   </Link>
                   <Link
                     className="flex items-center justify-between rounded-2xl border border-slate-300 px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
@@ -134,6 +134,13 @@ export default function CandidateDashboardPage() {
                   >
                     <span>My Applications</span>
                     <span>Track updates</span>
+                  </Link>
+                  <Link
+                    className="flex items-center justify-between rounded-2xl border border-slate-300 px-4 py-3 text-sm font-medium text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"
+                    href="/learn"
+                  >
+                    <span>Learn</span>
+                    <span>Progress view</span>
                   </Link>
                 </div>
               </SectionCard>

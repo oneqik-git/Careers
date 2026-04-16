@@ -26,7 +26,7 @@ router.get('/me', auth, requireCandidate, asyncHandler(async (req, res) => {
     });
   }
 
-  const [score, experiences, documents, certs, scoreHistory] = await Promise.all([
+  const [score, experiences, documents, certs, learningJourney, scoreHistory, topSkills, applicationSummary, communityActivity] = await Promise.all([
     ensureCareerScore(candidate.id),
     query(`SELECT we.*,
       (SELECT JSON_ARRAYAGG(JSON_OBJECT('id', a.id, 'title', a.title, 'description', a.description,
@@ -39,8 +39,71 @@ router.get('/me', auth, requireCandidate, asyncHandler(async (req, res) => {
       [candidate.id]),
     query('SELECT * FROM digilocker_documents WHERE candidate_id = ? ORDER BY created_at DESC', [candidate.id]),
     query("SELECT * FROM course_enrollments ce JOIN courses c ON ce.course_id = c.id WHERE ce.candidate_id = ? AND ce.status = 'completed'", [candidate.id]),
+    query(
+      `SELECT ce.*, c.title, c.slug, c.domain, c.sub_domain, c.level, c.duration_mins, c.provider, c.score_pts_reward
+       FROM course_enrollments ce
+       JOIN courses c ON ce.course_id = c.id
+       WHERE ce.candidate_id = ?
+       ORDER BY
+         CASE ce.status
+           WHEN 'in_progress' THEN 1
+           WHEN 'enrolled' THEN 2
+           WHEN 'completed' THEN 3
+           ELSE 4
+         END ASC,
+         ce.enrolled_at DESC`,
+      [candidate.id]
+    ),
     query('SELECT * FROM score_events WHERE candidate_id = ? ORDER BY created_at DESC LIMIT 10', [candidate.id]),
+    query(
+      `SELECT skill_name, score, max_score, source, ai_summary, ai_tags, assessed_at
+       FROM skill_assessments
+       WHERE candidate_id = ? AND status = 'completed'
+       ORDER BY score DESC, assessed_at DESC
+       LIMIT 8`,
+      [candidate.id]
+    ),
+    queryOne(
+      `SELECT
+        COUNT(*) AS total,
+        SUM(CASE WHEN status = 'submitted' THEN 1 ELSE 0 END) AS submitted,
+        SUM(CASE WHEN status = 'under_review' THEN 1 ELSE 0 END) AS under_review,
+        SUM(CASE WHEN status = 'shortlisted' THEN 1 ELSE 0 END) AS shortlisted,
+        SUM(CASE WHEN status = 'interview_scheduled' THEN 1 ELSE 0 END) AS interview_scheduled,
+        SUM(CASE WHEN status = 'interview_done' THEN 1 ELSE 0 END) AS interview_done,
+        SUM(CASE WHEN status = 'offer_sent' THEN 1 ELSE 0 END) AS offer_sent,
+        SUM(CASE WHEN status = 'offer_accepted' THEN 1 ELSE 0 END) AS offer_accepted,
+        SUM(CASE WHEN status = 'joined' THEN 1 ELSE 0 END) AS joined,
+        SUM(CASE WHEN status = 'on_hold' THEN 1 ELSE 0 END) AS on_hold,
+        SUM(CASE WHEN status = 'rejected' THEN 1 ELSE 0 END) AS rejected,
+        SUM(CASE WHEN status = 'withdrawn' THEN 1 ELSE 0 END) AS withdrawn,
+        ROUND(AVG(ai_match_score), 2) AS avg_match_score
+       FROM job_applications
+       WHERE candidate_id = ?`,
+      [candidate.id]
+    ),
+    queryOne(
+      `SELECT
+        (SELECT COUNT(*) FROM community_posts WHERE author_id = ? AND author_role = 'candidate' AND status = 'approved') AS posts_count,
+        (SELECT COUNT(*) FROM community_comments WHERE author_id = ? AND author_role = 'candidate' AND status = 'approved') AS comments_count`,
+      [req.user.id, req.user.id]
+    ),
   ]);
+
+  const verifiedExperienceCount = experiences.filter((experience) => experience.is_employer_verified).length;
+  const verifiedAchievementCount = experiences.reduce(
+    (sum, experience) => sum + parseJsonArray(experience.achievements).filter((achievement) => achievement.is_employer_verified).length,
+    0
+  );
+  const verifiedDocumentCount = documents.filter((document) => document.is_verified).length;
+  const profileStrength = {
+    verified_documents: verifiedDocumentCount,
+    verified_experiences: verifiedExperienceCount,
+    verified_achievements: verifiedAchievementCount,
+    completed_courses: certs.length,
+    active_learning_items: learningJourney.filter((item) => item.status === 'in_progress').length,
+    assessed_skills: topSkills.length,
+  };
 
   return sendSuccess(res, {
     data: {
@@ -49,7 +112,15 @@ router.get('/me', auth, requireCandidate, asyncHandler(async (req, res) => {
       experiences: experiences.map(normalizeWorkExperience),
       documents,
       certifications: certs,
+      learning_journey: learningJourney,
+      skills_overview: topSkills.map((skill) => ({
+        ...skill,
+        ai_tags: parseJsonArray(skill.ai_tags),
+      })),
       score_history: scoreHistory,
+      application_summary: applicationSummary,
+      community_activity: communityActivity,
+      profile_strength: profileStrength,
     },
   });
 }));

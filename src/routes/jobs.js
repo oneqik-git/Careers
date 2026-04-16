@@ -624,9 +624,10 @@ router.get('/my/applications', auth, requireCandidate, asyncHandler(async (req, 
 
   const apps = await query(
     `SELECT ja.id, ja.status, ja.career_score_at_apply, ja.ai_match_score, ja.applied_at, ja.status_updated_at,
-     ja.rejection_reason, ja.hold_until, ja.tat_breach,
-     jp.id as job_id, jp.title, jp.department, jp.level, jp.work_mode, jp.salary_min, jp.salary_max, jp.salary_disclosed,
-     c.name as company_name, c.logo_url,
+     ja.reviewed_at, ja.rejection_reason, ja.hold_until, ja.tat_breach,
+     jp.id as job_id, jp.title, jp.department, jp.job_function, jp.level, jp.work_mode, jp.location, jp.tat_hours,
+     jp.experience_min_years, jp.experience_max_years, jp.salary_min, jp.salary_max, jp.salary_disclosed,
+     c.id as company_id, c.name as company_name, c.logo_url,
      (SELECT COUNT(*) FROM job_applications ja2
       JOIN job_postings jp2 ON ja2.job_id = jp2.id
       WHERE ja2.candidate_id = ? AND jp2.company_id = jp.company_id) as total_apps_to_company

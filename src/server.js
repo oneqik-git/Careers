@@ -47,11 +47,15 @@ const authRoutes      = require('./routes/auth');
 const { router: jobRoutes } = require('./routes/jobs');
 const candidateRoutes = require('./routes/candidates');
 const companyRoutes   = require('./routes/companies');
+const communityRoutes = require('./routes/community');
+const learnRoutes     = require('./routes/learn');
 
 app.use('/api/auth',       authRoutes);
 app.use('/api/jobs',       jobRoutes);
 app.use('/api/candidates', candidateRoutes);
 app.use('/api/companies',  companyRoutes);
+app.use('/api/community',  communityRoutes);
+app.use('/api/learn',      learnRoutes);
 
 // ── 404 ───────────────────────────────────────────────────────────
 app.use((req, res) => {

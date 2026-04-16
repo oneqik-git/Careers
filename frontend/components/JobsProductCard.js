@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { formatExperienceRange, formatRelativeTime, formatSalaryRange, formatStatus } from '@/utils/formatters';
+import { getApplicationStatusMeta } from '@/utils/applicationStatus';
 
 const stateToneMap = {
   default: {
@@ -21,6 +22,18 @@ const stateToneMap = {
   offer: {
     card: 'border-[rgba(34,197,94,0.3)] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_100%),rgba(8,27,48,0.98)]',
     badge: 'border-[rgba(34,197,94,0.32)] bg-[rgba(34,197,94,0.15)] text-[#8cf0b1]',
+  },
+  on_hold: {
+    card: 'border-[rgba(245,158,11,0.3)] bg-[linear-gradient(180deg,rgba(245,158,11,0.08),transparent_100%),rgba(19,22,32,0.98)]',
+    badge: 'border-[rgba(245,158,11,0.3)] bg-[rgba(245,158,11,0.16)] text-amber-200',
+  },
+  rejected: {
+    card: 'border-[rgba(244,63,94,0.3)] bg-[linear-gradient(180deg,rgba(244,63,94,0.08),transparent_100%),rgba(21,18,28,0.98)]',
+    badge: 'border-[rgba(244,63,94,0.3)] bg-[rgba(244,63,94,0.16)] text-rose-200',
+  },
+  withdrawn: {
+    card: 'border-[rgba(148,163,184,0.24)] bg-[linear-gradient(180deg,rgba(148,163,184,0.06),transparent_100%),rgba(12,20,34,0.98)]',
+    badge: 'border-[rgba(148,163,184,0.24)] bg-[rgba(71,85,105,0.18)] text-slate-200',
   },
 };
 
@@ -51,6 +64,26 @@ function renderInfoPanel(label, value) {
   );
 }
 
+function getCandidateFooterMessage(state, stateLabel) {
+  if (state === 'offer') {
+    return 'Offer-stage application. Open the candidate detail flow to review the role and jump into the tracker.';
+  }
+
+  if (state === 'in_review' || state === 'on_hold') {
+    return `${stateLabel || 'Application in progress'}. Open the candidate detail flow for structured context and next steps.`;
+  }
+
+  if (state === 'rejected' || state === 'withdrawn') {
+    return `${stateLabel || 'Application closed'}. Re-open the role to compare fit or move into similar jobs.`;
+  }
+
+  if (state === 'applied') {
+    return 'Already submitted. Open the candidate detail flow or tracker to monitor progress.';
+  }
+
+  return 'Structured application flow with status tracking once you apply.';
+}
+
 export default function JobsProductCard({
   job,
   href,
@@ -64,6 +97,10 @@ export default function JobsProductCard({
   const tone = stateToneMap[state] || stateToneMap.default;
   const tags = buildTags(job);
   const companyDetails = [job.company_name, job.location].filter(Boolean).join(' | ');
+  const statusMeta = getApplicationStatusMeta(job.applied_status);
+  const candidateFooterMessage = getCandidateFooterMessage(state, stateLabel);
+  const companyScoreValue = job.company_score ?? '-';
+  const isCandidateMode = showApplicationState || showMatch;
 
   return (
     <Link className="block" href={href} onClick={onOpen}>
@@ -81,10 +118,27 @@ export default function JobsProductCard({
                     {job.title}
                   </h2>
                   <p className="mt-1 text-sm text-[var(--text-soft)]">{companyDetails || 'Company details pending'}</p>
+                  {isCandidateMode ? (
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <span className="text-xs font-medium uppercase tracking-[0.18em] text-[var(--text-muted)]">Company Score</span>
+                      <span className="text-sm font-semibold text-[var(--text)]">{companyScoreValue}</span>
+                      {job.applied_status ? (
+                        <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] ${statusMeta.badgeClassName}`.trim()}>
+                          {statusMeta.badgeLabel}
+                        </span>
+                      ) : null}
+                    </div>
+                  ) : null}
                 </div>
 
-                <div className="flex shrink-0 items-center gap-2">
-                  {state !== 'default' && (showApplicationState || state === 'viewed') ? (
+                <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+                  {showMatch ? (
+                    <div className="rounded-[1rem] border border-[rgba(45,212,191,0.24)] bg-[rgba(13,148,136,0.12)] px-3 py-2 text-right shadow-[0_12px_22px_rgba(0,0,0,0.14)]">
+                      <p className="text-[0.62rem] font-semibold uppercase tracking-[0.18em] text-teal-100/80">Match</p>
+                      <p className="mt-1 text-base font-semibold text-teal-100">{matchPercent !== null ? `${matchPercent}%` : '-'}</p>
+                    </div>
+                  ) : null}
+                  {!showMatch && state !== 'default' && (showApplicationState || state === 'viewed') ? (
                     <span
                       className={`inline-flex items-center rounded-full border px-3 py-1 text-[0.66rem] font-semibold uppercase tracking-[0.16em] ${tone.badge}`.trim()}
                     >
@@ -109,13 +163,17 @@ export default function JobsProductCard({
             </div>
           </div>
 
-          <div className={`grid gap-3 ${showMatch ? 'sm:grid-cols-3' : 'sm:grid-cols-2 lg:grid-cols-3'}`}>
+          <div className={`grid gap-3 ${isCandidateMode ? 'sm:grid-cols-3' : 'sm:grid-cols-2 lg:grid-cols-3'}`}>
             {renderInfoPanel('Salary', formatSalaryRange(job.salary_min, job.salary_max, job.salary_disclosed))}
-            {renderInfoPanel('Co. Score', job.company_score ?? '-')}
-            {showMatch
-              ? renderInfoPanel('Match %', matchPercent !== null ? `${matchPercent}%` : '-')
-              : renderInfoPanel('Status', state === 'viewed' ? 'Viewed' : 'Open')}
+            {renderInfoPanel('Experience', formatExperienceRange(job.experience_min_years, job.experience_max_years))}
+            {renderInfoPanel(isCandidateMode ? 'Application state' : 'Status', isCandidateMode ? (stateLabel || 'Open') : (state === 'viewed' ? 'Viewed' : 'Open'))}
           </div>
+
+          {isCandidateMode ? (
+            <div className="rounded-[1.15rem] border border-[rgba(29,40,56,0.9)] bg-[rgba(255,255,255,0.025)] px-4 py-3 text-sm text-[var(--text-soft)]">
+              {candidateFooterMessage}
+            </div>
+          ) : null}
         </div>
       </article>
     </Link>
