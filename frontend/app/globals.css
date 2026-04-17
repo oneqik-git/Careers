@@ -185,6 +185,241 @@ textarea {
 }
 
 @layer components {
+  .nav-shell {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    margin-bottom: 3rem;
+    overflow: hidden;
+    border: 1px solid rgba(29, 40, 56, 0.85);
+    border-top: 0;
+    border-radius: 0 0 15px 15px;
+    background-color: var(--dark-pallet);
+    box-shadow: var(--shadow-soft);
+    backdrop-filter: blur(18px);
+    isolation: isolate;
+  }
+
+  .nav-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+  }
+
+  .nav-shell-home::before {
+    opacity: 1;
+    background:
+      radial-gradient(circle at 14% 0%, rgba(93, 224, 230, 0.18), transparent 34%),
+      linear-gradient(180deg, rgba(93, 224, 230, 0.08), transparent 65%);
+  }
+
+  html[data-theme='light'] .nav-shell-home::before {
+    background:
+      radial-gradient(circle at 14% 0%, rgba(93, 224, 230, 0.24), transparent 34%),
+      linear-gradient(180deg, rgba(49, 131, 255, 0.08), transparent 65%);
+  }
+
+  .nav-link,
+  .oq-nav-link,
+  .oq-nav-utility-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.15rem;
+    color: var(--secondary-1);
+    font-size: 0.94rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+    transform-origin: center;
+  }
+
+  .nav-link:hover,
+  .oq-nav-link:hover,
+  .oq-nav-utility-link:hover {
+    transform: scale(1.2);
+    color: var(--white);
+  }
+
+  .nav-link-active,
+  .oq-nav-link-active {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .btn-primary,
+  .oq-button-primary,
+  .oq-nav-cta-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 52px;
+    padding: 0.84rem 1.4rem;
+    border: 1px solid var(--dark-1);
+    border-radius: 100px;
+    background: transparent;
+    box-shadow:
+      -10px -6px 10px 5px var(--light-glow),
+      10px 6px 10px 5px var(--dark-glow);
+    color: var(--white);
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+
+  .btn-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 52px;
+    padding: 14px 24px;
+    border: 1px solid var(--dark-1);
+    border-radius: 6px;
+    background: transparent;
+    box-shadow:
+      -10px -6px 10px 5px var(--light-glow),
+      10px 6px 10px 5px var(--dark-glow);
+    color: var(--white);
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+  }
+
+  .btn-primary:hover,
+  .btn-box:hover,
+  .oq-button-primary:hover,
+  .oq-nav-cta-primary:hover {
+    background: linear-gradient(83deg, #5de0e6, var(--secondary-2));
+    color: var(--backgrounda);
+    transform: scale(0.96);
+  }
+
+  .btn-primary:focus-visible,
+  .btn-box:focus-visible,
+  .oq-button-primary:focus-visible,
+  .oq-button-secondary:focus-visible,
+  .oq-button-ghost:focus-visible,
+  .oq-nav-pill:focus-visible,
+  .oq-nav-link:focus-visible,
+  .oq-nav-utility-link:focus-visible,
+  .oq-nav-cta:focus-visible,
+  .oq-link:focus-visible,
+  a:focus-visible,
+  button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(93, 224, 230, 0.16), 0 0 0 1px rgba(93, 224, 230, 0.3);
+  }
+
+  .btn-primary:disabled,
+  .btn-box:disabled,
+  .oq-button-primary:disabled,
+  .oq-button-secondary:disabled,
+  .oq-button-ghost:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+  }
+
+  .text-field,
+  .oq-input,
+  .oq-textarea,
+  .oq-select {
+    width: 100%;
+    border: 1px solid var(--backgrounda);
+    border-radius: 15px;
+    padding: 14px 20px;
+    background: var(--backgrounda);
+    color: var(--text);
+    outline: none;
+    transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    box-shadow:
+      inset -4px -1px 8px -5px rgba(93, 224, 230, 0.3),
+      inset 6px 3px 10px 5px rgba(0, 0, 0, 0.3);
+  }
+
+  .text-field::placeholder,
+  .oq-input::placeholder,
+  .oq-textarea::placeholder {
+    color: var(--graytexts);
+  }
+
+  .text-field:focus,
+  .oq-input:focus,
+  .oq-textarea:focus,
+  .oq-select:focus {
+    border-color: rgba(93, 224, 230, 0.32);
+    box-shadow:
+      inset -4px -1px 8px -5px rgba(93, 224, 230, 0.34),
+      inset 6px 3px 10px 5px rgba(0, 0, 0, 0.32),
+      0 0 0 3px rgba(93, 224, 230, 0.08);
+  }
+
+  .field-label {
+    color: #5de0e6;
+    font-size: 0.7rem;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .grid-container {
+    display: grid;
+    gap: 30px;
+    align-items: start;
+    padding: 6px 0 8px;
+  }
+
+  .grid-card {
+    position: relative;
+    border-radius: 15px;
+    padding: 32px;
+    background: linear-gradient(180deg, var(--transparent-2), var(--transparent-3));
+    box-shadow:
+      -4px -4px 10px 3px rgba(93, 224, 230, 0.05),
+      4px 6px 10px 3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+  }
+
+  .grid-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .h1-style {
+    font-size: 3rem;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+  }
+
+  .h2-style {
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.04em;
+  }
+
+  .hero-panel-clean {
+    background:
+      radial-gradient(circle at 18% 16%, rgba(93, 224, 230, 0.05), transparent 22%),
+      radial-gradient(circle at 82% 18%, rgba(49, 131, 255, 0.08), transparent 24%),
+      linear-gradient(180deg, rgba(3, 14, 37, 0.96) 0%, rgba(4, 20, 52, 0.96) 58%, rgba(7, 28, 68, 0.94) 100%);
+  }
+
+  html[data-theme='light'] .hero-panel-clean {
+    background:
+      radial-gradient(circle at 18% 16%, rgba(93, 224, 230, 0.14), transparent 22%),
+      radial-gradient(circle at 82% 18%, rgba(49, 131, 255, 0.12), transparent 24%),
+      linear-gradient(180deg, rgba(244, 249, 255, 0.98) 0%, rgba(229, 239, 255, 0.98) 58%, rgba(212, 229, 255, 0.96) 100%);
+  }
+
   .oq-shell {
     border: 1px solid var(--dark-1);
     background:
@@ -294,7 +529,6 @@ textarea {
       rgba(240, 247, 255, 0.94);
   }
 
-  .oq-button-primary,
   .oq-button-secondary,
   .oq-button-ghost {
     display: inline-flex;
@@ -328,19 +562,20 @@ textarea {
     box-shadow: 0 0 0 3px rgba(93, 224, 230, 0.16), 0 0 0 1px rgba(93, 224, 230, 0.3);
   }
 
-  .oq-button-primary:hover,
   .oq-button-secondary:hover,
   .oq-button-ghost:hover {
     transform: translateY(-2px);
   }
 
   .oq-button-primary {
-    background: linear-gradient(90deg, var(--primary-2) 0%, var(--primary-5) 100%);
-    color: #06162d;
+    background: transparent;
+    color: var(--white);
   }
 
   .oq-button-primary:hover {
-    background: linear-gradient(90deg, #7be7eb 0%, #5c9cff 100%);
+    background: linear-gradient(83deg, #5de0e6, var(--secondary-2));
+    color: var(--backgrounda);
+    transform: scale(0.96);
   }
 
   .oq-button-secondary {
@@ -512,29 +747,23 @@ textarea {
   .oq-input,
   .oq-textarea,
   .oq-select {
-    width: 100%;
-    border-radius: 15px;
-    border: 1px solid var(--dark-1);
-    background: rgba(5, 18, 43, 0.9);
-    color: var(--text);
-    outline: none;
-    transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--backgrounda);
+    background: var(--backgrounda);
+    box-shadow:
+      inset -4px -1px 8px -5px rgba(93, 224, 230, 0.3),
+      inset 6px 3px 10px 5px rgba(0, 0, 0, 0.3);
   }
 
   html[data-theme='light'] .oq-input,
   html[data-theme='light'] .oq-textarea,
   html[data-theme='light'] .oq-select {
-    background: rgba(255, 255, 255, 0.84);
+    background: var(--backgrounda);
   }
 
   .oq-input,
-  .oq-select {
-    padding: 0.92rem 1rem;
-  }
-
+  .oq-select,
   .oq-textarea {
-    padding: 0.96rem 1rem;
+    padding: 14px 20px;
   }
 
   .oq-input::placeholder,
@@ -545,8 +774,10 @@ textarea {
   .oq-input:focus,
   .oq-textarea:focus,
   .oq-select:focus {
-    border-color: rgba(93, 224, 230, 0.32);
-    box-shadow: 0 0 0 4px rgba(93, 224, 230, 0.08);
+    box-shadow:
+      inset -4px -1px 8px -5px rgba(93, 224, 230, 0.34),
+      inset 6px 3px 10px 5px rgba(0, 0, 0, 0.32),
+      0 0 0 3px rgba(93, 224, 230, 0.08);
   }
 
   .oq-public-root .oq-shell {
@@ -677,7 +908,6 @@ textarea {
     color: var(--white);
   }
 
-  .oq-public-root .oq-button-primary,
   .oq-public-root .oq-button-secondary,
   .oq-public-root .oq-button-ghost {
     border-color: rgba(93, 224, 230, 0.18);
@@ -686,10 +916,8 @@ textarea {
     box-shadow: none;
   }
 
-  .oq-public-root .oq-button-primary:hover,
   .oq-public-root .oq-button-secondary:hover,
   .oq-public-root .oq-button-ghost:hover,
-  .oq-public-root .oq-button-primary:focus-visible,
   .oq-public-root .oq-button-secondary:focus-visible,
   .oq-public-root .oq-button-ghost:focus-visible {
     transform: translateY(-2px);
@@ -702,9 +930,10 @@ textarea {
   }
 
   .oq-public-root .oq-button-primary {
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 100%),
-      rgba(9, 12, 17, 0.58);
+    background: transparent;
+    box-shadow:
+      -10px -6px 10px 5px var(--light-glow),
+      10px 6px 10px 5px var(--dark-glow);
   }
 
   .oq-public-root .oq-button-secondary {
@@ -724,29 +953,35 @@ textarea {
     background: rgba(93, 224, 230, 0.06);
   }
 
+  .oq-public-root .nav-link,
   .oq-public-root .oq-nav-link,
   .oq-public-root .oq-nav-utility-link {
     color: var(--secondary-1);
     font-size: 0.94rem;
     font-weight: 400;
     letter-spacing: 0.01em;
-    transition: color 180ms ease, opacity 180ms ease;
+    transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
   }
 
+  .oq-public-root .nav-link,
   .oq-public-root .oq-nav-link {
     padding: 0.3rem 0.15rem;
   }
 
+  .oq-public-root .nav-link:hover,
   .oq-public-root .oq-nav-link:hover,
   .oq-public-root .oq-nav-utility-link:hover {
+    transform: scale(1.2);
     color: var(--white);
   }
 
+  .oq-public-root .nav-link-active,
   .oq-public-root .oq-nav-link-active {
     color: var(--white);
     font-weight: 500;
   }
 
+  html[data-theme='light'] .oq-public-root .nav-link-active,
   html[data-theme='light'] .oq-public-root .oq-nav-link-active {
     color: var(--text);
   }
