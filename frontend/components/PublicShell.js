@@ -12,6 +12,8 @@ const navItems = [
   { label: 'Jobs', href: '/jobs' },
   { label: 'Community', href: '/community' },
   { label: 'Learn', href: '/learn' },
+  { label: 'For Employers', href: '/employers' },
+  { label: 'About', href: '/about' },
 ];
 
 const footerGroups = [
@@ -62,7 +64,6 @@ function BrandLockup() {
 export default function PublicShell({ children, utilityContent }) {
   const pathname = usePathname();
   const [session, setSession] = useState({ role: null, user: null });
-  const isHomePage = pathname === '/';
 
   useEffect(() => {
     setSession({
@@ -78,7 +79,7 @@ export default function PublicShell({ children, utilityContent }) {
   return (
     <main className="oq-public-root min-h-screen px-4 pb-5 pt-0 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
-        <header className={`nav-shell ${isHomePage ? 'nav-shell-home' : ''} px-5 py-5 sm:px-6`.trim()}>
+        <header className="oq-header-shell sticky top-0 z-20 mb-12 rounded-b-[15px] px-5 py-5 sm:px-6">
           <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center lg:gap-6">
             <div className="flex items-center justify-between gap-4">
               <BrandLockup />
@@ -91,7 +92,7 @@ export default function PublicShell({ children, utilityContent }) {
                 return (
                   <Link
                     key={item.href}
-                    className={`nav-link ${isActive ? 'nav-link-active' : ''}`.trim()}
+                    className={`oq-nav-link ${isActive ? 'oq-nav-link-active' : ''}`.trim()}
                     href={item.href}
                   >
                     {item.label}
@@ -112,25 +113,25 @@ export default function PublicShell({ children, utilityContent }) {
                         </span>
                       ) : null}
                       {session.role === 'candidate' ? (
-                        <Link className="nav-link" href="/candidate/applications">
+                        <Link className="oq-nav-utility-link" href="/candidate/applications">
                           Applications
                         </Link>
                       ) : (
-                        <Link className="nav-link" href="/employer/jobs">
+                        <Link className="oq-nav-utility-link" href="/employer/jobs">
                           Jobs
                         </Link>
                       )}
-                      <Link className="btn-primary" href={dashboardHref}>
+                      <Link className="oq-nav-cta oq-nav-cta-secondary" href={dashboardHref}>
                         {workspaceLabel}
                       </Link>
                     </>
                   ) : (
                     <>
-                      <Link className="nav-link" href="/employers">
-                        Employers
-                      </Link>
-                      <Link className="btn-primary" href="/login">
+                      <Link className="oq-nav-utility-link" href="/login">
                         Login
+                      </Link>
+                      <Link className="oq-nav-cta oq-nav-cta-secondary" href="/employer/login">
+                        Employer Login
                       </Link>
                     </>
                   )}
