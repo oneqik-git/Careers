@@ -10,23 +10,23 @@ import { fetchJobs } from '@/services/jobs';
 import { formatExperienceRange, formatSalaryRange, formatStatus } from '@/utils/formatters';
 
 const trustPoints = [
-  'Structured applications, not resume spam',
+  'Credibility over Resume',
   'Clear application progress',
   'Better visibility for the right roles',
 ];
 
 const differenceCards = [
   {
-    title: 'Apply with context',
-    description: 'Show more than a resume.',
+    title: 'Everything in one place',
+    description: 'Your progress, your profile, your opportunities - finally connected.',
   },
   {
-    title: 'Get real visibility',
-    description: 'Be seen for the right roles.',
+    title: 'Show off what you bring',
+    description: 'A Recorded proof of your skills & Capabilities.',
   },
   {
-    title: 'Know where you stand',
-    description: 'No more guessing after applying.',
+    title: 'Know Where You Stand',
+    description: 'Complete clarity on your applications',
   },
 ];
 
@@ -46,6 +46,7 @@ const fallbackJobs = [
     location: 'Hyderabad',
     work_mode: 'hybrid',
     department: 'Technology',
+    job_function: 'Frontend',
     level: 'mid',
     salary_min: 1400000,
     salary_max: 2100000,
@@ -64,6 +65,7 @@ const fallbackJobs = [
     location: 'Bengaluru',
     work_mode: 'hybrid',
     department: 'Operations',
+    job_function: 'Process Ops',
     level: 'mid',
     salary_min: 850000,
     salary_max: 1250000,
@@ -82,6 +84,7 @@ const fallbackJobs = [
     location: 'Chennai',
     work_mode: 'on_site',
     department: 'Operations',
+    job_function: 'Clinical Operations',
     level: 'mid',
     salary_min: 800000,
     salary_max: 1200000,
@@ -100,6 +103,7 @@ const fallbackJobs = [
     location: 'Remote - India',
     work_mode: 'remote',
     department: 'Customer Success',
+    job_function: 'Renewals',
     level: 'mid',
     salary_min: 900000,
     salary_max: 1350000,
@@ -118,6 +122,7 @@ const fallbackJobs = [
     location: 'Remote - India',
     work_mode: 'remote',
     department: 'Product',
+    job_function: 'Product Design',
     level: 'mid',
     salary_min: 1300000,
     salary_max: 1900000,
@@ -136,6 +141,7 @@ const fallbackJobs = [
     location: 'Mumbai',
     work_mode: 'hybrid',
     department: 'Marketing',
+    job_function: 'Growth',
     level: 'junior',
     salary_min: 650000,
     salary_max: 900000,
@@ -146,69 +152,281 @@ const fallbackJobs = [
     company_score: 4.6,
     is_featured: false,
   },
+  {
+    id: 'demo-sales-executive',
+    title: 'Sales Executive',
+    company_name: 'VerveRetail Cloud',
+    industry: 'Retail Technology',
+    location: 'Mumbai',
+    work_mode: 'hybrid',
+    department: 'Sales & GTM',
+    job_function: 'Inside Sales',
+    level: 'junior',
+    salary_min: 600000,
+    salary_max: 900000,
+    salary_disclosed: true,
+    experience_min_years: 1,
+    experience_max_years: 3,
+    openings: 3,
+    company_score: 4.3,
+    is_featured: false,
+  },
+  {
+    id: 'demo-business-development-manager',
+    title: 'Business Development Manager',
+    company_name: 'Northstar Commerce',
+    industry: 'Retail Technology',
+    location: 'Bengaluru',
+    work_mode: 'hybrid',
+    department: 'Sales & GTM',
+    job_function: 'Business Development',
+    level: 'mid',
+    salary_min: 1200000,
+    salary_max: 1800000,
+    salary_disclosed: true,
+    experience_min_years: 3,
+    experience_max_years: 6,
+    openings: 2,
+    company_score: 4.6,
+    is_featured: false,
+  },
+  {
+    id: 'demo-hr-recruiter',
+    title: 'HR Recruiter',
+    company_name: 'PeoplePulse Labs',
+    industry: 'HR Tech',
+    location: 'Pune',
+    work_mode: 'hybrid',
+    department: 'Human Resources',
+    job_function: 'Talent Acquisition',
+    level: 'junior',
+    salary_min: 500000,
+    salary_max: 800000,
+    salary_disclosed: true,
+    experience_min_years: 1,
+    experience_max_years: 3,
+    openings: 2,
+    company_score: 4.3,
+    is_featured: false,
+  },
+  {
+    id: 'demo-hr-operations-specialist',
+    title: 'HR Operations Specialist',
+    company_name: 'TrueNorth HR Cloud',
+    industry: 'HR Tech',
+    location: 'Bengaluru',
+    work_mode: 'hybrid',
+    department: 'Human Resources',
+    job_function: 'HR Ops',
+    level: 'mid',
+    salary_min: 800000,
+    salary_max: 1200000,
+    salary_disclosed: true,
+    experience_min_years: 2,
+    experience_max_years: 5,
+    openings: 1,
+    company_score: 4.5,
+    is_featured: false,
+  },
+  {
+    id: 'demo-accounts-executive',
+    title: 'Accounts Executive',
+    company_name: 'LedgerLane Finance',
+    industry: 'Fintech',
+    location: 'Mumbai',
+    work_mode: 'on_site',
+    department: 'Finance',
+    job_function: 'Accounting',
+    level: 'junior',
+    salary_min: 550000,
+    salary_max: 850000,
+    salary_disclosed: true,
+    experience_min_years: 1,
+    experience_max_years: 3,
+    openings: 2,
+    company_score: 4.7,
+    is_featured: false,
+  },
+  {
+    id: 'demo-customer-support-executive',
+    title: 'Customer Support Executive',
+    company_name: 'OrbitServe Global',
+    industry: 'BPO / Operations',
+    location: 'Jaipur',
+    work_mode: 'on_site',
+    department: 'BPO / Contact Centre',
+    job_function: 'Inbound',
+    level: 'entry',
+    salary_min: 320000,
+    salary_max: 500000,
+    salary_disclosed: true,
+    experience_min_years: 0,
+    experience_max_years: 2,
+    openings: 4,
+    company_score: 4.0,
+    is_featured: false,
+  },
+  {
+    id: 'demo-software-engineer',
+    title: 'Software Engineer',
+    company_name: 'AptEdge Software',
+    industry: 'SaaS',
+    location: 'Pune',
+    work_mode: 'hybrid',
+    department: 'Technology',
+    job_function: 'Product Engineering',
+    level: 'junior',
+    salary_min: 900000,
+    salary_max: 1400000,
+    salary_disclosed: true,
+    experience_min_years: 0,
+    experience_max_years: 2,
+    openings: 2,
+    company_score: 4.7,
+    is_featured: false,
+  },
 ];
 
-function buildRoleClusters(jobs) {
-  const counts = new Map();
+const roleClusterDefinitions = [
+  {
+    key: 'sales-business-development',
+    label: 'Sales & Business Development',
+    tagline: 'For people who know how to open doors, build trust, and move conversations forward.',
+    departments: ['Sales & GTM'],
+    exampleRoles: ['Sales Executive', 'BDE', 'Business Development Manager', 'Sales Manager'],
+    matchers: ['sales', 'business development', 'account executive', 'account manager', 'inside sales', 'partnership', 'revenue'],
+  },
+  {
+    key: 'marketing-growth',
+    label: 'Marketing & Growth',
+    tagline: 'For those who can turn attention into action and ideas into results.',
+    departments: ['Marketing'],
+    exampleRoles: ['Growth Marketing Associate', 'Performance Marketing Manager', 'Content Strategist'],
+    matchers: ['marketing', 'growth', 'brand', 'performance marketing', 'content', 'seo'],
+  },
+  {
+    key: 'operations-support',
+    label: 'Operations & Support',
+    tagline: 'For people who keep things moving, organized, and under control.',
+    departments: ['Operations'],
+    exampleRoles: ['Operations Analyst', 'Operations Executive', 'Supply Chain Coordinator', 'Implementation Consultant'],
+    matchers: ['operations', 'process ops', 'program management', 'supply chain', 'implementation', 'logistics'],
+  },
+  {
+    key: 'customer-service',
+    label: 'Customer Service',
+    tagline: 'For people who know how to handle people without losing their soul.',
+    departments: ['Customer Success', 'BPO / Contact Centre', 'BPO/Contact Centre'],
+    exampleRoles: ['Customer Support Associate', 'Customer Success Manager', 'Team Lead - Customer Operations'],
+    matchers: ['customer service', 'customer support', 'customer success', 'support executive', 'contact centre', 'call center', 'inbound', 'outbound'],
+  },
+  {
+    key: 'hr-recruitment',
+    label: 'HR & Recruitment',
+    tagline: 'For those who understand people, process, and what makes a team work.',
+    departments: ['Human Resources'],
+    exampleRoles: ['HR Executive', 'HR Recruiter', 'Talent Acquisition Partner', 'HR Operations Specialist'],
+    matchers: ['hr', 'human resources', 'recruit', 'talent acquisition', 'people operations', 'hr ops', 'hrbp'],
+  },
+  {
+    key: 'finance-accounts',
+    label: 'Finance & Accounts',
+    tagline: 'For minds that like order, accuracy, and making numbers behave.',
+    departments: ['Finance'],
+    exampleRoles: ['Finance Analyst', 'Accounts Executive', 'FP&A Analyst', 'Finance Controller'],
+    matchers: ['finance', 'accounts', 'accounting', 'audit', 'payroll', 'tax'],
+  },
+  {
+    key: 'technology-product',
+    label: 'Technology & Product',
+    tagline: "For builders, problem-solvers, and people who'd rather fix the system than complain about it.",
+    departments: ['Technology', 'Product'],
+    exampleRoles: ['Frontend Engineer', 'Backend Engineer', 'Product Manager', 'Product Designer'],
+    matchers: ['technology', 'engineer', 'developer', 'software', 'product', 'design', 'tech', 'qa'],
+  },
+  {
+    key: 'freshers-entry-roles',
+    label: 'Freshers & Entry Roles',
+    tagline: 'For those starting out and ready to be seen for potential, not just past experience.',
+    levels: ['entry', 'junior'],
+    exampleRoles: ['Graduate Trainee', 'Junior Associate', 'Sales Trainee', 'Support Associate'],
+    matchers: ['fresher', 'entry', 'intern', 'graduate', 'junior', 'trainee'],
+  },
+];
 
-  jobs.forEach((job) => {
-    const key = job.department || 'General';
-    const entry = counts.get(key) || { label: key, count: 0, sampleRoles: [] };
-    entry.count += 1;
-
-    if (job.title && entry.sampleRoles.length < 3 && !entry.sampleRoles.includes(job.title)) {
-      entry.sampleRoles.push(job.title);
-    }
-
-    counts.set(key, entry);
-  });
-
-  return Array.from(counts.values()).sort((left, right) => right.count - left.count).slice(0, 6);
+function normalizeClusterText(value) {
+  return String(value || '').trim().toLowerCase();
 }
 
-function HeroShowcase() {
-  return (
-    <div className="relative overflow-hidden rounded-[15px] bg-[linear-gradient(180deg,rgba(255,255,255,0.025),rgba(255,255,255,0.01))] p-5 sm:p-6">
-      <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(180deg,rgba(93,224,230,0.08),transparent)]" />
+function jobMatchesCluster(job, definition) {
+  const department = normalizeClusterText(job.department);
+  const level = normalizeClusterText(job.level);
+  const haystack = [
+    job.department,
+    job.job_function,
+    job.sub_department,
+    job.title,
+    job.industry,
+    job.level,
+    job.seniority_label,
+  ]
+    .filter(Boolean)
+    .join(' ')
+    .toLowerCase();
 
-      <div className="relative space-y-5">
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <p className="text-[0.72rem] font-light uppercase tracking-[0.22em] text-[var(--primary-2)]">Career showcase</p>
-          <span className="rounded-full border border-[rgba(93,224,230,0.16)] bg-[rgba(93,224,230,0.04)] px-3 py-1.5 text-[0.68rem] font-light uppercase tracking-[0.18em] text-[var(--secondary-1)]">
-            Public preview
-          </span>
-        </div>
+  const hasDepartmentMatch = definition.departments?.some((item) => normalizeClusterText(item) === department);
+  const hasLevelMatch = definition.levels?.some((item) => normalizeClusterText(item) === level);
+  const hasKeywordMatch = definition.matchers.some((matcher) => haystack.includes(normalizeClusterText(matcher)));
 
-        <div className="rounded-[15px] border border-[var(--dark-1)] bg-[rgba(4,18,44,0.72)] p-5">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="oq-chip">Hybrid</span>
-            <span className="oq-chip">3-6 years</span>
-            <span className="oq-chip">Structured apply</span>
-          </div>
-          <div className="mt-5 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="text-[0.72rem] font-light uppercase tracking-[0.2em] text-[var(--graytexts)]">AtlasGrid Systems</p>
-              <h3 className="mt-3 text-[1.85rem] font-light tracking-[-0.05em] text-[var(--white)]">Frontend Engineer</h3>
-              <p className="mt-3 max-w-2xl text-sm leading-7 text-[var(--secondary-1)]">
-                Discover the role in public, understand the fit, and move into a protected application flow only when you are ready.
-              </p>
-            </div>
-            <div className="rounded-[14px] border border-[rgba(93,224,230,0.14)] bg-[rgba(93,224,230,0.05)] px-4 py-3">
-              <p className="text-[0.68rem] font-light uppercase tracking-[0.2em] text-[var(--graytexts)]">Clarity</p>
-              <p className="mt-2 text-sm text-[var(--white)]">Role details first. Protected action second.</p>
-            </div>
-          </div>
-          <div className="mt-5 grid gap-3 border-t border-[rgba(93,224,230,0.12)] pt-5 sm:grid-cols-3">
-            {['Discover roles clearly', 'Stand out beyond your resume', 'Move forward with more context'].map((item) => (
-              <p key={item} className="text-sm font-light leading-7 text-[var(--secondary-1)]">
-                {item}
-              </p>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+  return Boolean(hasDepartmentMatch || hasLevelMatch || hasKeywordMatch);
+}
+
+function buildRoleClusters(jobs) {
+  const groupedRoles = new Map(
+    roleClusterDefinitions.map((definition) => [
+      definition.key,
+      {
+        ...definition,
+        opportunities: 0,
+        roles: new Set(),
+      },
+    ]),
   );
+
+  jobs.forEach((job) => {
+    roleClusterDefinitions.forEach((definition) => {
+      if (!jobMatchesCluster(job, definition)) {
+        return;
+      }
+
+      const entry = groupedRoles.get(definition.key);
+      entry.opportunities += Number(job.openings) > 0 ? Number(job.openings) : 1;
+
+      if (job.title) {
+        entry.roles.add(job.title);
+      } else if (job.job_function) {
+        entry.roles.add(job.job_function);
+      }
+    });
+  });
+
+  return roleClusterDefinitions.map((definition) => {
+    const entry = groupedRoles.get(definition.key);
+    const roleExamples = entry.roles.size ? Array.from(entry.roles) : definition.exampleRoles;
+    const rolePreview = roleExamples.length > 2
+      ? `${roleExamples.join(' | ')} | ..`
+      : roleExamples.join(' | ');
+
+    return {
+      key: definition.key,
+      label: definition.label,
+      tagline: definition.tagline,
+      opportunities: entry.opportunities,
+      rolesCount: entry.roles.size,
+      roleExamples,
+      rolePreview,
+    };
+  });
 }
 
 function FeaturedJobCard({ job }) {
@@ -219,26 +437,26 @@ function FeaturedJobCard({ job }) {
   ].filter(Boolean);
 
   return (
-    <Link className="oq-card oq-public-job-card group block rounded-[1.8rem] p-5 sm:p-6" href={`/jobs/${job.id}`}>
-      <div className="flex items-start justify-between gap-3">
+    <Link className="grid-card-style-2 oq-home-job-stat-card group block" href={`/jobs/${job.id}`}>
+      <div className="flex items-start justify-between gap-2.5">
         <div>
-          <p className="text-[0.72rem] font-medium uppercase tracking-[0.24em] text-[var(--text-muted)]">
+          <p className="text-[0.63rem] font-medium uppercase tracking-[0.18em] text-[var(--text-muted)]">
             {job.company_name}
           </p>
-          <h3 className="mt-3 text-[1.75rem] font-medium tracking-[-0.05em] text-[var(--text)] transition-colors group-hover:text-[var(--brand-accent)]">
+          <h3 className="mt-2 text-[1.04rem] font-medium leading-tight tracking-[-0.035em] text-[var(--text)] transition-colors group-hover:text-[var(--brand-accent)]">
             {job.title}
           </h3>
         </div>
-        <div className="rounded-full border border-[rgba(93,224,230,0.16)] bg-[rgba(93,224,230,0.05)] px-3 py-1.5 text-xs font-medium uppercase tracking-[0.14em] text-[var(--secondary-1)]">
+        <div className="oq-score-badge rounded-[12px] border border-[rgba(93,224,230,0.16)] bg-[rgba(93,224,230,0.05)] font-medium uppercase text-[var(--secondary-1)]">
           {job.company_score ? `Co. Score ${job.company_score}` : `${job.openings || 1} opening${job.openings === 1 ? '' : 's'}`}
         </div>
       </div>
 
-      <p className="mt-3 text-sm leading-7 text-[var(--text-soft)]">
+      <p className="mt-2 text-[0.76rem] leading-5 text-[var(--text-soft)]">
         {[job.industry, job.level ? formatStatus(job.level) : null].filter(Boolean).join(' | ')}
       </p>
 
-      <div className="mt-5 flex flex-wrap gap-2">
+      <div className="mt-3 flex flex-wrap gap-1.5">
         {metadata.map((item) => (
           <span key={item} className="oq-chip">
             {item}
@@ -246,88 +464,25 @@ function FeaturedJobCard({ job }) {
         ))}
       </div>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <div className="oq-public-job-panel rounded-[1.25rem] px-4 py-4">
-          <p className="text-[0.68rem] uppercase tracking-[0.22em] text-[var(--text-muted)]">Salary</p>
-          <p className="mt-2 text-sm font-medium text-[var(--text)]">
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        <div className="grid-stat-style-2">
+          <p className="text-[0.58rem] uppercase tracking-[0.17em] text-[var(--text-muted)]">Salary</p>
+          <p className="mt-1.5 text-[0.78rem] font-medium leading-5 text-[var(--text)]">
             {formatSalaryRange(job.salary_min, job.salary_max, job.salary_disclosed)}
           </p>
         </div>
-        <div className="oq-public-job-panel rounded-[1.25rem] px-4 py-4">
-          <p className="text-[0.68rem] uppercase tracking-[0.22em] text-[var(--text-muted)]">Department</p>
-          <p className="mt-2 text-sm font-medium text-[var(--text)]">{job.department || 'General'}</p>
+        <div className="grid-stat-style-2">
+          <p className="text-[0.58rem] uppercase tracking-[0.17em] text-[var(--text-muted)]">Department</p>
+          <p className="mt-1.5 text-[0.78rem] font-medium leading-5 text-[var(--text)]">{job.department || 'General'}</p>
         </div>
       </div>
     </Link>
   );
 }
 
-function ProductPreviewStrip() {
-  return (
-    <section className="oq-card rounded-[2.4rem] p-6 sm:p-8">
-      <div className="flex flex-col gap-3">
-        <p className="oq-kicker">Product Preview</p>
-        <h2 className="oq-section-title font-medium text-[var(--text)]">What the actual product experience is designed to show you</h2>
-        <p className="max-w-3xl text-[1rem] font-light leading-8 text-[var(--secondary-1)]">
-          This is a structured preview, not a live dashboard. It shows the kind of clarity the product layer is meant to surface once a candidate signs in.
-        </p>
-      </div>
-
-      <div className="mt-8 grid gap-4 lg:grid-cols-3">
-        <div className="rounded-[2rem] border border-[var(--border)] bg-[var(--surface-muted)] p-5 shadow-[var(--shadow-soft)]">
-          <p className="text-[0.72rem] uppercase tracking-[0.18em] text-[var(--primary-2)]">Jobs preview</p>
-          <div className="mt-4 rounded-[1.5rem] border border-[var(--border)] bg-[var(--surface-elevated)] p-4">
-            <p className="text-sm font-semibold text-[var(--text)]">Senior Account Executive</p>
-            <p className="mt-1 text-sm text-[var(--text-soft)]">Northstar Commerce | Bengaluru | Hybrid</p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <span className="oq-chip">Structured apply</span>
-              <span className="oq-chip">Hiring team notes</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-[2rem] border border-[var(--border)] bg-[var(--surface-muted)] p-5 shadow-[var(--shadow-soft)]">
-          <p className="text-[0.72rem] uppercase tracking-[0.18em] text-[var(--primary-2)]">Application pipeline</p>
-          <div className="mt-5 flex items-center gap-2 text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(34,197,94,0.16)] text-[var(--success)]">1</span>
-            <span className="h-px flex-1 bg-[var(--border-strong)]" />
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(245,158,11,0.18)] text-[var(--warning)]">2</span>
-            <span className="h-px flex-1 bg-[var(--border)]" />
-            <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[rgba(255,255,255,0.08)] text-[var(--text-muted)]">3</span>
-          </div>
-          <div className="mt-4 grid gap-3 text-sm text-[var(--text-soft)]">
-            <div className="rounded-[1.3rem] border border-[var(--border)] bg-[var(--surface-elevated)] px-4 py-3">Applied with structured answers</div>
-            <div className="rounded-[1.3rem] border border-[rgba(245,158,11,0.24)] bg-[rgba(245,158,11,0.08)] px-4 py-3 text-[var(--text)]">Under review with timeline clarity</div>
-            <div className="rounded-[1.3rem] border border-[var(--border)] bg-[var(--surface-elevated)] px-4 py-3">What happened and what comes next</div>
-          </div>
-        </div>
-
-        <div className="rounded-[2rem] border border-[var(--border)] bg-[var(--surface-muted)] p-5 shadow-[var(--shadow-soft)]">
-          <p className="text-[0.72rem] uppercase tracking-[0.18em] text-[var(--primary-2)]">Profile credibility</p>
-          <div className="mt-4 rounded-[1.7rem] border border-[var(--border)] bg-[linear-gradient(180deg,rgba(19,41,71,0.95),rgba(16,35,63,0.96))] p-5">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-semibold text-white">Candidate summary</p>
-                <p className="mt-1 text-sm text-white/70">Skills, work history, achievements, and better role-fit context.</p>
-              </div>
-              <div className="rounded-full border border-white/12 bg-white/10 px-3 py-2 text-sm font-semibold text-white">742</div>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/84">Profile strength</span>
-              <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/84">Career history</span>
-              <span className="rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-xs font-medium text-white/84">Achievements</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function HomePage() {
   const router = useRouter();
   const [jobs, setJobs] = useState([]);
-  const [error, setError] = useState(null);
   const [heroQuery, setHeroQuery] = useState('');
   const [heroExperience, setHeroExperience] = useState('');
   const [heroArea, setHeroArea] = useState('');
@@ -335,10 +490,10 @@ export default function HomePage() {
   useEffect(() => {
     async function loadJobs() {
       try {
-        const response = await fetchJobs({ limit: 18, sort: 'date' });
+        const response = await fetchJobs({ limit: 100, sort: 'date' });
         setJobs(response?.data || []);
-      } catch (requestError) {
-        setError(requestError);
+      } catch {
+        setJobs([]);
       }
     }
 
@@ -346,11 +501,12 @@ export default function HomePage() {
   }, []);
 
   const publicJobs = jobs.length ? jobs : fallbackJobs;
-  const usingFallback = !jobs.length;
 
   const featuredJobs = useMemo(() => {
     const featured = publicJobs.filter((job) => job.is_featured);
-    return (featured.length ? featured : publicJobs).slice(0, 4);
+    const featuredIds = new Set(featured.map((job) => job.id));
+    const remainingJobs = publicJobs.filter((job) => !featuredIds.has(job.id));
+    return [...featured, ...remainingJobs].slice(0, 4);
   }, [publicJobs]);
 
   const roleClusters = useMemo(() => buildRoleClusters(publicJobs), [publicJobs]);
@@ -383,39 +539,34 @@ export default function HomePage() {
           align="center"
           layout="stacked"
           className="oq-home-hero"
-          eyebrow="Candidate-first discovery"
           title={(
             <>
               <span className="block text-[var(--text)]">Not a Job Portal,</span>
               <span className="block text-[var(--primary-2)]">It&apos;s YOUR Career</span>
             </>
           )}
-          description="A stronger way to discover roles, stand out beyond your resume, and move forward with more clarity."
+          description={(
+            <>
+              <span className="block font-medium text-[var(--white)]">Everything your career needs, Finally in ONE place!</span>
+              <span className="block">Build your track record, stay visible, and move forward without the confusion of scattered platforms.</span>
+            </>
+          )}
           titleClassName="max-w-[14ch] !font-light"
           descriptionClassName="max-w-2xl"
-          aside={<HeroShowcase />}
-          asideClassName="p-0"
         >
-          <div className="mx-auto max-w-5xl space-y-4">
+          <div className="mx-auto max-w-5xl shadow-safe-spacing-style-2">
             <PublicJobSearchStrip
               area={heroArea}
-              buttonLabel="Search Jobs"
-              className="text-left"
+              buttonLabel="Search"
+              className="oq-home-search-strip text-left"
               experience={heroExperience}
               onAreaChange={setHeroArea}
               onExperienceChange={setHeroExperience}
               onQueryChange={setHeroQuery}
               onSubmit={handleHeroSearch}
               query={heroQuery}
+              tone="preset"
             />
-            <div className="flex flex-wrap items-center justify-center gap-3">
-              <Link className="oq-button-secondary" href="/jobs">
-                Browse Jobs
-              </Link>
-              <Link className="oq-button-ghost" href="/login">
-                Login
-              </Link>
-            </div>
           </div>
         </PageHero>
 
@@ -430,61 +581,62 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="space-y-6">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <p className="oq-kicker">Featured Jobs</p>
-              <h2 className="oq-section-title mt-3 font-medium text-[var(--text)]">Based on your profile</h2>
-              <p className="mt-3 max-w-2xl text-[1rem] font-light leading-8 text-[var(--secondary-1)]">Roles where you actually have a shot.</p>
-            </div>
-            <div className="flex flex-col items-start gap-2 sm:items-end">
-              <Link className="oq-button-secondary" href="/jobs">
-                See all jobs
+        <section className="featured-split-style-2 career-featured-split-style-2 shadow-safe-spacing-style-2">
+          <div className="oq-featured-copy-card">
+            <p className="oq-kicker">Featured Jobs</p>
+            <h2 className="h1-style-2 mt-3">
+              <span className="block">Popular</span>
+              <span className="block">Searches</span>
+            </h2>
+            <p className="mt-5 max-w-xl text-[1rem] font-light leading-8 text-[var(--secondary-1)]">
+              <span className="block">Roles that are active & relevant.</span>
+              <span className="block">No endless scrolling through jobs that</span>
+              <span className="block">died three Tuesdays ago.</span>
+            </p>
+            <div className="mt-7 flex flex-col items-start gap-3">
+              <Link className="btn-box-style-2" href="/jobs">
+                See All Jobs
               </Link>
-              {usingFallback ? (
-                <p className="text-xs uppercase tracking-[0.18em] text-[var(--graytexts)]">
-                  {error ? 'Showing seeded public preview while live jobs load.' : 'Showing seeded public preview.'}
-                </p>
-              ) : null}
             </div>
           </div>
 
-          <div className="grid gap-4 xl:grid-cols-2">
+          <div className="stats-grid-style-2">
             {featuredJobs.map((job) => (
               <FeaturedJobCard key={job.id} job={job} />
             ))}
           </div>
         </section>
 
-        <section className="oq-card rounded-[2.4rem] p-6 sm:p-8">
+        <section className="oq-card oq-home-section-clear rounded-[2.4rem] p-6 sm:p-8">
           <div className="flex flex-col gap-3">
             <p className="oq-kicker">Role Clusters</p>
-            <h2 className="oq-section-title font-medium text-[var(--text)]">Explore what you do best</h2>
+            <h2 className="h1-style-2 oq-home-heading-balance">Start Where You Belong</h2>
             <p className="max-w-3xl text-[1rem] font-light leading-8 text-[var(--secondary-1)]">
-              Public discovery should feel directional and calm, not like a dense toolbar. Start with the area where your strongest signal already exists.
+              Browse roles by what you want to do. Not by how much patience you have left.
             </p>
           </div>
 
           <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {roleClusters.map((cluster) => (
               <Link
-                key={cluster.label}
-                className="oq-card-muted block rounded-[1.9rem] p-5 transition-transform hover:-translate-y-1"
+                key={cluster.key}
+                className="oq-card-muted oq-role-cluster-card block rounded-[1.9rem] p-5 transition-transform hover:-translate-y-1"
                 href={`/jobs?domain=${encodeURIComponent(cluster.label)}`}
               >
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <p className="text-[0.72rem] uppercase tracking-[0.24em] text-[var(--text-muted)]">{cluster.label}</p>
-                    <p className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-[var(--text)]">{cluster.count}</p>
+                    <h3 className="text-[1.04rem] font-medium leading-tight tracking-[-0.035em] text-[var(--text)]">{cluster.label}</h3>
+                    <p className="mt-2 text-[0.76rem] font-medium leading-5 text-[var(--primary-2)]">
+                      {cluster.opportunities === 1 ? '1 position open' : `${cluster.opportunities} positions open`}
+                    </p>
                   </div>
-                  <div className="rounded-full border border-[rgba(93,224,230,0.18)] bg-[rgba(93,224,230,0.08)] px-3 py-1.5 text-xs font-medium uppercase tracking-[0.14em] text-[var(--primary-2)]">
-                    Discovery
+                  <div className="rounded-full border border-[rgba(93,224,230,0.18)] bg-[rgba(93,224,230,0.08)] px-2.5 py-1 text-[0.58rem] font-medium uppercase tracking-[0.1em] text-[var(--primary-2)]">
+                    Discover
                   </div>
                 </div>
-                <p className="mt-4 text-sm font-light leading-7 text-[var(--secondary-1)]">
-                  {cluster.sampleRoles.length ? cluster.sampleRoles.join(', ') : 'Explore open roles in this cluster.'}
+                <p className="role-example-line-style-2 mt-3 text-[0.76rem] font-light leading-5 text-[var(--secondary-1)]">
+                  {cluster.rolePreview}
                 </p>
-                <p className="mt-5 text-sm font-medium text-[var(--primary-2)]">Explore roles</p>
               </Link>
             ))}
           </div>
@@ -492,9 +644,15 @@ export default function HomePage() {
 
         <section className="oq-card rounded-[2.4rem] p-6 sm:p-8">
           <div className="max-w-3xl">
-            <p className="oq-kicker">Why Careers Is Different</p>
-            <h2 className="oq-section-title mt-3 font-medium text-[var(--text)]">Most people apply. Few get noticed.</h2>
-            <p className="mt-3 text-[1rem] font-light leading-8 text-[var(--secondary-1)]">This is built to change that.</p>
+            <p className="oq-kicker">What is Careers?</p>
+            <h2 className="h1-style-2 oq-home-heading-balance mt-3">
+              <span className="block">It’s Everything Your Career, Built on Proof.</span>
+              <span className="block">Not Guesswork.</span>
+            </h2>
+            <p className="mt-5 text-[1rem] font-light leading-8 text-[var(--secondary-1)]">
+              <span className="block">You’re Not Just Another Profile.</span>
+              <span className="block">A Presence That Gets Noticed</span>
+            </p>
           </div>
 
           <div className="mt-8 grid gap-4 md:grid-cols-3">
@@ -510,17 +668,18 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="oq-hero rounded-[22px] p-6 sm:p-8 lg:p-10">
+        <section className="oq-hero oq-home-section-clear rounded-[22px] p-6 sm:p-8 lg:p-10">
           <div className="oq-grid-overlay absolute inset-0 opacity-18" aria-hidden="true" />
           <div className="relative grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
             <div>
-              <p className="oq-kicker">Candidate-first value</p>
-              <h2 className="oq-section-title mt-3 max-w-xl font-medium text-[var(--text)]">Stop getting ignored. Start getting responses.</h2>
+              <p className="oq-kicker">WHY Careers?</p>
+              <h2 className="h1-style-2 oq-home-heading-balance-wide mt-3 max-w-3xl">Because Right Now, You’re Doing Everything… and yet Nothing&apos;s Happening.</h2>
               <p className="mt-4 max-w-2xl text-[1rem] font-light leading-8 text-[var(--secondary-1)]">
-                If you&apos;re serious about getting hired, your approach has to change. This gives you a better way to apply and move forward.
+                <span className="block">Ever Felt LOST in the crowd? You’re applying, trying, showing up,but it feels like none of it matters.</span>
+                <span className="block">Not because you’re not capable, but the right Company never even saw you.</span>
               </p>
               <div className="mt-6">
-                <Link className="oq-button-primary" href="/register">
+                <Link className="btn-box-style-2" href="/register">
                   Create Profile
                 </Link>
               </div>
@@ -535,27 +694,6 @@ export default function HomePage() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        <ProductPreviewStrip />
-
-        <section className="oq-hero rounded-[22px] p-6 text-center sm:p-8 lg:p-10">
-          <div className="oq-grid-overlay absolute inset-0 opacity-18" aria-hidden="true" />
-          <div className="relative mx-auto max-w-3xl">
-            <p className="oq-kicker">Final CTA</p>
-            <h2 className="oq-section-title mt-3 font-medium text-[var(--text)]">Start where others stop.</h2>
-            <p className="mt-4 text-[1rem] font-light leading-8 text-[var(--secondary-1)]">
-              Browse with clarity first. Create a profile when you are ready to move into the product layer.
-            </p>
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-              <Link className="oq-button-primary" href="/jobs">
-                Browse Jobs
-              </Link>
-              <Link className="oq-button-secondary" href="/register">
-                Create Profile
-              </Link>
             </div>
           </div>
         </section>

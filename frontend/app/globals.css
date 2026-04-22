@@ -263,7 +263,7 @@ textarea {
     inset: auto auto -16% -4%;
     width: 18rem;
     height: 18rem;
-    border-radius: 999px;
+    border-radius: 12px;
     background: radial-gradient(circle, rgba(93, 224, 230, 0.08), transparent 68%);
     animation: oq-float 8s ease-in-out infinite;
   }
@@ -272,7 +272,7 @@ textarea {
     inset: -10% -4% auto auto;
     width: 16rem;
     height: 16rem;
-    border-radius: 999px;
+    border-radius: 12px;
     background: radial-gradient(circle, rgba(49, 131, 255, 0.1), transparent 68%);
     animation: oq-float 9s ease-in-out infinite reverse;
   }
@@ -302,7 +302,7 @@ textarea {
     justify-content: center;
     gap: 0.5rem;
     border: 1px solid var(--dark-1);
-    border-radius: 100px;
+    border-radius: 15px;
     padding: 0.84rem 1.4rem;
     font-size: 0.88rem;
     font-weight: 500;
@@ -381,7 +381,7 @@ textarea {
     border: 1px solid transparent;
     background: transparent;
     color: var(--secondary-1);
-    border-radius: 100px;
+    border-radius: 12px;
     padding: 0.68rem 1rem;
     font-size: 0.94rem;
     font-weight: 400;
@@ -410,7 +410,7 @@ textarea {
     border: 1px solid rgba(29, 40, 56, 0.75);
     background: rgba(93, 224, 230, 0.05);
     color: var(--secondary-1);
-    border-radius: 100px;
+    border-radius: 10px;
     padding: 0.48rem 0.92rem;
     font-size: 0.82rem;
     font-weight: 400;
@@ -423,7 +423,7 @@ textarea {
     justify-content: center;
     gap: 0.45rem;
     border: 1px solid rgba(29, 40, 56, 0.9);
-    border-radius: 999px;
+    border-radius: 12px;
     background: rgba(255, 255, 255, 0.03);
     color: var(--text-soft);
     padding: 0.72rem 1rem;
@@ -448,7 +448,7 @@ textarea {
 
   .oq-toolbar-surface {
     border: 1px solid rgba(29, 40, 56, 0.9);
-    border-radius: 1.65rem;
+    border-radius: 18px;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 100%),
       rgba(5, 18, 43, 0.94);
@@ -494,7 +494,7 @@ textarea {
 
   .oq-empty-state {
     border: 1px dashed rgba(93, 224, 230, 0.2);
-    border-radius: 1.75rem;
+    border-radius: 18px;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 100%),
       rgba(8, 22, 48, 0.64);
@@ -502,7 +502,7 @@ textarea {
 
   .oq-loading-state {
     border: 1px solid rgba(29, 40, 56, 0.9);
-    border-radius: 1.5rem;
+    border-radius: 16px;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 100%),
       rgba(8, 22, 48, 0.64);
@@ -611,11 +611,13 @@ textarea {
   }
 
   .oq-public-root .oq-home-hero {
+    border: none;
+    background: transparent;
     box-shadow: none;
   }
 
-  .oq-public-root .oq-home-hero .oq-grid-overlay {
-    opacity: 0.1;
+  .oq-public-root .oq-home-hero > [aria-hidden='true'] {
+    display: none;
   }
 
   .oq-public-root .oq-search-strip {
@@ -648,7 +650,7 @@ textarea {
     align-items: center;
     gap: 0.45rem;
     border: 1px solid rgba(29, 40, 56, 0.88);
-    border-radius: 999px;
+    border-radius: 12px;
     background:
       linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 100%),
       rgba(6, 18, 43, 0.92);
@@ -759,21 +761,22 @@ textarea {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 999px;
+    border-radius: 12px;
     border: 1px solid rgba(93, 224, 230, 0.16);
     padding: 0.72rem 1rem;
     font-size: 0.8rem;
     font-weight: 500;
     letter-spacing: 0.08em;
     text-transform: uppercase;
+    box-shadow: var(--shadow-soft);
     transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease;
   }
 
   .oq-public-root .oq-nav-cta:hover,
   .oq-public-root .oq-nav-cta:focus-visible {
-    transform: translateY(-1px);
+    transform: scale(0.98);
     border-color: rgba(93, 224, 230, 0.3);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.16);
+    box-shadow: var(--shadow-soft);
   }
 
   .oq-public-root .oq-nav-cta-secondary {

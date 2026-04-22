@@ -11,9 +11,6 @@ const navItems = [
   { label: 'Home', href: '/' },
   { label: 'Jobs', href: '/jobs' },
   { label: 'Community', href: '/community' },
-  { label: 'Learn', href: '/learn' },
-  { label: 'For Employers', href: '/employers' },
-  { label: 'About', href: '/about' },
 ];
 
 const footerGroups = [
@@ -75,11 +72,12 @@ export default function PublicShell({ children, utilityContent }) {
   const viewerName = String(session.user?.full_name || '').trim();
   const dashboardHref = getDashboardRoute(session.role);
   const workspaceLabel = session.role === 'candidate' ? 'Candidate Workspace' : 'Employer Workspace';
+  const isHome = pathname === '/';
 
   return (
-    <main className="oq-public-root min-h-screen px-4 pb-5 pt-0 sm:px-6 lg:px-8">
+    <main className="oq-public-root min-h-screen px-4 pb-5 pt-[260px] sm:px-6 sm:pt-[220px] lg:px-8 lg:pt-[136px]">
       <div className="mx-auto max-w-7xl">
-        <header className="oq-header-shell sticky top-0 z-20 mb-12 rounded-b-[15px] px-5 py-5 sm:px-6">
+        <header className={`oq-header-shell fixed left-1/2 top-0 z-50 w-[calc(100%-2rem)] max-w-7xl -translate-x-1/2 rounded-b-[15px] px-5 py-5 sm:w-[calc(100%-3rem)] sm:px-6 lg:w-[calc(100%-4rem)] ${isHome ? 'nav-home-highlight-2' : ''}`.trim()}>
           <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center lg:gap-6">
             <div className="flex items-center justify-between gap-4">
               <BrandLockup />
@@ -92,7 +90,7 @@ export default function PublicShell({ children, utilityContent }) {
                 return (
                   <Link
                     key={item.href}
-                    className={`oq-nav-link ${isActive ? 'oq-nav-link-active' : ''}`.trim()}
+                    className={`oq-nav-link ${isHome ? 'nav-link-hover-2' : ''} ${isActive ? 'oq-nav-link-active' : ''}`.trim()}
                     href={item.href}
                   >
                     {item.label}
@@ -101,7 +99,7 @@ export default function PublicShell({ children, utilityContent }) {
               })}
             </nav>
 
-            <div className="flex flex-wrap items-center gap-2.5 lg:justify-end">
+            <div className="flex flex-wrap items-center gap-4 lg:gap-5 lg:justify-end">
               {utilityContent || (
                 <>
                   <ThemeToggle className="shrink-0" tone="public" />
@@ -127,11 +125,11 @@ export default function PublicShell({ children, utilityContent }) {
                     </>
                   ) : (
                     <>
-                      <Link className="oq-nav-utility-link" href="/login">
-                        Login
+                      <Link className={isHome ? 'oq-nav-utility-link' : 'oq-nav-cta oq-nav-cta-secondary'} href="/employer/login">
+                        Employers
                       </Link>
-                      <Link className="oq-nav-cta oq-nav-cta-secondary" href="/employer/login">
-                        Employer Login
+                      <Link className={isHome ? 'oq-nav-cta oq-nav-cta-secondary btn-box-style-2' : 'oq-nav-utility-link'} href="/login">
+                        Login
                       </Link>
                     </>
                   )}

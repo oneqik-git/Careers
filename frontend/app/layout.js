@@ -1,5 +1,6 @@
 import { Outfit } from 'next/font/google';
 import './globals.css';
+import './design-presets.css';
 import ThemeProvider from '@/components/ThemeProvider';
 
 const outfit = Outfit({
