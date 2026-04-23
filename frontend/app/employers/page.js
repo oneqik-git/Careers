@@ -89,7 +89,7 @@ export default function EmployersPage() {
               </div>
               <div className="rounded-[1.7rem] border border-[var(--border)] bg-[var(--surface-muted)] p-5">
                 <p className="text-[0.72rem] uppercase tracking-[0.22em] text-[var(--text-muted)]">Candidate side</p>
-                <p className="mt-2 text-sm leading-7 text-[var(--text-soft)]">Job seekers still browse publicly from the homepage and jobs routes without mixing the two entry modes together.</p>
+                <p className="mt-2 text-sm leading-7 text-[var(--text-soft)]">Candidates still browse publicly from the homepage and opportunities route without mixing the two entry modes together.</p>
               </div>
             </div>
           </div>

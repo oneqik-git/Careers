@@ -73,7 +73,7 @@ export default function AuthLayout({
                 </Link>
               ) : (
                 <Link className="oq-button-secondary" href="/jobs">
-                  Browse Jobs
+                  Browse Opportunities
                 </Link>
               )}
             </div>

@@ -138,7 +138,11 @@ router.patch('/me', auth, requireCandidate, asyncHandler(async (req, res) => {
   }
 
   const allowed = [
-    'full_name', 'headline', 'summary', 'location', 'city', 'state',
+    'full_name', 'headline', 'summary', 'location', 'city', 'state', 'country',
+    'latitude', 'longitude', 'location_source', 'location_confidence',
+    'preferred_location_text', 'preferred_location_city', 'preferred_location_state',
+    'preferred_location_country', 'preferred_location_latitude', 'preferred_location_longitude',
+    'preferred_location_radius_km', 'preferred_location_source',
     'current_role', 'current_company', 'domains', 'preferred_locations',
     'expected_salary_min', 'expected_salary_max', 'notice_period_days', 'open_to_work',
   ];
@@ -313,7 +317,11 @@ router.get('/search', auth, requireEmployer, asyncHandler(async (req, res) => {
   const { q, domain, min_score, max_score, career_stage, location, experience_min, experience_max } = req.query;
   const { page, limit, offset } = getPagination(req.query);
 
-  let sql = `SELECT c.id, c.full_name, c.headline, c.\`current_role\`, c.location, c.total_experience_months,
+  let sql = `SELECT c.id, c.full_name, c.headline, c.\`current_role\`, c.location, c.city, c.state, c.country,
+    c.latitude, c.longitude, c.location_source, c.location_confidence,
+    c.preferred_location_text, c.preferred_location_city, c.preferred_location_state, c.preferred_location_country,
+    c.preferred_location_latitude, c.preferred_location_longitude, c.preferred_location_radius_km,
+    c.total_experience_months,
     c.domains, c.career_stage, c.open_to_work,
     cs.total_score, cs.band, cs.offer_reliability_pct
     FROM candidates c
@@ -342,8 +350,8 @@ router.get('/search', auth, requireEmployer, asyncHandler(async (req, res) => {
     params.push(career_stage);
   }
   if (location) {
-    sql += ' AND c.city LIKE ?';
-    params.push(`%${location}%`);
+    sql += ' AND (c.location LIKE ? OR c.city LIKE ? OR c.state LIKE ? OR c.country LIKE ? OR c.preferred_location_text LIKE ? OR c.preferred_location_city LIKE ?)';
+    params.push(`%${location}%`, `%${location}%`, `%${location}%`, `%${location}%`, `%${location}%`, `%${location}%`);
   }
   if (experience_min) {
     sql += ' AND c.total_experience_months >= ?';
@@ -380,7 +388,11 @@ router.get('/:id', auth, requireEmployer, asyncHandler(async (req, res) => {
   await ensureCareerScore(req.params.id);
 
   const candidate = await queryOne(
-    `SELECT c.id, c.full_name, c.headline, c.location, c.\`current_role\`, c.current_company,
+    `SELECT c.id, c.full_name, c.headline, c.location, c.city, c.state, c.country,
+     c.latitude, c.longitude, c.location_source, c.location_confidence,
+     c.preferred_location_text, c.preferred_location_city, c.preferred_location_state, c.preferred_location_country,
+     c.preferred_location_latitude, c.preferred_location_longitude, c.preferred_location_radius_km,
+     c.\`current_role\`, c.current_company,
      c.total_experience_months, c.domains, c.career_stage, c.generation,
      cs.total_score, cs.band, cs.offer_reliability_pct, cs.no_show_count, cs.ghosting_count, cs.avg_employer_rating
      FROM candidates c

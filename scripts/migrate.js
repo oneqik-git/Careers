@@ -56,6 +56,19 @@ const migrations = [
     location           VARCHAR(255),
     city               VARCHAR(100),
     state              VARCHAR(100),
+    country            VARCHAR(100),
+    latitude           DECIMAL(10,7),
+    longitude          DECIMAL(10,7),
+    location_source    ENUM('manual','browser_geolocation','google_places','pin_drop','imported','inferred') DEFAULT 'manual',
+    location_confidence DECIMAL(4,3),
+    preferred_location_text VARCHAR(255),
+    preferred_location_city VARCHAR(100),
+    preferred_location_state VARCHAR(100),
+    preferred_location_country VARCHAR(100),
+    preferred_location_latitude DECIMAL(10,7),
+    preferred_location_longitude DECIMAL(10,7),
+    preferred_location_radius_km DECIMAL(6,2) DEFAULT 20.00,
+    preferred_location_source ENUM('manual','browser_geolocation','google_places','pin_drop','imported','inferred') DEFAULT 'manual',
     date_of_birth      DATE,
     gender             ENUM('male','female','non_binary','prefer_not_to_say'),
     aadhaar_hash       VARCHAR(64) UNIQUE,  -- SHA-256 of Aadhaar, never raw
@@ -76,6 +89,8 @@ const migrations = [
     updated_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     INDEX idx_location (city, state),
+    INDEX idx_candidate_geo (latitude, longitude),
+    INDEX idx_candidate_preferred_geo (preferred_location_latitude, preferred_location_longitude),
     INDEX idx_open_to_work (open_to_work)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
@@ -97,6 +112,15 @@ const migrations = [
     funding_amount_usd BIGINT,
     is_profitable      BOOLEAN,
     headquarters       VARCHAR(255),
+    location_formatted VARCHAR(255),
+    location_city      VARCHAR(100),
+    location_state     VARCHAR(100),
+    location_country   VARCHAR(100),
+    location_latitude  DECIMAL(10,7),
+    location_longitude DECIMAL(10,7),
+    location_source    ENUM('manual','google_places','pin_drop','imported','inferred') DEFAULT 'manual',
+    location_confidence DECIMAL(4,3),
+    location_place_id  VARCHAR(255),
     global_offices     JSON,              -- ['IN','US','SG']
     ceo_name           VARCHAR(255),
     gstin              VARCHAR(20),
@@ -108,6 +132,8 @@ const migrations = [
     updated_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_slug (slug),
     INDEX idx_industry (industry),
+    INDEX idx_company_location (location_city, location_state),
+    INDEX idx_company_geo (location_latitude, location_longitude),
     FULLTEXT idx_search (name, industry, description)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
@@ -155,6 +181,16 @@ const migrations = [
     employment_type       ENUM('full_time','part_time','contract','internship','freelance'),
     work_mode             ENUM('on_site','hybrid','remote','flexible'),
     location              VARCHAR(255),
+    location_formatted    VARCHAR(255),
+    location_city         VARCHAR(100),
+    location_state        VARCHAR(100),
+    location_country      VARCHAR(100),
+    location_latitude     DECIMAL(10,7),
+    location_longitude    DECIMAL(10,7),
+    location_source       ENUM('company_default','role_override','google_places','pin_drop','manual','remote','inferred') DEFAULT 'company_default',
+    location_confidence   DECIMAL(4,3),
+    location_place_id     VARCHAR(255),
+    location_radius_km    DECIMAL(6,2) DEFAULT 5.00,
     salary_min            INT,
     salary_max            INT,
     salary_currency       VARCHAR(10) DEFAULT 'INR',
@@ -187,6 +223,8 @@ const migrations = [
     INDEX idx_status (status),
     INDEX idx_function (job_function),
     INDEX idx_level (level),
+    INDEX idx_job_location (location_city, location_state),
+    INDEX idx_job_geo (location_latitude, location_longitude),
     FULLTEXT idx_search (title, description, responsibilities)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
@@ -679,6 +717,118 @@ const migrations = [
 
 ];
 
+const schemaExtensions = [
+  {
+    table: 'candidates',
+    columns: [
+      ['country', 'VARCHAR(100) AFTER `state`'],
+      ['latitude', 'DECIMAL(10,7) AFTER `country`'],
+      ['longitude', 'DECIMAL(10,7) AFTER `latitude`'],
+      ['location_source', "ENUM('manual','browser_geolocation','google_places','pin_drop','imported','inferred') DEFAULT 'manual' AFTER `longitude`"],
+      ['location_confidence', 'DECIMAL(4,3) AFTER `location_source`'],
+      ['preferred_location_text', 'VARCHAR(255) AFTER `preferred_locations`'],
+      ['preferred_location_city', 'VARCHAR(100) AFTER `preferred_location_text`'],
+      ['preferred_location_state', 'VARCHAR(100) AFTER `preferred_location_city`'],
+      ['preferred_location_country', 'VARCHAR(100) AFTER `preferred_location_state`'],
+      ['preferred_location_latitude', 'DECIMAL(10,7) AFTER `preferred_location_country`'],
+      ['preferred_location_longitude', 'DECIMAL(10,7) AFTER `preferred_location_latitude`'],
+      ['preferred_location_radius_km', 'DECIMAL(6,2) DEFAULT 20.00 AFTER `preferred_location_longitude`'],
+      ['preferred_location_source', "ENUM('manual','browser_geolocation','google_places','pin_drop','imported','inferred') DEFAULT 'manual' AFTER `preferred_location_radius_km`"],
+    ],
+    indexes: [
+      ['idx_candidate_geo', 'INDEX idx_candidate_geo (`latitude`, `longitude`)'],
+      ['idx_candidate_preferred_geo', 'INDEX idx_candidate_preferred_geo (`preferred_location_latitude`, `preferred_location_longitude`)'],
+    ],
+  },
+  {
+    table: 'companies',
+    columns: [
+      ['location_formatted', 'VARCHAR(255) AFTER `headquarters`'],
+      ['location_city', 'VARCHAR(100) AFTER `location_formatted`'],
+      ['location_state', 'VARCHAR(100) AFTER `location_city`'],
+      ['location_country', 'VARCHAR(100) AFTER `location_state`'],
+      ['location_latitude', 'DECIMAL(10,7) AFTER `location_country`'],
+      ['location_longitude', 'DECIMAL(10,7) AFTER `location_latitude`'],
+      ['location_source', "ENUM('manual','google_places','pin_drop','imported','inferred') DEFAULT 'manual' AFTER `location_longitude`"],
+      ['location_confidence', 'DECIMAL(4,3) AFTER `location_source`'],
+      ['location_place_id', 'VARCHAR(255) AFTER `location_confidence`'],
+    ],
+    indexes: [
+      ['idx_company_location', 'INDEX idx_company_location (`location_city`, `location_state`)'],
+      ['idx_company_geo', 'INDEX idx_company_geo (`location_latitude`, `location_longitude`)'],
+    ],
+  },
+  {
+    table: 'job_postings',
+    columns: [
+      ['location_formatted', 'VARCHAR(255) AFTER `location`'],
+      ['location_city', 'VARCHAR(100) AFTER `location_formatted`'],
+      ['location_state', 'VARCHAR(100) AFTER `location_city`'],
+      ['location_country', 'VARCHAR(100) AFTER `location_state`'],
+      ['location_latitude', 'DECIMAL(10,7) AFTER `location_country`'],
+      ['location_longitude', 'DECIMAL(10,7) AFTER `location_latitude`'],
+      ['location_source', "ENUM('company_default','role_override','google_places','pin_drop','manual','remote','inferred') DEFAULT 'company_default' AFTER `location_longitude`"],
+      ['location_confidence', 'DECIMAL(4,3) AFTER `location_source`'],
+      ['location_place_id', 'VARCHAR(255) AFTER `location_confidence`'],
+      ['location_radius_km', 'DECIMAL(6,2) DEFAULT 5.00 AFTER `location_place_id`'],
+    ],
+    indexes: [
+      ['idx_job_location', 'INDEX idx_job_location (`location_city`, `location_state`)'],
+      ['idx_job_geo', 'INDEX idx_job_geo (`location_latitude`, `location_longitude`)'],
+    ],
+  },
+];
+
+async function columnExists(tableName, columnName) {
+  const [rows] = await pool.execute(
+    `SELECT COUNT(*) AS count
+     FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE()
+     AND TABLE_NAME = ?
+     AND COLUMN_NAME = ?`,
+    [tableName, columnName]
+  );
+
+  return Number(rows[0]?.count || 0) > 0;
+}
+
+async function indexExists(tableName, indexName) {
+  const [rows] = await pool.execute(
+    `SELECT COUNT(*) AS count
+     FROM information_schema.STATISTICS
+     WHERE TABLE_SCHEMA = DATABASE()
+     AND TABLE_NAME = ?
+     AND INDEX_NAME = ?`,
+    [tableName, indexName]
+  );
+
+  return Number(rows[0]?.count || 0) > 0;
+}
+
+async function runSchemaExtensions() {
+  console.log('\nRunning location schema extensions...\n');
+
+  for (const extension of schemaExtensions) {
+    for (const [columnName, definition] of extension.columns) {
+      if (await columnExists(extension.table, columnName)) {
+        continue;
+      }
+
+      await pool.execute(`ALTER TABLE \`${extension.table}\` ADD COLUMN \`${columnName}\` ${definition}`);
+      console.log(`  added ${extension.table}.${columnName}`);
+    }
+
+    for (const [indexName, definition] of extension.indexes) {
+      if (await indexExists(extension.table, indexName)) {
+        continue;
+      }
+
+      await pool.execute(`ALTER TABLE \`${extension.table}\` ADD ${definition}`);
+      console.log(`  indexed ${extension.table}.${indexName}`);
+    }
+  }
+}
+
 async function runMigrations() {
   console.log('🚀 Running migrations...\n');
   for (let i = 0; i < migrations.length; i++) {
@@ -693,6 +843,7 @@ async function runMigrations() {
     }
   }
   console.log('\n✅ All migrations complete.');
+  await runSchemaExtensions();
   await pool.end();
 }
 

@@ -74,7 +74,7 @@ function getCandidateFooterMessage(state, stateLabel) {
   }
 
   if (state === 'rejected' || state === 'withdrawn') {
-    return `${stateLabel || 'Application closed'}. Re-open the role to compare fit or move into similar jobs.`;
+    return `${stateLabel || 'Application closed'}. Re-open the opportunity to compare fit or move into similar opportunities.`;
   }
 
   if (state === 'applied') {

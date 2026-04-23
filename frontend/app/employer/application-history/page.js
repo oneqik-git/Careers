@@ -80,7 +80,7 @@ function EmployerApplicationHistoryContent() {
               `Latest status: ${formatStatus(entries[entries.length - 1]?.to_status)}`,
             ]}
             actions={[
-              { label: 'Jobs', href: '/employer/jobs' },
+              { label: 'Opportunities', href: '/employer/jobs' },
               { label: 'Dashboard', href: '/employer/dashboard', variant: 'secondary' },
             ]}
           />
@@ -93,7 +93,7 @@ function EmployerApplicationHistoryContent() {
           description="This application does not have any recorded timeline events yet."
           action={
             <Link className="oq-button-primary" href="/employer/jobs">
-              Back to jobs
+              Back to opportunities
             </Link>
           }
         />

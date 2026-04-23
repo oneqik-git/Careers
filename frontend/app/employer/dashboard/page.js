@@ -129,7 +129,7 @@ export default function EmployerDashboardPage() {
                 employer?.is_admin ? 'Company admin access' : 'Hiring workspace access',
               ].filter(Boolean)}
               actions={[
-                { label: 'Post Job', href: '/employer/jobs/new' },
+                { label: 'Post Opportunity', href: '/employer/jobs/new' },
                 { label: 'Review Applicants', href: priorityJobs[0] ? `/employer/jobs/applicants?jobId=${priorityJobs[0].id}` : '/employer/jobs', variant: 'secondary' },
               ]}
               aside={
@@ -164,7 +164,7 @@ export default function EmployerDashboardPage() {
             />
 
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
-              <StatCard label="Open jobs" value={hiringStats.openJobs} helper="Roles currently live for candidates." tone="dark" />
+              <StatCard label="Open opportunities" value={hiringStats.openJobs} helper="Roles currently live for candidates." tone="dark" />
               <StatCard label="Applicants" value={hiringStats.applicants} helper="All applications across posted roles." />
               <StatCard label="Under review" value={hiringStats.underReview} helper="Candidates waiting on recruiter decisions." />
               <StatCard label="Interview pipeline" value={hiringStats.interviewPipeline} helper="Profiles in scheduled or completed interview stages." />
@@ -175,19 +175,19 @@ export default function EmployerDashboardPage() {
               <SectionCard
                 eyebrow="Quick actions"
                 title="Move the hiring work forward"
-                description="Jump straight into the actions employers need most here: create a role, inspect jobs, and review live applicants."
+                description="Jump straight into the actions employers need most here: create a role, inspect opportunities, and review live applicants."
               >
                 <div className="grid gap-4 md:grid-cols-3">
                   <QuickActionCard
                     href="/employer/jobs/new"
-                    label="Post Job"
+                    label="Post Opportunity"
                     meta="Create role"
                     description="Open a new role with prescreen questions and role context."
                     toneClassName="border-[rgba(93,224,230,0.2)] bg-[rgba(93,224,230,0.08)]"
                   />
                   <QuickActionCard
                     href="/employer/jobs"
-                    label="View Jobs"
+                    label="View Opportunities"
                     meta="Operate list"
                     description="See applicant volume, funnel movement, and recent hiring activity by role."
                     toneClassName="border-[rgba(148,163,184,0.22)] bg-[rgba(255,255,255,0.03)]"

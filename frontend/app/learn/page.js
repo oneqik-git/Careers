@@ -55,7 +55,7 @@ export default function LearnPage() {
   const totalLessonCount = useMemo(() => data.modules.reduce((sum, module) => sum + (module.lessons?.length || 0), 0), [data.modules]);
   const heroActions = viewer.role === 'candidate'
     ? [{ label: 'Candidate Workspace', href: '/candidate/dashboard' }, { label: 'Profile', href: '/candidate/profile', variant: 'secondary' }]
-    : [{ label: 'Candidate Login', href: '/login' }, { label: 'Browse Jobs', href: '/jobs', variant: 'secondary' }];
+    : [{ label: 'Candidate Login', href: '/login' }, { label: 'Browse Opportunities', href: '/jobs', variant: 'secondary' }];
 
   return (
     <PublicShell>

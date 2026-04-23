@@ -29,7 +29,7 @@ export default function AboutPage() {
           titleClassName="max-w-[16ch]"
           descriptionClassName="max-w-3xl"
           actions={[
-            { label: 'Browse Jobs', href: '/jobs' },
+            { label: 'Browse Opportunities', href: '/jobs' },
             { label: 'For Employers', href: '/employers', variant: 'secondary' },
           ]}
           aside={(
@@ -40,7 +40,7 @@ export default function AboutPage() {
               </div>
               <div className="rounded-[15px] border border-[var(--dark-1)] bg-[rgba(4,18,44,0.56)] px-4 py-4">
                 <p className="text-[0.68rem] uppercase tracking-[0.18em] text-[var(--primary-2)]">Product layer</p>
-                <p className="mt-2 text-sm font-light leading-7 text-[var(--secondary-1)]">Jobs, applications, progress tracking, and protected workflows after login.</p>
+                <p className="mt-2 text-sm font-light leading-7 text-[var(--secondary-1)]">Opportunities, applications, progress tracking, and protected workflows after login.</p>
               </div>
             </div>
           )}
@@ -103,7 +103,7 @@ export default function AboutPage() {
             </p>
             <div className="mt-6">
               <Link className="oq-button-primary" href="/jobs">
-                Browse Jobs
+                Browse Opportunities
               </Link>
             </div>
           </SectionCard>

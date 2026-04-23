@@ -125,7 +125,10 @@ router.patch('/me', auth, requireEmployer, asyncHandler(async (req, res) => {
   const allowed = [
     'name', 'description', 'website_url', 'linkedin_url', 'founded_year',
     'employee_count_min', 'employee_count_max', 'funding_stage', 'funding_amount_usd',
-    'headquarters', 'global_offices', 'ceo_name', 'is_profitable',
+    'headquarters', 'location_formatted', 'location_city', 'location_state',
+    'location_country', 'location_latitude', 'location_longitude',
+    'location_source', 'location_confidence', 'location_place_id',
+    'global_offices', 'ceo_name', 'is_profitable',
   ];
 
   const updates = [];

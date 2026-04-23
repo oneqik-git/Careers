@@ -48,7 +48,7 @@ function CandidateJobDetailContent() {
 
   async function loadJob() {
     if (!jobId) {
-      setError({ message: 'Missing job ID.' });
+      setError({ message: 'Missing opportunity ID.' });
       setIsLoading(false);
       return;
     }
@@ -151,7 +151,7 @@ function CandidateJobDetailContent() {
 
   return (
     <DashboardShell
-      title="Job Detail"
+      title="Opportunity Detail"
       subtitle="Review the role clearly before you apply, then move straight into the structured application flow."
       onRefresh={loadJob}
       navItems={candidateNavItems}
@@ -159,17 +159,17 @@ function CandidateJobDetailContent() {
       {isLoading ? (
         <LoadingState
           description="Loading the role details, prescreen questions, and your current application state."
-          label="Job detail"
+          label="Opportunity detail"
           title="Preparing this role"
         />
       ) : error ? (
-        <MessageBanner tone="error" message={error.message || 'Unable to load this job.'} />
+        <MessageBanner tone="error" message={error.message || 'Unable to load this opportunity.'} />
       ) : !job ? (
-        <MessageBanner tone="error" message="Job not found." />
+        <MessageBanner tone="error" message="Opportunity not found." />
       ) : (
         <div className="space-y-6">
           <PageHero
-            eyebrow={job.company_name || 'Job opening'}
+            eyebrow={job.company_name || 'Open opportunity'}
             title={job.title}
             description="Review the role details below before you submit your application. The apply form stays separate so the decision content remains easy to scan."
             badges={[
@@ -179,7 +179,7 @@ function CandidateJobDetailContent() {
               formatExperienceRange(job.experience_min_years, job.experience_max_years),
             ].filter(Boolean)}
               actions={[
-                { label: 'Back to jobs', href: '/jobs', variant: 'secondary' },
+                { label: 'Back to opportunities', href: '/jobs', variant: 'secondary' },
                 { label: 'Applications', href: '/candidate/applications' },
               ]}
               aside={
@@ -388,7 +388,7 @@ function CandidateJobDetailContent() {
 export default function CandidateJobDetailPage() {
   return (
     <ProtectedRoute allowedRoles={['candidate']}>
-      <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-slate-600">Loading job page...</div>}>
+      <Suspense fallback={<div className="flex min-h-screen items-center justify-center text-sm text-slate-600">Loading opportunity page...</div>}>
         <CandidateJobDetailContent />
       </Suspense>
     </ProtectedRoute>

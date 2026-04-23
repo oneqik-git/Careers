@@ -477,13 +477,17 @@
 }
 
 .oq-public-root .oq-home-heading-balance {
-  font-size: clamp(2.55rem, 4.6vw, 4.05rem);
+  font-size: clamp(2.25rem, 4vw, 3.5rem);
   line-height: 1.03;
 }
 
 .oq-public-root .oq-home-heading-balance-wide {
-  font-size: clamp(2.35rem, 4vw, 3.65rem);
+  font-size: clamp(2.1rem, 3.55vw, 3.2rem);
   line-height: 1.04;
+}
+
+.oq-public-root .oq-home-title-case {
+  text-transform: capitalize;
 }
 
 .oq-public-root .oq-home-section-clear,
@@ -496,6 +500,12 @@
 
 .oq-public-root .oq-home-section-clear > .oq-grid-overlay {
   display: none;
+}
+
+.oq-public-root .oq-inner-card-clear,
+.oq-public-root .oq-inner-card-clear:hover {
+  background: #000820;
+  box-shadow: none;
 }
 
 @media (min-width: 768px) {

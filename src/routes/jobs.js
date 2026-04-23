@@ -13,6 +13,15 @@ const {
   sendSuccess,
 } = require('../utils/api');
 const { normalizeJob, splitCsv } = require('../utils/normalize');
+const {
+  MAX_JOB_SEARCH_RADIUS_KM,
+  buildDistanceExpression,
+  buildJobLocationFields,
+  hasUsableCompanyLocation,
+  normalizeRadiusKm,
+  numberOrNull,
+  trimOrNull,
+} = require('../utils/location');
 
 const router = express.Router();
 
@@ -155,6 +164,27 @@ router.post('/', auth, requireEmployer, [
     });
   }
 
+  const company = await queryOne(
+    `SELECT id, headquarters, location_formatted, location_city, location_state, location_country,
+      location_latitude, location_longitude, location_source, location_confidence, location_place_id
+     FROM companies
+     WHERE id = ?`,
+    [employer.company_id]
+  );
+  const jobLocation = buildJobLocationFields(req.body, company);
+
+  if ((work_mode || 'on_site') !== 'remote' && !hasUsableCompanyLocation(company)) {
+    return sendError(res, {
+      status: 409,
+      code: 'COMPANY_LOCATION_REQUIRED',
+      message: 'Set a usable company location before posting on-site or hybrid jobs.',
+      details: {
+        company_id: employer.company_id,
+        required_fields: ['location_formatted or headquarters', 'location_city + location_country or latitude + longitude'],
+      },
+    });
+  }
+
   const invalidQuestion = prescreening_questions.find((question) =>
     !question?.question_text || String(question.question_text).trim().length < 3
   );
@@ -172,14 +202,19 @@ router.post('/', auth, requireEmployer, [
       await conn.execute(
         `INSERT INTO job_postings
           (id, company_id, employer_id, title, department, sub_department, job_function, level,
-           seniority_label, employment_type, work_mode, location, salary_min, salary_max,
+           seniority_label, employment_type, work_mode, location, location_formatted, location_city,
+           location_state, location_country, location_latitude, location_longitude, location_source,
+           location_confidence, location_place_id, location_radius_km, salary_min, salary_max,
            salary_disclosed, experience_min_years, experience_max_years, min_career_score,
            required_skills, preferred_skills, education_requirement, description,
            responsibilities, benefits, openings, tat_hours)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [jobId, employer.company_id, employer.id, title, department, sub_department || null,
           job_function || null, level || null, seniority_label || null,
-          employment_type || 'full_time', work_mode || 'on_site', location || null,
+          employment_type || 'full_time', work_mode || 'on_site', jobLocation.formatted || location || null,
+          jobLocation.formatted || location || null, jobLocation.city, jobLocation.state, jobLocation.country,
+          jobLocation.latitude, jobLocation.longitude, jobLocation.source, jobLocation.confidence,
+          jobLocation.placeId, jobLocation.radiusKm,
           salary_min || null, salary_max || null, salary_disclosed !== false,
           experience_min_years || 0, experience_max_years || null,
           min_career_score || 0,
@@ -379,7 +414,13 @@ router.patch('/:id', auth, requireEmployer, asyncHandler(async (req, res) => {
     });
   }
 
-  const allowed = ['title', 'status', 'closed_reason', 'openings', 'salary_min', 'salary_max', 'work_mode', 'location', 'description', 'is_featured'];
+  const allowed = [
+    'title', 'status', 'closed_reason', 'openings', 'salary_min', 'salary_max',
+    'work_mode', 'location', 'location_formatted', 'location_city', 'location_state',
+    'location_country', 'location_latitude', 'location_longitude', 'location_source',
+    'location_confidence', 'location_place_id', 'location_radius_km',
+    'description', 'is_featured',
+  ];
   const updates = [];
   const params = [];
   const updatedFields = [];
@@ -419,9 +460,15 @@ router.patch('/:id', auth, requireEmployer, asyncHandler(async (req, res) => {
 router.get('/', optionalAuth, asyncHandler(async (req, res) => {
   const {
     q, domain, level, work_mode, salary_min, salary_max,
-    experience_max, location, sort = 'match',
+    experience_max, location, location_query, lat, lng, radius_km,
+    include_remote = 'true', sort = 'match',
   } = req.query;
   const { page, limit, offset } = getPagination(req.query);
+  const searchLat = numberOrNull(lat);
+  const searchLng = numberOrNull(lng);
+  const hasGeoSearch = searchLat !== null && searchLng !== null;
+  const effectiveRadiusKm = normalizeRadiusKm(radius_km, { fallback: 5, max: MAX_JOB_SEARCH_RADIUS_KM });
+  const shouldIncludeRemote = String(include_remote).toLowerCase() !== 'false';
 
   let candidateId = null;
   let careerScore = null;
@@ -437,13 +484,24 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
     }
   }
 
-  let sql = `SELECT jp.id, jp.title, jp.department, jp.job_function, jp.level,
-    jp.work_mode, jp.location, jp.salary_min, jp.salary_max, jp.salary_disclosed,
+  const distanceExpression = hasGeoSearch ? buildDistanceExpression(searchLat, searchLng) : null;
+  const params = [];
+  if (hasGeoSearch) {
+    params.push(searchLat, searchLng, searchLat);
+  }
+
+  let sql = `SELECT jp.id, jp.title, jp.department, jp.job_function, jp.level, jp.employment_type,
+    jp.work_mode, jp.location, jp.location_formatted, jp.location_city, jp.location_state,
+    jp.location_country, jp.location_latitude, jp.location_longitude, jp.location_source,
+    jp.location_confidence, jp.location_place_id, jp.location_radius_km,
+    ${distanceExpression || 'NULL'} as distance_km,
+    jp.salary_min, jp.salary_max, jp.salary_disclosed,
     jp.experience_min_years, jp.experience_max_years, jp.openings, jp.applications_count,
     jp.is_featured,
     jp.created_at, jp.tat_hours, jp.required_skills, jp.preferred_skills,
     c.name as company_name, c.logo_url, c.industry, c.employee_count_min, c.employee_count_max,
-    cs.total_score as company_score,
+    c.verified_company,
+    cs.total_score as company_score, cs.response_rate_pct, cs.review_count, cs.verified_review_count,
     ? as candidate_career_score
     FROM job_postings jp
     JOIN companies c ON jp.company_id = c.id
@@ -451,7 +509,7 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
     WHERE jp.status = 'active'
     AND (? = 0 OR jp.min_career_score <= ?)`;
 
-  const params = [careerScore, scoreGateValue, scoreGateValue];
+  params.push(careerScore, scoreGateValue, scoreGateValue);
 
   if (q) {
     sql += ' AND (MATCH(jp.title, jp.description, jp.responsibilities) AGAINST(? IN BOOLEAN MODE) OR jp.title LIKE ?)';
@@ -481,14 +539,39 @@ router.get('/', optionalAuth, asyncHandler(async (req, res) => {
     sql += ' AND jp.experience_min_years <= ?';
     params.push(experience_max);
   }
-  if (location) {
-    sql += ' AND jp.location LIKE ?';
-    params.push(`%${location}%`);
+  const textLocation = trimOrNull(location_query) || trimOrNull(location);
+  if (textLocation) {
+    sql += ` AND (
+      jp.location LIKE ?
+      OR jp.location_formatted LIKE ?
+      OR jp.location_city LIKE ?
+      OR jp.location_state LIKE ?
+      OR jp.location_country LIKE ?
+      ${shouldIncludeRemote ? "OR jp.work_mode = 'remote'" : ''}
+    )`;
+    params.push(
+      `%${textLocation}%`,
+      `%${textLocation}%`,
+      `%${textLocation}%`,
+      `%${textLocation}%`,
+      `%${textLocation}%`
+    );
+  }
+  if (hasGeoSearch) {
+    sql += ` AND (
+      (jp.location_latitude IS NOT NULL AND jp.location_longitude IS NOT NULL AND ${distanceExpression} <= ?)
+      ${shouldIncludeRemote ? "OR jp.work_mode = 'remote'" : ''}
+    )`;
+    params.push(searchLat, searchLng, searchLat, effectiveRadiusKm);
   }
 
-  sql += sort === 'date'
-    ? ' ORDER BY jp.created_at DESC'
-    : ' ORDER BY cs.total_score DESC, jp.created_at DESC';
+  if (hasGeoSearch && sort !== 'date') {
+    sql += ' ORDER BY (distance_km IS NULL), distance_km ASC, cs.total_score DESC, jp.created_at DESC';
+  } else {
+    sql += sort === 'date'
+      ? ' ORDER BY jp.created_at DESC'
+      : ' ORDER BY cs.total_score DESC, jp.created_at DESC';
+  }
   sql += ` LIMIT ${limit} OFFSET ${offset}`;
 
   const jobs = await query(sql, params);
@@ -699,7 +782,10 @@ router.get('/my/applications', auth, requireCandidate, asyncHandler(async (req, 
   const apps = await query(
     `SELECT ja.id, ja.status, ja.career_score_at_apply, ja.ai_match_score, ja.applied_at, ja.status_updated_at,
      ja.reviewed_at, ja.rejection_reason, ja.hold_until, ja.tat_breach,
-     jp.id as job_id, jp.title, jp.department, jp.job_function, jp.level, jp.work_mode, jp.location, jp.tat_hours,
+     jp.id as job_id, jp.title, jp.department, jp.job_function, jp.level, jp.work_mode, jp.location,
+     jp.location_formatted, jp.location_city, jp.location_state, jp.location_country,
+     jp.location_latitude, jp.location_longitude, jp.location_source, jp.location_radius_km,
+     jp.tat_hours,
      jp.experience_min_years, jp.experience_max_years, jp.salary_min, jp.salary_max, jp.salary_disclosed,
      c.id as company_id, c.name as company_name, c.logo_url,
      (SELECT COUNT(*) FROM job_applications ja2
@@ -745,7 +831,9 @@ router.get('/:id/applications', auth, requireEmployer, asyncHandler(async (req, 
 
   let sql = `SELECT ja.id, ja.status, ja.career_score_at_apply, ja.ai_match_score, ja.ai_summary, ja.applied_at,
      ja.cover_note, ja.employer_notes, ja.rejection_reason, ja.hold_until, ja.reviewed_at, ja.status_updated_at, ja.tat_breach,
-     c.id as candidate_id, c.full_name, c.headline, c.location, c.total_experience_months,
+     c.id as candidate_id, c.full_name, c.headline, c.location, c.city, c.state, c.country,
+     c.latitude, c.longitude, c.location_source, c.location_confidence,
+     c.total_experience_months,
      cs.total_score as current_career_score, cs.offer_reliability_pct, cs.no_show_count, cs.ghosting_count, cs.avg_employer_rating,
      (SELECT COUNT(*) FROM job_applications ja2
       JOIN job_postings jp2 ON ja2.job_id = jp2.id

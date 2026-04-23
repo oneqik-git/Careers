@@ -40,7 +40,7 @@ export default function PublicJobDetailPage() {
   useEffect(() => {
     async function loadJob() {
       if (!jobId) {
-        setError({ message: 'Missing job ID.' });
+        setError({ message: 'Missing opportunity ID.' });
         setIsLoading(false);
         return;
       }
@@ -75,11 +75,11 @@ export default function PublicJobDetailPage() {
   return (
     <PublicShell>
       {isLoading ? (
-        <p className="text-sm text-[var(--text-soft)]">Loading job detail...</p>
+        <p className="text-sm text-[var(--text-soft)]">Loading opportunity detail...</p>
       ) : error ? (
-        <MessageBanner tone="error" message={error.message || 'Unable to load job detail.'} />
+        <MessageBanner tone="error" message={error.message || 'Unable to load opportunity detail.'} />
       ) : !job ? (
-        <MessageBanner tone="error" message="Job not found." />
+        <MessageBanner tone="error" message="Opportunity not found." />
       ) : (
         <div className="space-y-8">
           <PageHero
@@ -93,7 +93,7 @@ export default function PublicJobDetailPage() {
               formatExperienceRange(job.experience_min_years, job.experience_max_years),
             ].filter(Boolean)}
             actions={[
-              { label: 'Back to Jobs', href: '/jobs', variant: 'secondary' },
+              { label: 'Back to Opportunities', href: '/jobs', variant: 'secondary' },
               { label: 'Create Profile', href: `/register?next=${encodeURIComponent(`/candidate/jobs/detail?jobId=${job.id}`)}` },
             ]}
             aside={(

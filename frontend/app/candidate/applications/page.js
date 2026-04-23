@@ -133,7 +133,7 @@ export default function CandidateApplicationsPage() {
 
                 <div className="flex flex-wrap gap-3">
                   <Link className="oq-button-secondary" href="/jobs">
-                    Browse Jobs
+                    Browse Opportunities
                   </Link>
                 </div>
               </div>
@@ -269,7 +269,7 @@ export default function CandidateApplicationsPage() {
                 title="No applications in this slice"
                 description="The tracker is working, but nothing currently matches this status filter. Switch back to All to review the full list."
                 action={<button className="oq-button-primary" onClick={() => setActiveFilter('all')} type="button">Show all applications</button>}
-                secondaryAction={<Link className="oq-button-ghost" href="/jobs">Browse jobs</Link>}
+                secondaryAction={<Link className="oq-button-ghost" href="/jobs">Browse opportunities</Link>}
               />
             )}
           </div>
@@ -280,7 +280,7 @@ export default function CandidateApplicationsPage() {
             description="Apply to a role to unlock the application tracker and status pipeline here."
             action={
               <Link className="oq-button-primary" href="/jobs">
-                Browse jobs
+                Browse opportunities
               </Link>
             }
           />

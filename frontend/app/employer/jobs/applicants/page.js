@@ -128,7 +128,7 @@ function ApplicantsContent() {
 
   async function loadApplications() {
     if (!jobId) {
-      setError({ message: 'Missing job ID.' });
+      setError({ message: 'Missing opportunity ID.' });
       setIsLoading(false);
       return;
     }
@@ -289,8 +289,8 @@ function ApplicantsContent() {
               `${applications.length} applicant${applications.length === 1 ? '' : 's'}`,
             ].filter(Boolean)}
             actions={[
-              { label: 'Back to jobs', href: '/employer/jobs', variant: 'secondary' },
-              { label: 'Post Job', href: '/employer/jobs/new' },
+              { label: 'Back to opportunities', href: '/employer/jobs', variant: 'secondary' },
+              { label: 'Post Opportunity', href: '/employer/jobs/new' },
             ]}
             aside={(
               <div className="space-y-4">
@@ -619,7 +619,7 @@ function ApplicantsContent() {
               title="No applicants in this slice"
               description="This role has applicants, but none currently match the selected stage filter. Switch back to All to review the full queue."
               action={<button className="oq-button-primary" onClick={() => setActiveFilter('all')} type="button">Show all applicants</button>}
-              secondaryAction={<Link className="oq-button-ghost" href="/employer/jobs">Back to jobs</Link>}
+              secondaryAction={<Link className="oq-button-ghost" href="/employer/jobs">Back to opportunities</Link>}
             />
           )}
         </div>
@@ -630,7 +630,7 @@ function ApplicantsContent() {
           description="Applications will appear here once candidates start applying to this role."
           action={(
             <Link className="oq-button-primary" href="/employer/jobs">
-              Back to posted jobs
+              Back to posted opportunities
             </Link>
           )}
         />

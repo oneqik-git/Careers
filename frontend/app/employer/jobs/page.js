@@ -84,25 +84,25 @@ export default function EmployerJobsPage() {
   return (
     <ProtectedRoute allowedRoles={['employer', 'admin']}>
       <DashboardShell
-        title="Posted Jobs"
+        title="Posted Opportunities"
         subtitle="Operate every role with clearer applicant volume, funnel activity, and direct paths into review."
         onRefresh={loadJobs}
         navItems={employerNavItems}
       >
         {isLoading ? (
           <LoadingState
-            description="Loading job performance, funnel movement, and recent applicant activity."
-            label="Employer jobs"
-            title="Preparing your jobs view"
+            description="Loading opportunity performance, funnel movement, and recent applicant activity."
+            label="Employer opportunities"
+            title="Preparing your opportunities view"
           />
         ) : error ? (
-          <MessageBanner tone="error" message={error.message || 'Unable to load posted jobs.'} />
+          <MessageBanner tone="error" message={error.message || 'Unable to load posted opportunities.'} />
         ) : jobs.length ? (
           <div className="space-y-6">
             <PageHero
-              eyebrow="Employer jobs"
+              eyebrow="Employer opportunities"
               title="Role overview that supports decisions"
-              description="Each role now shows not just posting metadata, but where the funnel is moving, which jobs need attention, and how quickly you can jump into candidate review."
+              description="Each role now shows not just posting metadata, but where the funnel is moving, which opportunities need attention, and how quickly you can jump into candidate review."
               badges={[
                 `${jobsSummary.openJobs} open role${jobsSummary.openJobs === 1 ? '' : 's'}`,
                 `${jobsSummary.applicants} applicants`,
@@ -110,14 +110,14 @@ export default function EmployerJobsPage() {
                 `${jobsSummary.offers} offers live`,
               ]}
               actions={[
-                { label: 'Post Job', href: '/employer/jobs/new' },
+                { label: 'Post Opportunity', href: '/employer/jobs/new' },
                 { label: 'Dashboard', href: '/employer/dashboard', variant: 'secondary' },
               ]}
             />
 
             <section className="rounded-[1.65rem] border border-[rgba(29,40,56,0.9)] bg-[linear-gradient(180deg,rgba(255,255,255,0.025),transparent_100%),rgba(5,18,43,0.94)] p-5">
               <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
-                <JobsSummaryTile label="Open roles" value={jobsSummary.openJobs} helper="Posted jobs currently visible to candidates." />
+                <JobsSummaryTile label="Open roles" value={jobsSummary.openJobs} helper="Posted opportunities currently visible to candidates." />
                 <JobsSummaryTile label="Applicants" value={jobsSummary.applicants} helper="Total inbound applications across roles." />
                 <JobsSummaryTile label="New to review" value={jobsSummary.newApplicants} helper="Fresh applicants still waiting for first pass." />
                 <JobsSummaryTile label="Under review" value={jobsSummary.underReview} helper="Candidates sitting with the hiring team." />
@@ -128,7 +128,7 @@ export default function EmployerJobsPage() {
             <div className="space-y-4">
               <div className="flex flex-col gap-2 px-1 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-[var(--text-soft)]">
-                  Showing <span className="font-medium text-[var(--text)]">{visibleJobs.length}</span> role{visibleJobs.length === 1 ? '' : 's'} in the employer workspace.
+                  <span className="font-medium text-[var(--text)]">{visibleJobs.length}</span> opportunities in the employer workspace.
                 </p>
                 <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">Open a role to review applicants and full timeline context.</p>
               </div>
@@ -229,12 +229,12 @@ export default function EmployerJobsPage() {
           </div>
         ) : (
           <EmptyState
-            eyebrow="Employer jobs"
-            title="No posted jobs yet"
-            description="Create a job first, then applicant tracking and hiring status updates will appear here."
+            eyebrow="Employer opportunities"
+            title="No posted opportunities yet"
+            description="Create an opportunity first, then applicant tracking and hiring status updates will appear here."
             action={(
               <Link className="oq-button-primary" href="/employer/jobs/new">
-                Post your first job
+                Post your first opportunity
               </Link>
             )}
           />

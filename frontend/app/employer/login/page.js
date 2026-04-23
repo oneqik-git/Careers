@@ -18,7 +18,7 @@ export default function EmployerLoginPage() {
       footerHref="/employer/register"
       footerText="Create employer account"
       sideTitle="Keep employer access separate from the candidate journey."
-      sideBody="Use your employer credentials to manage jobs, applicants, and company-owned hiring workflows."
+      sideBody="Use your employer credentials to manage opportunities, applicants, and company-owned hiring workflows."
       sidePoints={[
         'Employer-focused entry and copy',
         'Protected posting and applicant review',

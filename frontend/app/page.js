@@ -338,11 +338,19 @@ const roleClusterDefinitions = [
   },
   {
     key: 'technology-product',
-    label: 'Technology & Product',
+    label: 'Technology & Engineering',
     tagline: "For builders, problem-solvers, and people who'd rather fix the system than complain about it.",
-    departments: ['Technology', 'Product'],
-    exampleRoles: ['Frontend Engineer', 'Backend Engineer', 'Product Manager', 'Product Designer'],
-    matchers: ['technology', 'engineer', 'developer', 'software', 'product', 'design', 'tech', 'qa'],
+    departments: ['Technology'],
+    exampleRoles: ['Frontend Engineer', 'Backend Engineer', 'Full Stack Engineer', 'QA Automation Engineer'],
+    matchers: ['technology', 'engineer', 'developer', 'software', 'tech', 'qa', 'devops'],
+  },
+  {
+    key: 'product-design',
+    label: 'Product & Design',
+    tagline: 'For people who turn customer problems, product thinking, and design judgment into usable experiences.',
+    departments: ['Product'],
+    exampleRoles: ['Product Manager', 'Associate Product Manager', 'Product Designer', 'Product Operations Specialist'],
+    matchers: ['product', 'product management', 'product design', 'ux', 'design', 'product ops'],
   },
   {
     key: 'freshers-entry-roles',
@@ -525,7 +533,10 @@ export default function HomePage() {
     }
 
     if (heroArea.trim()) {
+      params.set('location_query', heroArea.trim());
       params.set('area', heroArea.trim());
+      params.set('radius_km', '5');
+      params.set('include_remote', 'true');
     }
 
     router.push(params.toString() ? `/jobs?${params}` : '/jobs');
@@ -541,7 +552,7 @@ export default function HomePage() {
           className="oq-home-hero"
           title={(
             <>
-              <span className="block text-[var(--text)]">Not a Job Portal,</span>
+              <span className="block text-[var(--text)]">Not an Opportunity Board,</span>
               <span className="block text-[var(--primary-2)]">It&apos;s YOUR Career</span>
             </>
           )}
@@ -583,19 +594,19 @@ export default function HomePage() {
 
         <section className="featured-split-style-2 career-featured-split-style-2 shadow-safe-spacing-style-2">
           <div className="oq-featured-copy-card">
-            <p className="oq-kicker">Featured Jobs</p>
+            <p className="oq-kicker">Featured Opportunities</p>
             <h2 className="h1-style-2 mt-3">
               <span className="block">Popular</span>
               <span className="block">Searches</span>
             </h2>
             <p className="mt-5 max-w-xl text-[1rem] font-light leading-8 text-[var(--secondary-1)]">
               <span className="block">Roles that are active & relevant.</span>
-              <span className="block">No endless scrolling through jobs that</span>
+              <span className="block">No endless scrolling through opportunities that</span>
               <span className="block">died three Tuesdays ago.</span>
             </p>
             <div className="mt-7 flex flex-col items-start gap-3">
               <Link className="btn-box-style-2" href="/jobs">
-                See All Jobs
+                See All Opportunities
               </Link>
             </div>
           </div>
@@ -610,7 +621,7 @@ export default function HomePage() {
         <section className="oq-card oq-home-section-clear rounded-[2.4rem] p-6 sm:p-8">
           <div className="flex flex-col gap-3">
             <p className="oq-kicker">Role Clusters</p>
-            <h2 className="h1-style-2 oq-home-heading-balance">Start Where You Belong</h2>
+            <h2 className="h1-style-2 oq-home-heading-balance oq-home-title-case">Start Where You Belong</h2>
             <p className="max-w-3xl text-[1rem] font-light leading-8 text-[var(--secondary-1)]">
               Browse roles by what you want to do. Not by how much patience you have left.
             </p>
@@ -645,19 +656,19 @@ export default function HomePage() {
         <section className="oq-card rounded-[2.4rem] p-6 sm:p-8">
           <div className="max-w-3xl">
             <p className="oq-kicker">What is Careers?</p>
-            <h2 className="h1-style-2 oq-home-heading-balance mt-3">
-              <span className="block">It’s Everything Your Career, Built on Proof.</span>
+            <h2 className="h1-style-2 oq-home-heading-balance oq-home-title-case mt-3">
+              <span className="block text-[var(--primary-3)]">It’s Everything Your Career,</span>
+              <span className="block text-[var(--primary-3)]">Built on Proof.</span>
               <span className="block">Not Guesswork.</span>
             </h2>
             <p className="mt-5 text-[1rem] font-light leading-8 text-[var(--secondary-1)]">
-              <span className="block">You’re Not Just Another Profile.</span>
-              <span className="block">A Presence That Gets Noticed</span>
+              <span className="block">You’re Not Just Another Profile..You're a Presence to be Noticed</span>
             </p>
           </div>
 
           <div className="mt-8 grid gap-4 md:grid-cols-3">
             {differenceCards.map((card) => (
-              <div key={card.title} className="oq-card-muted rounded-[1.9rem] p-5">
+              <div key={card.title} className="oq-card-muted oq-inner-card-clear rounded-[1.9rem] p-5">
                 <p className="text-xl font-medium tracking-[-0.04em] text-[var(--text)]">
                   {card.title}
                   <span className="text-[var(--primary-2)]">.</span>
@@ -673,9 +684,10 @@ export default function HomePage() {
           <div className="relative grid gap-6 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
             <div>
               <p className="oq-kicker">WHY Careers?</p>
-              <h2 className="h1-style-2 oq-home-heading-balance-wide mt-3 max-w-3xl">Because Right Now, You’re Doing Everything… and yet Nothing&apos;s Happening.</h2>
+              <h2 className="h1-style-2 oq-home-heading-balance-wide oq-home-title-case mt-3 max-w-3xl">Because Right Now, You’re Doing Everything… and yet Nothing&apos;s Happening.</h2>
               <p className="mt-4 max-w-2xl text-[1rem] font-light leading-8 text-[var(--secondary-1)]">
-                <span className="block">Ever Felt LOST in the crowd? You’re applying, trying, showing up,but it feels like none of it matters.</span>
+                <span className="block">Ever Felt LOST in the crowd? You’re applying, trying, showing up,</span>
+                <span className="block">but it feels like none of it matters.</span>
                 <span className="block">Not because you’re not capable, but the right Company never even saw you.</span>
               </p>
               <div className="mt-6">

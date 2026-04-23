@@ -9,7 +9,7 @@ import { getDashboardRoute } from '@/utils/roles';
 
 const navItems = [
   { label: 'Home', href: '/' },
-  { label: 'Jobs', href: '/jobs' },
+  { label: 'Opportunities', href: '/jobs' },
   { label: 'Community', href: '/community' },
 ];
 
@@ -17,7 +17,7 @@ const footerGroups = [
   {
     title: 'Explore',
     links: [
-      { label: 'Jobs', href: '/jobs' },
+      { label: 'Opportunities', href: '/jobs' },
       { label: 'Community', href: '/community' },
       { label: 'Learn', href: '/learn' },
       { label: 'About', href: '/about' },
@@ -116,7 +116,7 @@ export default function PublicShell({ children, utilityContent }) {
                         </Link>
                       ) : (
                         <Link className="oq-nav-utility-link" href="/employer/jobs">
-                          Jobs
+                          Opportunities
                         </Link>
                       )}
                       <Link className="oq-nav-cta oq-nav-cta-secondary" href={dashboardHref}>
@@ -150,7 +150,7 @@ export default function PublicShell({ children, utilityContent }) {
                 Candidate-first discovery, structured applications, and a clearer path from public browsing to real hiring progress.
               </p>
               <div className="flex flex-wrap gap-4 text-sm text-[var(--secondary-1)]">
-                <Link className="oq-link" href="/jobs">Browse Jobs</Link>
+                <Link className="oq-link" href="/jobs">Browse Opportunities</Link>
                 <Link className="oq-link" href="/employers">For Employers</Link>
               </div>
             </div>

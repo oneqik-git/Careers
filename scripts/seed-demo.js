@@ -39,6 +39,31 @@ function listToJson(value) {
   return JSON.stringify(value || []);
 }
 
+const LOCATION_LIBRARY = {
+  Ahmedabad: { city: 'Ahmedabad', state: 'Gujarat', country: 'India', latitude: 23.0225, longitude: 72.5714 },
+  Bengaluru: { city: 'Bengaluru', state: 'Karnataka', country: 'India', latitude: 12.9716, longitude: 77.5946 },
+  Chandigarh: { city: 'Chandigarh', state: 'Chandigarh', country: 'India', latitude: 30.7333, longitude: 76.7794 },
+  Chennai: { city: 'Chennai', state: 'Tamil Nadu', country: 'India', latitude: 13.0827, longitude: 80.2707 },
+  Delhi: { city: 'Delhi', state: 'Delhi', country: 'India', latitude: 28.6139, longitude: 77.2090 },
+  Gurugram: { city: 'Gurugram', state: 'Haryana', country: 'India', latitude: 28.4595, longitude: 77.0266 },
+  Hyderabad: { city: 'Hyderabad', state: 'Telangana', country: 'India', latitude: 17.3850, longitude: 78.4867 },
+  Indore: { city: 'Indore', state: 'Madhya Pradesh', country: 'India', latitude: 22.7196, longitude: 75.8577 },
+  Jaipur: { city: 'Jaipur', state: 'Rajasthan', country: 'India', latitude: 26.9124, longitude: 75.7873 },
+  Kochi: { city: 'Kochi', state: 'Kerala', country: 'India', latitude: 9.9312, longitude: 76.2673 },
+  Mumbai: { city: 'Mumbai', state: 'Maharashtra', country: 'India', latitude: 19.0760, longitude: 72.8777 },
+  Noida: { city: 'Noida', state: 'Uttar Pradesh', country: 'India', latitude: 28.5355, longitude: 77.3910 },
+  Pune: { city: 'Pune', state: 'Maharashtra', country: 'India', latitude: 18.5204, longitude: 73.8567 },
+};
+
+function getLocationSpec(cityOrText) {
+  const firstPart = String(cityOrText || '').split(',')[0].trim();
+  return LOCATION_LIBRARY[firstPart] || { city: firstPart || null, state: null, country: 'India', latitude: null, longitude: null };
+}
+
+function formatLocation(spec) {
+  return [spec.city, spec.state, spec.country].filter(Boolean).join(', ');
+}
+
 const COURSE_LIBRARY = {
   Communication: {
     subDomain: 'Executive Presence',
@@ -556,6 +581,7 @@ async function seedCompaniesAndEmployers(passwordHash) {
     const userId = uuid();
     const companyId = uuid();
     const employerId = uuid();
+    const companyLocation = getLocationSpec(company.location);
 
     await query(
       `INSERT INTO users (id, email, phone, password_hash, \`role\`, is_verified, is_active, created_at)
@@ -565,9 +591,9 @@ async function seedCompaniesAndEmployers(passwordHash) {
 
     await query(
       `INSERT INTO companies
-        (id, name, slug, industry, sub_industry, description, website_url, linkedin_url, founded_year, employee_count_min, employee_count_max, funding_stage, funding_amount_usd, is_profitable, headquarters, global_offices, ceo_name, verified_company, data_source, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, 'verified', ?)`,
-      [companyId, company.name, company.slug, company.industry, company.industry, company.description, company.websiteUrl, company.linkedinUrl, company.foundedYear, company.employeeRange[0], company.employeeRange[1], company.fundingStage, company.fundingAmountUsd, company.isProfitable ? 1 : 0, company.location, listToJson(company.globalOffices), company.ceoName, toSqlDateTime(isoDate(200))]
+        (id, name, slug, industry, sub_industry, description, website_url, linkedin_url, founded_year, employee_count_min, employee_count_max, funding_stage, funding_amount_usd, is_profitable, headquarters, location_formatted, location_city, location_state, location_country, location_latitude, location_longitude, location_source, location_confidence, global_offices, ceo_name, verified_company, data_source, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'manual', 0.900, ?, ?, 1, 'verified', ?)`,
+      [companyId, company.name, company.slug, company.industry, company.industry, company.description, company.websiteUrl, company.linkedinUrl, company.foundedYear, company.employeeRange[0], company.employeeRange[1], company.fundingStage, company.fundingAmountUsd, company.isProfitable ? 1 : 0, formatLocation(companyLocation), formatLocation(companyLocation), companyLocation.city, companyLocation.state, companyLocation.country, companyLocation.latitude, companyLocation.longitude, listToJson(company.globalOffices), company.ceoName, toSqlDateTime(isoDate(200))]
     );
 
     await query(
@@ -622,6 +648,8 @@ async function seedCandidates(passwordHash, context) {
   for (const spec of CANDIDATES) {
     const userId = uuid();
     const candidateId = uuid();
+    const candidateLocation = getLocationSpec(spec.city || spec.location);
+    const preferredLocation = getLocationSpec(spec.preferredLocations?.[0] || spec.city || spec.location);
 
     await query(
       `INSERT INTO users (id, email, phone, password_hash, \`role\`, is_verified, is_active, created_at)
@@ -631,9 +659,9 @@ async function seedCandidates(passwordHash, context) {
 
     await query(
       `INSERT INTO candidates
-        (id, user_id, full_name, headline, summary, location, city, state, aadhaar_hash, digilocker_linked, \`current_role\`, current_company, total_experience_months, domains, preferred_locations, expected_salary_min, expected_salary_max, notice_period_days, open_to_work, career_stage, generation, created_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-      [candidateId, userId, spec.fullName, spec.headline, spec.summary, spec.location, spec.city, spec.state, spec.aadhaarSeed ? hashAadhaar(spec.aadhaarSeed) : null, spec.digilockerLinked ? 1 : 0, spec.currentRole, spec.currentCompany, spec.totalExperienceMonths, listToJson(spec.domains), listToJson(spec.preferredLocations), spec.expectedSalary[0], spec.expectedSalary[1], spec.noticePeriodDays, spec.openToWork ? 1 : 0, spec.careerStage, spec.generation, toSqlDateTime(isoDate(140))]
+        (id, user_id, full_name, headline, summary, location, city, state, country, latitude, longitude, location_source, location_confidence, aadhaar_hash, digilocker_linked, \`current_role\`, current_company, total_experience_months, domains, preferred_locations, preferred_location_text, preferred_location_city, preferred_location_state, preferred_location_country, preferred_location_latitude, preferred_location_longitude, preferred_location_radius_km, preferred_location_source, expected_salary_min, expected_salary_max, notice_period_days, open_to_work, career_stage, generation, created_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'manual', 0.900, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 20.00, 'manual', ?, ?, ?, ?, ?, ?, ?)`,
+      [candidateId, userId, spec.fullName, spec.headline, spec.summary, spec.location, candidateLocation.city, candidateLocation.state, candidateLocation.country, candidateLocation.latitude, candidateLocation.longitude, spec.aadhaarSeed ? hashAadhaar(spec.aadhaarSeed) : null, spec.digilockerLinked ? 1 : 0, spec.currentRole, spec.currentCompany, spec.totalExperienceMonths, listToJson(spec.domains), listToJson(spec.preferredLocations), formatLocation(preferredLocation), preferredLocation.city, preferredLocation.state, preferredLocation.country, preferredLocation.latitude, preferredLocation.longitude, spec.expectedSalary[0], spec.expectedSalary[1], spec.noticePeriodDays, spec.openToWork ? 1 : 0, spec.careerStage, spec.generation, toSqlDateTime(isoDate(140))]
     );
 
     for (const [docType, docName, verified] of spec.docs) {
@@ -728,12 +756,15 @@ async function seedJobs(context) {
       const isFeatured = featuredCount < 12 && jobIndex === 0;
       const createdAt = isoDate(2 + ((companyIndex * 5) + jobIndex), 9 + (jobIndex % 5));
       const tatHours = 36 + ((jobIndex + companyIndex) % 4) * 12;
+      const companyLocation = getLocationSpec(company.location);
+      const isRemote = blueprint.work_mode === 'remote';
+      const jobLocationText = isRemote ? 'Remote - India' : formatLocation(companyLocation);
 
       await query(
         `INSERT INTO job_postings
-          (id, company_id, employer_id, title, department, sub_department, job_function, level, seniority_label, employment_type, work_mode, location, salary_min, salary_max, salary_currency, salary_period, salary_disclosed, experience_min_years, experience_max_years, min_career_score, required_skills, preferred_skills, education_requirement, description, responsibilities, benefits, openings, status, expires_at, is_featured, tat_hours, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'full_time', ?, ?, ?, ?, 'INR', 'yearly', 1, ?, ?, ?, ?, ?, 'ug', ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?)`,
-        [jobId, company.id, employer.id, blueprint.title, blueprint.department, blueprint.job_function, blueprint.job_function, blueprint.level, blueprint.seniority_label, blueprint.work_mode, blueprint.work_mode === 'remote' ? 'Remote - India' : company.location, minSalary, maxSalary, blueprint.experience[0], blueprint.experience[1], blueprint.minCareerScore, listToJson(blueprint.required), listToJson(blueprint.preferred), buildJobDescription(companySpec, blueprint), buildResponsibilities(companySpec, blueprint), buildBenefits(companySpec, blueprint), blueprint.level === 'manager' || blueprint.level === 'senior' ? 1 : 2, toSqlDateTime(isoDate(-25 + ((companyIndex + jobIndex) % 10))), isFeatured ? 1 : 0, tatHours, toSqlDateTime(createdAt), toSqlDateTime(createdAt)]
+          (id, company_id, employer_id, title, department, sub_department, job_function, level, seniority_label, employment_type, work_mode, location, location_formatted, location_city, location_state, location_country, location_latitude, location_longitude, location_source, location_confidence, location_radius_km, salary_min, salary_max, salary_currency, salary_period, salary_disclosed, experience_min_years, experience_max_years, min_career_score, required_skills, preferred_skills, education_requirement, description, responsibilities, benefits, openings, status, expires_at, is_featured, tat_hours, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'full_time', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'INR', 'yearly', 1, ?, ?, ?, ?, ?, 'ug', ?, ?, ?, ?, 'active', ?, ?, ?, ?, ?)`,
+        [jobId, company.id, employer.id, blueprint.title, blueprint.department, blueprint.job_function, blueprint.job_function, blueprint.level, blueprint.seniority_label, blueprint.work_mode, jobLocationText, jobLocationText, isRemote ? null : companyLocation.city, isRemote ? null : companyLocation.state, isRemote ? 'India' : companyLocation.country, isRemote ? null : companyLocation.latitude, isRemote ? null : companyLocation.longitude, isRemote ? 'remote' : 'company_default', isRemote ? null : 0.9, isRemote ? null : 5, minSalary, maxSalary, blueprint.experience[0], blueprint.experience[1], blueprint.minCareerScore, listToJson(blueprint.required), listToJson(blueprint.preferred), buildJobDescription(companySpec, blueprint), buildResponsibilities(companySpec, blueprint), buildBenefits(companySpec, blueprint), blueprint.level === 'manager' || blueprint.level === 'senior' ? 1 : 2, toSqlDateTime(isoDate(-25 + ((companyIndex + jobIndex) % 10))), isFeatured ? 1 : 0, tatHours, toSqlDateTime(createdAt), toSqlDateTime(createdAt)]
       );
 
       const jobQuestions = [];

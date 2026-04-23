@@ -71,6 +71,26 @@ function normalizeCandidate(candidate) {
     ...candidate,
     domains: parseJsonArray(candidate.domains),
     preferred_locations: parseJsonArray(candidate.preferred_locations),
+    location_info: {
+      formatted: candidate.location ?? null,
+      city: candidate.city ?? null,
+      state: candidate.state ?? null,
+      country: candidate.country ?? null,
+      latitude: candidate.latitude ?? null,
+      longitude: candidate.longitude ?? null,
+      source: candidate.location_source ?? null,
+      confidence: candidate.location_confidence ?? null,
+    },
+    preferred_location_info: {
+      formatted: candidate.preferred_location_text ?? null,
+      city: candidate.preferred_location_city ?? null,
+      state: candidate.preferred_location_state ?? null,
+      country: candidate.preferred_location_country ?? null,
+      latitude: candidate.preferred_location_latitude ?? null,
+      longitude: candidate.preferred_location_longitude ?? null,
+      radius_km: candidate.preferred_location_radius_km ?? null,
+      source: candidate.preferred_location_source ?? null,
+    },
   };
 }
 
@@ -91,6 +111,19 @@ function normalizeJob(job) {
     ...job,
     required_skills: parseJsonArray(job.required_skills),
     preferred_skills: parseJsonArray(job.preferred_skills),
+    location_info: {
+      formatted: job.location_formatted ?? job.location ?? null,
+      city: job.location_city ?? null,
+      state: job.location_state ?? null,
+      country: job.location_country ?? null,
+      latitude: job.location_latitude ?? null,
+      longitude: job.location_longitude ?? null,
+      source: job.location_source ?? null,
+      confidence: job.location_confidence ?? null,
+      place_id: job.location_place_id ?? null,
+      radius_km: job.location_radius_km ?? null,
+      distance_km: job.distance_km ?? null,
+    },
   };
 }
 
@@ -102,6 +135,17 @@ function normalizeCompany(company) {
   return {
     ...company,
     global_offices: parseJsonArray(company.global_offices),
+    location_info: {
+      formatted: company.location_formatted ?? company.headquarters ?? null,
+      city: company.location_city ?? null,
+      state: company.location_state ?? null,
+      country: company.location_country ?? null,
+      latitude: company.location_latitude ?? null,
+      longitude: company.location_longitude ?? null,
+      source: company.location_source ?? null,
+      confidence: company.location_confidence ?? null,
+      place_id: company.location_place_id ?? null,
+    },
   };
 }
 

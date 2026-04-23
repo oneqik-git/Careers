@@ -76,7 +76,7 @@ export default function PostJobPage() {
       .filter(Boolean);
 
     if (!trimmedTitle) {
-      setError({ message: 'Job title is required.' });
+      setError({ message: 'Opportunity title is required.' });
       return;
     }
 
@@ -106,6 +106,8 @@ export default function PostJobPage() {
         department: trimmedDepartment,
         description: trimmedDescription,
         location: formData.location.trim() || null,
+        location_formatted: formData.location.trim() || null,
+        location_source: formData.location.trim() ? 'manual' : undefined,
         salary_min: formData.salary_min ? Number(formData.salary_min) : null,
         salary_max: formData.salary_max ? Number(formData.salary_max) : null,
         prescreening_questions: sanitizedQuestions.map((question_text) => ({
@@ -114,7 +116,7 @@ export default function PostJobPage() {
           })),
       });
 
-      setSuccessMessage(`Job created successfully. Job ID: ${response?.data?.job_id}`);
+      setSuccessMessage(`Opportunity created successfully. ID: ${response?.data?.job_id}`);
       setFormData({
         title: '',
         department: '',
@@ -135,17 +137,17 @@ export default function PostJobPage() {
   return (
     <ProtectedRoute allowedRoles={['employer', 'admin']}>
       <DashboardShell
-        title="Post a Job"
+        title="Post an Opportunity"
         subtitle="Create a role with clearer grouping so the posting flow feels more structured and less form-heavy."
         navItems={employerNavItems}
       >
         <div className="space-y-6">
           <PageHero
             eyebrow="New role"
-            title="Create a job posting"
+            title="Create an opportunity posting"
             description="This pass keeps the form simple but improves the grouping, guidance text, and spacing so employers can move through it with more confidence."
             actions={[
-              { label: 'View Jobs', href: '/employer/jobs', variant: 'secondary' },
+              { label: 'View Opportunities', href: '/employer/jobs', variant: 'secondary' },
               { label: 'Dashboard', href: '/employer/dashboard' },
             ]}
             aside={
@@ -159,7 +161,7 @@ export default function PostJobPage() {
             }
           />
 
-          <SectionCard title="New Job Form" description="This page submits POST /api/jobs with the current prototype fields.">
+          <SectionCard title="New Opportunity Form" description="This page submits POST /api/jobs with the current prototype fields.">
             <form className="space-y-5" onSubmit={handleSubmit}>
               <MessageBanner tone="success" message={successMessage} />
               <MessageBanner tone="error" message={error?.message} />
@@ -296,7 +298,7 @@ export default function PostJobPage() {
                   disabled={isSubmitting}
                   type="submit"
                 >
-                  {isSubmitting ? 'Creating job...' : 'Create job'}
+                  {isSubmitting ? 'Creating opportunity...' : 'Create opportunity'}
                 </button>
                 <Link
                   className="rounded-2xl border border-slate-300 px-5 py-3 text-sm text-slate-700 transition hover:border-slate-400 hover:bg-slate-50"

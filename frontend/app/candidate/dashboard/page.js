@@ -32,7 +32,7 @@ export default function CandidateDashboardPage() {
     <ProtectedRoute allowedRoles={['candidate']}>
       <DashboardShell
         title="Candidate Dashboard"
-        subtitle="Use one workspace to review your profile, continue job discovery, and stay on top of active applications."
+        subtitle="Use one workspace to review your profile, continue opportunity discovery, and stay on top of active applications."
         onRefresh={refetch}
         navItems={candidateNavItems}
       >
@@ -144,7 +144,7 @@ export default function CandidateDashboardPage() {
                     className="flex items-center justify-between rounded-2xl border border-[var(--border)] bg-[rgba(255,255,255,0.03)] px-4 py-3 text-sm font-medium text-[var(--text)] transition hover:border-[rgba(93,224,230,0.22)] hover:bg-[rgba(93,224,230,0.06)]"
                     href="/jobs"
                   >
-                    <span>Browse Jobs</span>
+                    <span>Browse Opportunities</span>
                     <span>Find the next fit</span>
                   </Link>
                   <Link

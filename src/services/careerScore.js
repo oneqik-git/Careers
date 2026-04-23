@@ -119,7 +119,7 @@ async function calcEngagement(candidateId) {
   );
 
   // Profile completeness (0-1)
-  const fields = ['full_name','headline','summary','location','current_role','domains','preferred_locations'];
+  const fields = ['full_name','headline','summary','location','city','state','country','current_role','domains','preferred_locations'];
   const filled = fields.filter(f => candidate?.[f]).length;
   const completeness = filled / fields.length;
 
