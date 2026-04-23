@@ -294,20 +294,17 @@
 
 @media (max-width: 767px) {
   .oq-public-root .oq-home-search-strip {
-    border: 1px solid rgba(29, 40, 56, 0.72);
-    border-radius: 24px;
-    background:
-      linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 100%),
-      rgba(4, 16, 40, 0.88);
-    padding: 0.5rem;
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+    border-color: transparent;
+    background: transparent;
+    padding: clamp(1rem, 2.2vw, 1.4rem);
+    box-shadow: none;
   }
 
   .oq-public-root .oq-home-search-strip .home-search-mobile-grid {
     display: flex;
     align-items: stretch;
-    gap: 0.55rem;
-    overflow: hidden;
+    gap: 0.625rem;
+    overflow: visible;
   }
 
   .oq-public-root .oq-home-search-strip .home-search-mobile-field {
@@ -315,19 +312,21 @@
     min-width: 0;
     max-width: 100%;
     overflow: hidden;
+    cursor: text;
     transition:
       flex-basis 220ms ease,
+      min-width 220ms ease,
       max-width 220ms ease,
       opacity 180ms ease,
       transform 220ms ease;
   }
 
   .oq-public-root .oq-home-search-strip .home-search-mobile-field[data-collapsed='true'] {
-    flex: 0 0 0;
-    max-width: 0;
-    opacity: 0;
-    pointer-events: none;
-    transform: translateX(10px) scaleX(0.88);
+    flex: 0 0 5px;
+    min-width: 5px;
+    max-width: 5px;
+    opacity: 0.72;
+    transform: translateX(0);
   }
 
   .oq-public-root .oq-home-search-strip .home-search-mobile-field .home-search-input-style-2,
@@ -337,6 +336,20 @@
     padding: 0.95rem 0.95rem;
     font-size: 0.94rem;
     line-height: 1.2;
+  }
+
+  .oq-public-root .oq-home-search-strip .home-search-mobile-field[data-collapsed='true'] .home-search-input-style-2,
+  .oq-public-root .oq-home-search-strip .home-search-mobile-field[data-collapsed='true'] .home-search-select-style-2 {
+    border-radius: 0;
+    padding-left: 0;
+    padding-right: 0;
+    color: transparent;
+    caret-color: transparent;
+  }
+
+  .oq-public-root .oq-home-search-strip .home-search-mobile-field[data-collapsed='true'] .home-search-input-style-2::placeholder,
+  .oq-public-root .oq-home-search-strip .home-search-mobile-field[data-collapsed='true'] .select-placeholder-style-2 {
+    color: transparent;
   }
 
   .oq-public-root .oq-home-search-strip .home-search-mobile-grid[data-active-field=''] .home-search-mobile-field {
@@ -353,6 +366,7 @@
     flex: 0 0 0;
     width: 0;
     min-width: 0;
+    margin-left: 0;
     padding: 0;
     border-width: 0;
     opacity: 0;
@@ -362,6 +376,7 @@
     transition:
       width 220ms ease,
       min-width 220ms ease,
+      margin-left 220ms ease,
       opacity 180ms ease,
       transform 220ms ease,
       padding 220ms ease,
@@ -373,6 +388,7 @@
   .oq-public-root .oq-home-search-strip .home-search-mobile-grid[data-active-field='area'] .home-search-mobile-button {
     width: 6.4rem;
     min-width: 6.4rem;
+    margin-left: 10px;
     padding: 0.92rem 1rem;
     border-width: 1px;
     opacity: 1;

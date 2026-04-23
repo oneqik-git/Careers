@@ -552,7 +552,7 @@ export default function HomePage() {
           className="oq-home-hero"
           title={(
             <>
-              <span className="block text-[var(--text)]">Not an Opportunity Board,</span>
+              <span className="block text-[var(--text)]">Not a JOB Portal</span>
               <span className="block text-[var(--primary-2)]">It&apos;s YOUR Career</span>
             </>
           )}
