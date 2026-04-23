@@ -13,6 +13,12 @@ const navItems = [
   { label: 'Community', href: '/community' },
 ];
 
+const mobileHomeDockItems = [
+  { label: 'Home', href: '/' },
+  { label: 'Opportunities', href: '/jobs' },
+  { label: 'Community', href: '/community' },
+];
+
 const footerGroups = [
   {
     title: 'Explore',
@@ -58,6 +64,17 @@ function BrandLockup() {
   );
 }
 
+function getViewerInitial(value) {
+  const normalized = String(value || '').trim();
+
+  if (!normalized) {
+    return 'P';
+  }
+
+  const [firstToken = ''] = normalized.split(/\s+/);
+  return firstToken.charAt(0).toUpperCase() || 'P';
+}
+
 export default function PublicShell({ children, utilityContent }) {
   const pathname = usePathname();
   const [session, setSession] = useState({ role: null, user: null });
@@ -73,70 +90,162 @@ export default function PublicShell({ children, utilityContent }) {
   const dashboardHref = getDashboardRoute(session.role);
   const workspaceLabel = session.role === 'candidate' ? 'Candidate Workspace' : 'Employer Workspace';
   const isHome = pathname === '/';
+  const isEmployerSession = session.role === 'employer' || session.role === 'admin';
+  const profileHref = session.role === 'candidate'
+    ? '/candidate/profile'
+    : isEmployerSession
+      ? dashboardHref
+      : '/login';
+  const profileInitial = getViewerInitial(viewerName);
+  const employersHref = isEmployerSession ? dashboardHref : '/employer/login';
+  const mainClassName = isHome
+    ? 'oq-public-root min-h-screen px-4 pb-[124px] pt-[108px] md:px-6 md:pb-5 md:pt-[220px] lg:px-8 lg:pt-[136px]'
+    : 'oq-public-root min-h-screen px-4 pb-5 pt-[260px] sm:px-6 sm:pt-[220px] lg:px-8 lg:pt-[136px]';
+  const headerClassName = isHome
+    ? `oq-header-shell fixed left-1/2 top-4 z-50 w-[calc(100%-2rem)] max-w-7xl -translate-x-1/2 rounded-[24px] px-4 py-3 md:top-0 md:w-[calc(100%-3rem)] md:rounded-b-[15px] md:rounded-t-none md:px-6 md:py-5 lg:w-[calc(100%-4rem)] ${isHome ? 'nav-home-highlight-2' : ''}`.trim()
+    : `oq-header-shell fixed left-1/2 top-0 z-50 w-[calc(100%-2rem)] max-w-7xl -translate-x-1/2 rounded-b-[15px] px-5 py-5 sm:w-[calc(100%-3rem)] sm:px-6 lg:w-[calc(100%-4rem)] ${isHome ? 'nav-home-highlight-2' : ''}`.trim();
 
   return (
-    <main className="oq-public-root min-h-screen px-4 pb-5 pt-[260px] sm:px-6 sm:pt-[220px] lg:px-8 lg:pt-[136px]">
+    <main className={mainClassName}>
       <div className="mx-auto max-w-7xl">
-        <header className={`oq-header-shell fixed left-1/2 top-0 z-50 w-[calc(100%-2rem)] max-w-7xl -translate-x-1/2 rounded-b-[15px] px-5 py-5 sm:w-[calc(100%-3rem)] sm:px-6 lg:w-[calc(100%-4rem)] ${isHome ? 'nav-home-highlight-2' : ''}`.trim()}>
-          <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center lg:gap-6">
-            <div className="flex items-center justify-between gap-4">
-              <BrandLockup />
-            </div>
+        <header className={headerClassName}>
+          {isHome ? (
+            <>
+              <div className="flex items-center justify-between gap-3 md:hidden">
+                <Link className="oq-home-mobile-profile-entry" href={profileHref}>
+                  <span className="oq-home-mobile-profile-avatar" aria-hidden="true">{profileInitial}</span>
+                  <span className="text-sm font-medium tracking-[-0.02em] text-[var(--text)]">Profile</span>
+                </Link>
 
-            <nav className="flex flex-wrap items-center justify-start gap-2 lg:justify-center lg:gap-5">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
-
-                return (
-                  <Link
-                    key={item.href}
-                    className={`oq-nav-link ${isHome ? 'nav-link-hover-2' : ''} ${isActive ? 'oq-nav-link-active' : ''}`.trim()}
-                    href={item.href}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-
-            <div className="flex flex-wrap items-center gap-4 lg:gap-5 lg:justify-end">
-              {utilityContent || (
-                <>
+                <div className="flex items-center gap-2.5">
                   <ThemeToggle className="shrink-0" tone="public" />
-                  {session.role ? (
+                  <Link className="oq-home-mobile-header-link" href={employersHref}>
+                    Employers
+                  </Link>
+                </div>
+              </div>
+
+              <div className="hidden md:flex md:flex-col md:gap-5 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center lg:gap-6">
+                <div className="flex items-center justify-between gap-4">
+                  <BrandLockup />
+                </div>
+
+                <nav className="flex flex-wrap items-center justify-start gap-2 lg:justify-center lg:gap-5">
+                  {navItems.map((item) => {
+                    const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+
+                    return (
+                      <Link
+                        key={item.href}
+                        className={`oq-nav-link ${isHome ? 'nav-link-hover-2' : ''} ${isActive ? 'oq-nav-link-active' : ''}`.trim()}
+                        href={item.href}
+                      >
+                        {item.label}
+                      </Link>
+                    );
+                  })}
+                </nav>
+
+                <div className="flex flex-wrap items-center gap-4 lg:gap-5 lg:justify-end">
+                  {utilityContent || (
                     <>
-                      {viewerName ? (
-                        <span className="rounded-full border border-[var(--dark-1)] px-3 py-2 text-xs font-medium uppercase tracking-[0.16em] text-[var(--secondary-1)]">
-                          {viewerName}
-                        </span>
-                      ) : null}
-                      {session.role === 'candidate' ? (
-                        <Link className="oq-nav-utility-link" href="/candidate/applications">
-                          Applications
-                        </Link>
+                      <ThemeToggle className="shrink-0" tone="public" />
+                      {session.role ? (
+                        <>
+                          {viewerName ? (
+                            <span className="rounded-full border border-[var(--dark-1)] px-3 py-2 text-xs font-medium uppercase tracking-[0.16em] text-[var(--secondary-1)]">
+                              {viewerName}
+                            </span>
+                          ) : null}
+                          {session.role === 'candidate' ? (
+                            <Link className="oq-nav-utility-link" href="/candidate/applications">
+                              Applications
+                            </Link>
+                          ) : (
+                            <Link className="oq-nav-utility-link" href="/employer/jobs">
+                              Opportunities
+                            </Link>
+                          )}
+                          <Link className="oq-nav-cta oq-nav-cta-secondary" href={dashboardHref}>
+                            {workspaceLabel}
+                          </Link>
+                        </>
                       ) : (
-                        <Link className="oq-nav-utility-link" href="/employer/jobs">
-                          Opportunities
-                        </Link>
+                        <>
+                          <Link className={isHome ? 'oq-nav-utility-link' : 'oq-nav-cta oq-nav-cta-secondary'} href="/employer/login">
+                            Employers
+                          </Link>
+                          <Link className={isHome ? 'oq-nav-cta oq-nav-cta-secondary btn-box-style-2' : 'oq-nav-utility-link'} href="/login">
+                            Login
+                          </Link>
+                        </>
                       )}
-                      <Link className="oq-nav-cta oq-nav-cta-secondary" href={dashboardHref}>
-                        {workspaceLabel}
-                      </Link>
-                    </>
-                  ) : (
-                    <>
-                      <Link className={isHome ? 'oq-nav-utility-link' : 'oq-nav-cta oq-nav-cta-secondary'} href="/employer/login">
-                        Employers
-                      </Link>
-                      <Link className={isHome ? 'oq-nav-cta oq-nav-cta-secondary btn-box-style-2' : 'oq-nav-utility-link'} href="/login">
-                        Login
-                      </Link>
                     </>
                   )}
-                </>
-              )}
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col gap-5 lg:grid lg:grid-cols-[auto_1fr_auto] lg:items-center lg:gap-6">
+              <div className="flex items-center justify-between gap-4">
+                <BrandLockup />
+              </div>
+
+              <nav className="flex flex-wrap items-center justify-start gap-2 lg:justify-center lg:gap-5">
+                {navItems.map((item) => {
+                  const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+
+                  return (
+                    <Link
+                      key={item.href}
+                      className={`oq-nav-link ${isHome ? 'nav-link-hover-2' : ''} ${isActive ? 'oq-nav-link-active' : ''}`.trim()}
+                      href={item.href}
+                    >
+                      {item.label}
+                    </Link>
+                  );
+                })}
+              </nav>
+
+              <div className="flex flex-wrap items-center gap-4 lg:gap-5 lg:justify-end">
+                {utilityContent || (
+                  <>
+                    <ThemeToggle className="shrink-0" tone="public" />
+                    {session.role ? (
+                      <>
+                        {viewerName ? (
+                          <span className="rounded-full border border-[var(--dark-1)] px-3 py-2 text-xs font-medium uppercase tracking-[0.16em] text-[var(--secondary-1)]">
+                            {viewerName}
+                          </span>
+                        ) : null}
+                        {session.role === 'candidate' ? (
+                          <Link className="oq-nav-utility-link" href="/candidate/applications">
+                            Applications
+                          </Link>
+                        ) : (
+                          <Link className="oq-nav-utility-link" href="/employer/jobs">
+                            Opportunities
+                          </Link>
+                        )}
+                        <Link className="oq-nav-cta oq-nav-cta-secondary" href={dashboardHref}>
+                          {workspaceLabel}
+                        </Link>
+                      </>
+                    ) : (
+                      <>
+                        <Link className={isHome ? 'oq-nav-utility-link' : 'oq-nav-cta oq-nav-cta-secondary'} href="/employer/login">
+                          Employers
+                        </Link>
+                        <Link className={isHome ? 'oq-nav-cta oq-nav-cta-secondary btn-box-style-2' : 'oq-nav-utility-link'} href="/login">
+                          Login
+                        </Link>
+                      </>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </header>
 
         {children}
@@ -175,6 +284,24 @@ export default function PublicShell({ children, utilityContent }) {
           </div>
         </footer>
       </div>
+
+      {isHome ? (
+        <nav className="oq-home-mobile-dock md:hidden" aria-label="Home mobile navigation">
+          {mobileHomeDockItems.map((item) => {
+            const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href));
+
+            return (
+              <Link
+                key={item.href}
+                className={`oq-home-mobile-dock-link ${isActive ? 'oq-home-mobile-dock-link-active' : ''}`.trim()}
+                href={item.href}
+              >
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      ) : null}
     </main>
   );
 }

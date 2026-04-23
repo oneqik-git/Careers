@@ -1,5 +1,7 @@
 'use client';
 
+import { useState } from 'react';
+
 const experienceOptions = [
   { value: '', label: 'Any experience' },
   { value: '0-2', label: '0-2 years' },
@@ -19,7 +21,9 @@ export default function PublicJobSearchStrip({
   query,
   tone = 'default',
 }) {
+  const [activeField, setActiveField] = useState('');
   const usesPreset = tone === 'preset';
+  const usesInteractiveMobilePreset = usesPreset;
   const labelClassName = usesPreset
     ? 'home-search-label-style-2'
     : 'mb-2 block text-[0.7rem] font-light uppercase tracking-[0.18em] text-[var(--graytexts)]';
@@ -34,53 +38,108 @@ export default function PublicJobSearchStrip({
     ? 'home-search-grid-style-2'
     : 'grid gap-4 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)_auto] lg:items-end lg:gap-x-5';
   const fieldWrapperClassName = usesPreset ? 'home-search-field-shell-style-2' : 'block';
-  const queryPlaceholder = usesPreset ? 'Role / Company' : 'Product designer, Northstar Commerce...';
-  const areaPlaceholder = usesPreset ? 'Area' : 'Hyderabad, Bengaluru, Remote...';
+  const queryPlaceholder = usesPreset
+    ? activeField === 'query'
+      ? 'Role / what you want'
+      : 'Role'
+    : 'Product designer, Northstar Commerce...';
+  const areaPlaceholder = usesPreset
+    ? activeField === 'area'
+      ? 'Location'
+      : 'Location'
+    : 'Hyderabad, Bengaluru, Remote...';
   const normalizedExperienceOptions = usesPreset
     ? experienceOptions.map((option) => (option.value === '' ? { ...option, label: 'Experience' } : option))
     : experienceOptions;
+  const searchButtonClassName = usesInteractiveMobilePreset
+    ? `${buttonClassName} home-search-mobile-button`.trim()
+    : buttonClassName;
+
+  function engageField(fieldKey) {
+    if (!usesInteractiveMobilePreset) {
+      return;
+    }
+
+    setActiveField(fieldKey);
+  }
+
+  function renderFieldShell(fieldKey, content) {
+    const isCollapsed = usesInteractiveMobilePreset && activeField && activeField !== fieldKey;
+
+    return (
+      <label
+        className={`${fieldWrapperClassName} ${usesInteractiveMobilePreset ? 'home-search-mobile-field' : ''}`.trim()}
+        data-collapsed={isCollapsed ? 'true' : 'false'}
+        data-field={fieldKey}
+      >
+        {content}
+      </label>
+    );
+  }
 
   return (
     <form className={`oq-search-strip ${className}`.trim()} onSubmit={onSubmit}>
-      <div className={gridClassName}>
-        <label className={fieldWrapperClassName}>
-          <span className={labelClassName}>
-            Role / Company
-          </span>
-          <input
-            className={inputClassName}
-            onChange={(event) => onQueryChange(event.target.value)}
-            placeholder={queryPlaceholder}
-            value={query}
-          />
-        </label>
+      <div
+        className={`${gridClassName} ${usesInteractiveMobilePreset ? 'home-search-mobile-grid' : ''}`.trim()}
+        data-active-field={usesInteractiveMobilePreset ? activeField : undefined}
+      >
+        {renderFieldShell('query', (
+          <>
+            <span className={labelClassName}>
+              Role / what you want
+            </span>
+            <input
+              className={inputClassName}
+              onClick={() => engageField('query')}
+              onChange={(event) => onQueryChange(event.target.value)}
+              onFocus={() => engageField('query')}
+              placeholder={queryPlaceholder}
+              value={query}
+            />
+          </>
+        ))}
 
-        <label className={fieldWrapperClassName}>
-          <span className={labelClassName}>
-            Experience
-          </span>
-          <select className={selectClassName} onChange={(event) => onExperienceChange(event.target.value)} value={experience}>
-            {normalizedExperienceOptions.map((option) => (
-              <option key={option.value || 'all'} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
+        {renderFieldShell('experience', (
+          <>
+            <span className={labelClassName}>
+              Experience
+            </span>
+            <select
+              className={selectClassName}
+              onChange={(event) => onExperienceChange(event.target.value)}
+              onClick={() => engageField('experience')}
+              onFocus={() => engageField('experience')}
+              value={experience}
+            >
+              {normalizedExperienceOptions.map((option) => (
+                <option key={option.value || 'all'} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </>
+        ))}
 
-        <label className={fieldWrapperClassName}>
-          <span className={labelClassName}>
-            Area
-          </span>
-          <input
-            className={inputClassName}
-            onChange={(event) => onAreaChange(event.target.value)}
-            placeholder={areaPlaceholder}
-            value={area}
-          />
-        </label>
+        {renderFieldShell('area', (
+          <>
+            <span className={labelClassName}>
+              Location
+            </span>
+            <input
+              className={inputClassName}
+              onClick={() => engageField('area')}
+              onChange={(event) => onAreaChange(event.target.value)}
+              onFocus={() => engageField('area')}
+              placeholder={areaPlaceholder}
+              value={area}
+            />
+          </>
+        ))}
 
-        <button className={buttonClassName} type="submit">
+        <button
+          className={searchButtonClassName}
+          type="submit"
+        >
           {buttonLabel}
         </button>
       </div>

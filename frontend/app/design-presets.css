@@ -292,6 +292,95 @@
     10px 6px 10px 5px var(--dark-glow);
 }
 
+@media (max-width: 767px) {
+  .oq-public-root .oq-home-search-strip {
+    border: 1px solid rgba(29, 40, 56, 0.72);
+    border-radius: 24px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 100%),
+      rgba(4, 16, 40, 0.88);
+    padding: 0.5rem;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+  }
+
+  .oq-public-root .oq-home-search-strip .home-search-mobile-grid {
+    display: flex;
+    align-items: stretch;
+    gap: 0.55rem;
+    overflow: hidden;
+  }
+
+  .oq-public-root .oq-home-search-strip .home-search-mobile-field {
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
+    overflow: hidden;
+    transition:
+      flex-basis 220ms ease,
+      max-width 220ms ease,
+      opacity 180ms ease,
+      transform 220ms ease;
+  }
+
+  .oq-public-root .oq-home-search-strip .home-search-mobile-field[data-collapsed='true'] {
+    flex: 0 0 0;
+    max-width: 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(10px) scaleX(0.88);
+  }
+
+  .oq-public-root .oq-home-search-strip .home-search-mobile-field .home-search-input-style-2,
+  .oq-public-root .oq-home-search-strip .home-search-mobile-field .home-search-select-style-2 {
+    min-height: 3.55rem;
+    border-radius: 18px;
+    padding: 0.95rem 0.95rem;
+    font-size: 0.94rem;
+    line-height: 1.2;
+  }
+
+  .oq-public-root .oq-home-search-strip .home-search-mobile-grid[data-active-field=''] .home-search-mobile-field {
+    flex: 1 1 0;
+  }
+
+  .oq-public-root .oq-home-search-strip .home-search-mobile-grid[data-active-field='query'] .home-search-mobile-field[data-field='query'],
+  .oq-public-root .oq-home-search-strip .home-search-mobile-grid[data-active-field='experience'] .home-search-mobile-field[data-field='experience'],
+  .oq-public-root .oq-home-search-strip .home-search-mobile-grid[data-active-field='area'] .home-search-mobile-field[data-field='area'] {
+    flex: 1 1 auto;
+  }
+
+  .oq-public-root .oq-home-search-strip .home-search-mobile-button {
+    flex: 0 0 0;
+    width: 0;
+    min-width: 0;
+    padding: 0;
+    border-width: 0;
+    opacity: 0;
+    overflow: hidden;
+    pointer-events: none;
+    transform: translateX(10px);
+    transition:
+      width 220ms ease,
+      min-width 220ms ease,
+      opacity 180ms ease,
+      transform 220ms ease,
+      padding 220ms ease,
+      border-width 180ms ease;
+  }
+
+  .oq-public-root .oq-home-search-strip .home-search-mobile-grid[data-active-field='query'] .home-search-mobile-button,
+  .oq-public-root .oq-home-search-strip .home-search-mobile-grid[data-active-field='experience'] .home-search-mobile-button,
+  .oq-public-root .oq-home-search-strip .home-search-mobile-grid[data-active-field='area'] .home-search-mobile-button {
+    width: 6.4rem;
+    min-width: 6.4rem;
+    padding: 0.92rem 1rem;
+    border-width: 1px;
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+}
+
 @media (min-width: 1024px) {
   .oq-public-root .oq-home-search-strip .home-search-grid-style-2 {
     grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) auto;
