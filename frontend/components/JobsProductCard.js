@@ -57,7 +57,7 @@ function buildTags(job) {
 
 function renderInfoPanel(label, value) {
   return (
-    <div className="rounded-[1.05rem] border border-[rgba(29,40,56,0.85)] bg-[rgba(255,255,255,0.02)] px-4 py-3 shadow-[0_14px_24px_rgba(0,0,0,0.16)]">
+    <div className="oq-job-info-panel rounded-[1.05rem] border border-[rgba(29,40,56,0.85)] bg-[rgba(255,255,255,0.02)] px-4 py-3 shadow-[0_14px_24px_rgba(0,0,0,0.16)]">
       <p className="text-[0.68rem] uppercase tracking-[0.2em] text-[var(--text-muted)]">{label}</p>
       <p className="mt-2 text-sm font-medium text-[var(--text)]">{value}</p>
     </div>
@@ -107,7 +107,7 @@ export default function JobsProductCard({
       <article className={`oq-card oq-public-job-card rounded-[1.7rem] p-5 sm:p-6 ${tone.card}`.trim()}>
         <div className="flex flex-col gap-5">
           <div className="flex items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[1rem] border border-[rgba(93,224,230,0.18)] bg-[linear-gradient(180deg,rgba(11,32,65,0.96)_0%,rgba(5,18,42,0.96)_100%)] text-sm font-semibold tracking-[0.08em] text-[var(--text)] shadow-[0_14px_24px_rgba(0,0,0,0.18)]">
+            <div className="oq-job-company-mark flex h-12 w-12 shrink-0 items-center justify-center rounded-[1rem] border border-[rgba(93,224,230,0.18)] bg-[linear-gradient(180deg,rgba(11,32,65,0.96)_0%,rgba(5,18,42,0.96)_100%)] text-sm font-semibold tracking-[0.08em] text-[var(--text)] shadow-[0_14px_24px_rgba(0,0,0,0.18)]">
               {getCompanyInitials(job.company_name)}
             </div>
 

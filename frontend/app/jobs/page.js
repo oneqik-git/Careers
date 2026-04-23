@@ -433,17 +433,19 @@ async function loadJobsWithFallback(setJobs, setError, setViewer, viewerSnapshot
 
 function FilterSection({ children, title }) {
   return (
-    <section className="border-t border-[rgba(93,224,230,0.12)] pt-4 first:border-t-0 first:pt-0">
-      <h2 className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">{title}</h2>
+    <details className="border-t border-[rgba(93,224,230,0.12)] pt-4 first:border-t-0 first:pt-0">
+      <summary className="inline-block cursor-pointer list-none transition hover:scale-[1.03] [&::-webkit-details-marker]:hidden">
+        <h2 className="text-[0.72rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-muted)]">{title}</h2>
+      </summary>
       <div className="mt-3 flex flex-wrap gap-2">{children}</div>
-    </section>
+    </details>
   );
 }
 
 function FilterButton({ active, children, onClick }) {
   return (
     <button
-      className={`rounded-[0.8rem] border px-3 py-2 text-left text-xs font-medium transition ${active ? 'border-[rgba(93,224,230,0.38)] bg-[rgba(93,224,230,0.12)] text-white' : 'border-[rgba(29,40,56,0.9)] bg-[rgba(255,255,255,0.025)] text-[var(--text-soft)] hover:border-[rgba(93,224,230,0.24)] hover:text-white'}`.trim()}
+      className={`rounded-[0.8rem] border px-3 py-2 text-left text-xs font-medium transition hover:scale-[1.03] ${active ? 'border-[rgba(93,224,230,0.38)] bg-[rgba(93,224,230,0.12)] text-white' : 'border-[rgba(29,40,56,0.9)] bg-[rgba(255,255,255,0.025)] text-[var(--text-soft)] hover:border-[rgba(93,224,230,0.24)] hover:text-white'}`.trim()}
       onClick={onClick}
       type="button"
     >
@@ -707,6 +709,7 @@ export default function PublicJobsPage() {
       onRemove: () => setFilters((current) => ({ ...current, momentum: current.momentum.filter((item) => item !== value) })),
     })),
   ].filter(Boolean);
+  const opportunityCountLabel = jobsWithState.length > 100 ? '100+' : String(jobsWithState.length);
 
   return (
     <PublicShell
@@ -766,58 +769,8 @@ export default function PublicJobsPage() {
           </section>
         ) : null}
 
-        <section className="rounded-[1.55rem] border border-[rgba(29,40,56,0.9)] bg-[linear-gradient(180deg,rgba(255,255,255,0.03),transparent_100%),rgba(5,18,43,0.95)] p-4 shadow-[0_18px_34px_rgba(0,0,0,0.2)] sm:p-5">
-          <div className="flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
-            <div>
-              <p className="text-[0.74rem] uppercase tracking-[0.18em] text-[var(--text-muted)]">Opportunities</p>
-              <h1 className="mt-2 text-[2rem] font-medium tracking-[-0.055em] text-[var(--text)] sm:text-[2.45rem]">
-                Explore Opportunities
-              </h1>
-              {!viewer.isCandidate ? (
-                <p className="mt-2 text-sm text-[var(--text-soft)]">
-                  Sign in to unlock match scoring and application insights
-                </p>
-              ) : null}
-            </div>
-
-            <form className="flex w-full flex-col gap-3 xl:max-w-2xl" onSubmit={handleSearchSubmit}>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <input
-                  className="oq-input min-h-[52px] flex-1"
-                  onChange={(event) => setQuery(event.target.value)}
-                  placeholder="Search by role, intent, experience, location..."
-                  type="search"
-                  value={query}
-                />
-                <button className="oq-button-primary min-h-[52px] shrink-0" type="submit">
-                  Search
-                </button>
-              </div>
-
-              {activeChips.length ? (
-                <div className="flex flex-wrap gap-2">
-                  {activeChips.map((chip) => (
-                    <button
-                      key={chip.key}
-                      className="inline-flex items-center gap-2 rounded-full border border-[rgba(93,224,230,0.2)] bg-[rgba(93,224,230,0.08)] px-3 py-1.5 text-xs font-medium text-[var(--text)] transition hover:border-[rgba(93,224,230,0.38)]"
-                      onClick={chip.onRemove}
-                      type="button"
-                    >
-                      <span>{chip.label}</span>
-                      <span aria-hidden="true" className="text-[var(--text-muted)]">x</span>
-                    </button>
-                  ))}
-                  <button className="rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--brand-accent)] transition hover:text-white" onClick={clearFilters} type="button">
-                    Clear
-                  </button>
-                </div>
-              ) : null}
-            </form>
-          </div>
-        </section>
-
-        <div className="grid gap-5 lg:grid-cols-[300px_minmax(0,1fr)]">
-          <aside className="h-max rounded-[1.3rem] border border-[rgba(29,40,56,0.9)] bg-[linear-gradient(180deg,rgba(255,255,255,0.025),transparent_100%),rgba(6,18,43,0.9)] p-4 shadow-[0_18px_34px_rgba(0,0,0,0.18)] lg:sticky lg:top-[6.3rem]">
+        <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-8">
+          <aside className="big-box-shadow h-max rounded-[1.3rem] border border-[rgba(29,40,56,0.9)] bg-[linear-gradient(180deg,rgba(255,255,255,0.025),transparent_100%),rgba(6,18,43,0.9)] p-4 pb-5 lg:sticky lg:top-[6.3rem] lg:max-h-[calc(100vh-7.6rem)] lg:overflow-y-auto">
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text)]">Filters</h2>
               <button className="text-xs font-semibold uppercase tracking-[0.16em] text-[var(--brand-accent)] transition hover:text-white" onClick={clearFilters} type="button">
@@ -825,7 +778,7 @@ export default function PublicJobsPage() {
               </button>
             </div>
 
-            <div className="mt-5 space-y-5">
+            <div className="mt-5 space-y-5 pb-5">
               <FilterSection title="Work Mode">
                 {WORK_MODE_OPTIONS.map((option) => (
                   <FilterButton key={option.value} active={filters.workModes.includes(option.value)} onClick={() => setListFilter('workModes', option.value)}>
@@ -894,7 +847,43 @@ export default function PublicJobsPage() {
             </div>
           </aside>
 
-          <div className="min-w-0">
+          <div className="min-w-0 space-y-5">
+            <section className="oq-home-search-strip">
+              <form className="flex w-full flex-col gap-3" onSubmit={handleSearchSubmit}>
+                <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_156px] sm:items-center">
+                  <input
+                    className="home-search-input-style-2 min-h-[52px] flex-1"
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder="Search by role, intent, experience, location..."
+                    type="search"
+                    value={query}
+                  />
+                  <button className="home-search-button-style-2 shrink-0 sm:!ml-0 sm:!min-w-0" type="submit">
+                    Search
+                  </button>
+                </div>
+
+                {activeChips.length ? (
+                  <div className="flex flex-wrap gap-2">
+                    {activeChips.map((chip) => (
+                      <button
+                        key={chip.key}
+                        className="inline-flex items-center gap-2 rounded-full border border-[rgba(93,224,230,0.2)] bg-[rgba(93,224,230,0.08)] px-3 py-1.5 text-xs font-medium text-[var(--text)] transition hover:border-[rgba(93,224,230,0.38)]"
+                        onClick={chip.onRemove}
+                        type="button"
+                      >
+                        <span>{chip.label}</span>
+                        <span aria-hidden="true" className="text-[var(--text-muted)]">x</span>
+                      </button>
+                    ))}
+                    <button className="rounded-full px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.14em] text-[var(--brand-accent)] transition hover:text-white" onClick={clearFilters} type="button">
+                      Clear
+                    </button>
+                  </div>
+                ) : null}
+              </form>
+            </section>
+
             {error ? (
               <MessageBanner tone="error" message={error.message || 'Unable to load opportunities.'} />
             ) : isLoading ? (
@@ -907,14 +896,14 @@ export default function PublicJobsPage() {
               <div className="space-y-4">
                 <div className="flex flex-col gap-2 px-1 sm:flex-row sm:items-center sm:justify-between">
                   <p className="text-sm text-[var(--text-soft)]">
-                    <span className="font-medium text-[var(--text)]">{jobsWithState.length}</span> opportunities matching your direction
+                    <span className="font-medium text-[var(--text)]">{opportunityCountLabel}</span> opportunities to explore from
                   </p>
                   <p className="text-xs uppercase tracking-[0.18em] text-[var(--text-muted)]">
                     {viewer.isCandidate ? 'Cards open the candidate opportunity view with apply and tracker context.' : 'Sign in to unlock match scoring and application insights'}
                   </p>
                 </div>
 
-                <div className="grid gap-4">
+                <div className="grid gap-[22px]">
                   {jobsWithState.map((job) => (
                     <JobsProductCard
                       key={job.id}

@@ -1,11 +1,9 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import MessageBanner from '@/components/MessageBanner';
 import PageHero from '@/components/PageHero';
-import PublicApplyAction from '@/components/PublicApplyAction';
 import PublicShell from '@/components/PublicShell';
 import SectionCard from '@/components/SectionCard';
 import { fetchJobDetail } from '@/services/jobs';
@@ -15,7 +13,7 @@ import { markJobViewed } from '@/utils/jobViewState';
 
 function renderSkillGroup(skills, emptyLabel) {
   if (!skills?.length) {
-    return <p className="text-sm text-[var(--text-soft)]">{emptyLabel}</p>;
+    return <p className="text-sm font-normal text-[var(--text-soft)]">{emptyLabel}</p>;
   }
 
   return (
@@ -26,6 +24,50 @@ function renderSkillGroup(skills, emptyLabel) {
         </span>
       ))}
     </div>
+  );
+}
+
+function stripTextFormatting(value) {
+  return String(value || '')
+    .replace(/\*\*(.*?)\*\*/g, '$1')
+    .replace(/__(.*?)__/g, '$1')
+    .trim();
+}
+
+function splitIntoPoints(value) {
+  const cleanValue = stripTextFormatting(value);
+
+  if (!cleanValue) {
+    return [];
+  }
+
+  const lineItems = cleanValue
+    .split(/\r?\n/)
+    .map((line) => line.replace(/^[-*0-9.)\s]+/, '').trim())
+    .filter(Boolean);
+
+  if (lineItems.length > 1) {
+    return lineItems;
+  }
+
+  return (cleanValue.match(/[^.!?]+[.!?]?/g) || [cleanValue])
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function renderPointList(value, emptyLabel) {
+  const items = splitIntoPoints(value);
+
+  if (!items.length) {
+    return <p className="oq-detail-content mt-3 text-sm font-normal leading-7 text-[var(--text-soft)]">{emptyLabel}</p>;
+  }
+
+  return (
+    <ul className="oq-detail-content oq-detail-list mt-3 space-y-2 text-sm font-normal leading-7 text-[var(--text-soft)]">
+      {items.map((item) => (
+        <li key={item}>{item}</li>
+      ))}
+    </ul>
   );
 }
 
@@ -81,11 +123,11 @@ export default function PublicJobDetailPage() {
       ) : !job ? (
         <MessageBanner tone="error" message="Opportunity not found." />
       ) : (
-        <div className="space-y-8">
+        <div className="oq-public-job-detail space-y-8">
           <PageHero
             eyebrow={job.company_name || 'Open role'}
             title={job.title}
-            description="Review the full role publicly, then move into a protected candidate flow only when you’re ready to apply."
+            className="oq-public-job-detail-hero"
             badges={[
               job.department,
               job.location,
@@ -94,7 +136,7 @@ export default function PublicJobDetailPage() {
             ].filter(Boolean)}
             actions={[
               { label: 'Back to Opportunities', href: '/jobs', variant: 'secondary' },
-              { label: 'Create Profile', href: `/register?next=${encodeURIComponent(`/candidate/jobs/detail?jobId=${job.id}`)}` },
+              { label: 'Apply', href: `/register?next=${encodeURIComponent(`/candidate/jobs/detail?jobId=${job.id}`)}` },
             ]}
             aside={(
               <div className="space-y-5">
@@ -116,9 +158,9 @@ export default function PublicJobDetailPage() {
             )}
           />
 
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
-            <div className="space-y-6">
-              <SectionCard title="Role overview" description="Enough context to decide whether the role is worth your time.">
+          <div className="oq-public-job-detail-grid grid gap-6">
+            <div className="contents">
+              <SectionCard className="oq-public-job-section oq-public-job-section-compact" title="Role overview" description="Enough context to decide whether the role is worth your time.">
                 <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
                   <div>
                     <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Department</p>
@@ -139,77 +181,38 @@ export default function PublicJobDetailPage() {
                 </div>
                 <div className="mt-6">
                   <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Description</p>
-                  <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-[var(--text-soft)]">
-                    {job.description || 'No description provided.'}
+                  <p className="oq-detail-content mt-3 whitespace-pre-wrap text-sm font-normal leading-7 text-[var(--text-soft)]">
+                    {stripTextFormatting(job.description) || 'No description provided.'}
                   </p>
                 </div>
               </SectionCard>
 
-              <SectionCard title="Responsibilities and benefits" description="See the day-to-day expectations before you commit to an application.">
+              <SectionCard className="oq-public-job-section oq-public-job-section-wide" title="Responsibilities and benefits" description="What you're expected to do">
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div>
                     <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Responsibilities</p>
-                    <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-[var(--text-soft)]">
-                      {job.responsibilities || 'No responsibilities provided.'}
-                    </p>
+                    {renderPointList(job.responsibilities, 'No responsibilities provided.')}
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Benefits</p>
-                    <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-[var(--text-soft)]">
-                      {job.benefits || 'No benefits listed.'}
-                    </p>
+                    {renderPointList(job.benefits, 'No benefits listed.')}
                   </div>
                 </div>
               </SectionCard>
 
-              <SectionCard title="Requirements and fit" description="A clearer read on whether this role lines up with your strengths.">
+              <SectionCard className="oq-public-job-section oq-public-job-section-compact" title="Requirements and fit" description="Hope you got these, Coz we sure need it">
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div>
                     <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Required skills</p>
-                    <div className="mt-3">{renderSkillGroup(job.required_skills, 'No required skills listed.')}</div>
+                    <div className="oq-detail-content mt-3">{renderSkillGroup(job.required_skills, 'No required skills listed.')}</div>
                   </div>
                   <div>
                     <p className="text-xs uppercase tracking-[0.24em] text-[var(--text-muted)]">Preferred skills</p>
-                    <div className="mt-3">{renderSkillGroup(job.preferred_skills, 'No preferred skills listed.')}</div>
+                    <div className="oq-detail-content mt-3">{renderSkillGroup(job.preferred_skills, 'No preferred skills listed.')}</div>
                   </div>
                 </div>
               </SectionCard>
 
-              <SectionCard title="Application preview" description="Questions are visible publicly, but responses remain behind candidate auth.">
-                {(job.questions || []).length ? (
-                  <div className="space-y-3">
-                    {job.questions.map((question, index) => (
-                      <div key={question.id} className="oq-card-muted rounded-[1.5rem] p-4">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="oq-chip">Question {index + 1}</span>
-                          <span className="oq-chip">{formatStatus(question.question_type || 'text')}</span>
-                          {question.is_required ? <span className="oq-chip">Required</span> : null}
-                        </div>
-                        <p className="mt-3 text-sm leading-6 text-[var(--text)]">{question.question_text}</p>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <p className="text-sm text-[var(--text-soft)]">No pre-screen questions were added for this role.</p>
-                )}
-              </SectionCard>
-            </div>
-
-            <div className="space-y-6">
-              <SectionCard
-                title="Ready to apply?"
-                description="Candidate sign-in stays lightweight. The role stays public until you want to take action."
-              >
-                <div className="space-y-4">
-                  <p className="text-sm leading-7 text-[var(--text-soft)]">
-                    Your application flow, dashboard, and status tracking stay protected. Browsing and decision-making stay open.
-                  </p>
-                  <PublicApplyAction jobId={job.id} />
-                  <Link className="oq-button-ghost w-full" href="/employers">
-                    Hiring team? Visit the employer entry page
-                  </Link>
-                </div>
-              </SectionCard>
             </div>
           </div>
         </div>

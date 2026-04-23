@@ -428,6 +428,7 @@
 }
 
 .oq-role-cluster-card {
+  background: var(--transparent-2);
   border-radius: 8px;
   min-height: 100%;
 }
