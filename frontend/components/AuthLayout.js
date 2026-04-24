@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import LoggedOutMobileChrome from '@/components/LoggedOutMobileChrome';
+import PublicHeaderNav from '@/components/PublicHeaderNav';
 
 function BrandLockup() {
   return (
@@ -30,7 +32,9 @@ export default function AuthLayout({
   const isEmployer = variant === 'employer';
 
   return (
-    <main className="flex min-h-screen items-center justify-center px-4 py-10 sm:px-6">
+    <main className="relative flex min-h-screen items-center justify-center px-4 pb-[124px] pt-24 sm:px-6 md:pb-10 md:pt-[220px] lg:pt-[136px]">
+      <LoggedOutMobileChrome topbarClassName="absolute left-6 right-6 top-6 flex items-center justify-between gap-3 md:hidden" />
+      <PublicHeaderNav loggedOutOnly />
       <div className={`oq-shell grid w-full max-w-6xl overflow-hidden rounded-[2.2rem] ${isEmployer ? 'lg:grid-cols-[1.05fr_0.95fr]' : 'max-w-4xl lg:grid-cols-[0.88fr_1.12fr]'}`.trim()}>
         <section className={`relative overflow-hidden border-b border-[var(--border)] p-8 lg:border-b-0 ${isEmployer ? 'oq-hero text-white' : 'bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent),var(--surface-muted)]'} `.trim()}>
           {isEmployer ? <div className="oq-grid-overlay absolute inset-0 opacity-25" aria-hidden="true" /> : null}
