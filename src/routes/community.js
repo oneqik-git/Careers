@@ -76,7 +76,7 @@ async function buildFeed(req) {
   const posts = await query(
     `SELECT cp.*,
       c.full_name AS candidate_name,
-      c.\`current_role\` AS current_role,
+      c.\`current_role\` AS \`current_role\`,
       c.total_experience_months,
       e.full_name AS employer_name,
       e.designation AS employer_designation,
@@ -103,7 +103,7 @@ async function buildFeed(req) {
       query(
         `SELECT cc.*,
           c.full_name AS candidate_name,
-          c.\`current_role\` AS current_role,
+          c.\`current_role\` AS \`current_role\`,
           c.total_experience_months,
           e.full_name AS employer_name,
           e.designation AS employer_designation,
