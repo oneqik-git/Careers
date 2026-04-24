@@ -443,28 +443,31 @@ function FeaturedJobCard({ job }) {
     job.work_mode ? formatStatus(job.work_mode) : null,
     formatExperienceRange(job.experience_min_years, job.experience_max_years),
   ].filter(Boolean);
+  const scoreLabel = job.company_score
+    ? `Co. Score ${job.company_score}`
+    : `${job.openings || 1} opening${job.openings === 1 ? '' : 's'}`;
 
   return (
-    <Link className="grid-card-style-2 oq-home-job-stat-card group block" href={`/jobs/${job.id}`}>
-      <div className="flex items-start justify-between gap-2.5">
-        <div>
-          <p className="text-[0.63rem] font-medium uppercase tracking-[0.18em] text-[var(--text-muted)]">
+    <Link className="grid-card-style-2 oq-home-job-stat-card oq-home-featured-card group block" href={`/jobs/${job.id}`}>
+      <div className="oq-home-featured-card-header">
+        <div className="min-w-0">
+          <p className="oq-home-featured-company mt-2 text-[0.72rem] font-medium uppercase tracking-[0.16em] text-[var(--text-muted)]">
             {job.company_name}
           </p>
-          <h3 className="mt-2 text-[1.04rem] font-medium leading-tight tracking-[-0.035em] text-[var(--text)] transition-colors group-hover:text-[var(--brand-accent)]">
+          <h3 className="oq-home-featured-title mt-2 text-[1.04rem] font-medium leading-tight tracking-[-0.035em] text-[var(--text)] transition-colors group-hover:text-[var(--brand-accent)]">
             {job.title}
           </h3>
         </div>
         <div className="oq-score-badge rounded-[12px] border border-[rgba(93,224,230,0.16)] bg-[rgba(93,224,230,0.05)] font-medium uppercase text-[var(--secondary-1)]">
-          {job.company_score ? `Co. Score ${job.company_score}` : `${job.openings || 1} opening${job.openings === 1 ? '' : 's'}`}
+          {scoreLabel}
         </div>
       </div>
 
-      <p className="mt-2 text-[0.76rem] leading-5 text-[var(--text-soft)]">
+      <p className="oq-home-featured-location mt-3 text-[0.8rem] leading-5 text-[var(--text-soft)]">
         {[job.industry, job.level ? formatStatus(job.level) : null].filter(Boolean).join(' | ')}
       </p>
 
-      <div className="mt-3 flex flex-wrap gap-1.5">
+      <div className="oq-home-featured-meta mt-3 flex flex-wrap gap-2">
         {metadata.map((item) => (
           <span key={item} className="oq-chip">
             {item}
@@ -472,7 +475,7 @@ function FeaturedJobCard({ job }) {
         ))}
       </div>
 
-      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+      <div className="oq-home-featured-details mt-4 grid gap-2 sm:grid-cols-2">
         <div className="grid-stat-style-2">
           <p className="text-[0.58rem] uppercase tracking-[0.17em] text-[var(--text-muted)]">Salary</p>
           <p className="mt-1.5 text-[0.78rem] font-medium leading-5 text-[var(--text)]">
@@ -544,7 +547,7 @@ export default function HomePage() {
 
   return (
     <PublicShell>
-      <div className="space-y-12 lg:space-y-16">
+      <div className="oq-home-mobile-flow space-y-12 lg:space-y-16">
         <PageHero
           titleAs="h1"
           align="center"
@@ -581,30 +584,30 @@ export default function HomePage() {
           </div>
         </PageHero>
 
-        <section className="oq-shell rounded-[22px] px-4 py-5 sm:px-6">
-          <div className="grid gap-3 md:grid-cols-3">
+        <section className="oq-shell oq-home-trust-strip rounded-[22px] px-4 py-5 sm:px-6">
+          <div className="oq-home-trust-grid grid gap-3 md:grid-cols-3">
             {trustPoints.map((point) => (
-              <div key={point} className="flex items-center gap-3 rounded-[15px] border border-[var(--dark-1)] bg-[rgba(93,224,230,0.03)] px-4 py-4">
+              <div key={point} className="oq-home-trust-item flex items-center gap-3 rounded-[15px] border border-[var(--dark-1)] bg-[rgba(93,224,230,0.03)] px-4 py-4">
                 <span className="oq-dot shrink-0" />
-                <p className="text-sm font-light leading-7 text-[var(--paragraphs)]">{point}</p>
+                <p className="oq-home-trust-text text-sm font-light leading-7 text-[var(--paragraphs)]">{point}</p>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="featured-split-style-2 career-featured-split-style-2 shadow-safe-spacing-style-2">
+        <section className="featured-split-style-2 career-featured-split-style-2 oq-home-featured-section shadow-safe-spacing-style-2">
           <div className="oq-featured-copy-card">
             <p className="oq-kicker">Featured Opportunities</p>
             <h2 className="h1-style-2 mt-3">
               <span className="block">Popular</span>
               <span className="block">Searches</span>
             </h2>
-            <p className="mt-5 max-w-xl text-[1rem] font-light leading-8 text-[var(--secondary-1)]">
+            <p className="oq-home-featured-subtitle mt-5 max-w-xl text-[1rem] font-light leading-8 text-[var(--secondary-1)]">
               <span className="block">Roles that are active & relevant.</span>
               <span className="block">No endless scrolling through opportunities that</span>
               <span className="block">died three Tuesdays ago.</span>
             </p>
-            <div className="mt-7 flex flex-col items-start gap-3">
+            <div className="oq-home-featured-cta oq-home-featured-cta-desktop">
               <Link className="btn-box-style-2" href="/jobs">
                 See All Opportunities
               </Link>
@@ -615,6 +618,12 @@ export default function HomePage() {
             {featuredJobs.map((job) => (
               <FeaturedJobCard key={job.id} job={job} />
             ))}
+          </div>
+
+          <div className="oq-home-featured-cta oq-home-featured-cta-mobile">
+            <Link className="btn-box-style-2" href="/jobs">
+              See All Opportunities
+            </Link>
           </div>
         </section>
 

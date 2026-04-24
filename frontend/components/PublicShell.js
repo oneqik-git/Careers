@@ -122,8 +122,8 @@ export default function PublicShell({ children, utilityContent }) {
   const profileImage = getViewerImage(session.user);
   const profileInitial = getViewerInitial(viewerName);
   const mainClassName = isHome
-    ? 'oq-public-root min-h-screen px-4 pb-[124px] pt-6 md:px-6 md:pb-5 md:pt-[220px] lg:px-8 lg:pt-[136px]'
-    : 'oq-public-root min-h-screen px-4 pb-5 pt-[260px] sm:px-6 sm:pt-[220px] lg:px-8 lg:pt-[136px]';
+    ? 'oq-public-root min-h-screen px-[30px] pb-[124px] pt-6 md:px-6 md:pb-5 md:pt-[220px] lg:px-8 lg:pt-[136px]'
+    : 'oq-public-root min-h-screen px-[30px] pb-5 pt-[260px] sm:px-6 sm:pt-[220px] lg:px-8 lg:pt-[136px]';
   const headerClassName = isHome
     ? `oq-header-shell hidden fixed left-1/2 top-0 z-50 w-[calc(100%-3rem)] max-w-7xl -translate-x-1/2 rounded-b-[15px] px-6 py-5 md:block lg:w-[calc(100%-4rem)] ${isHome ? 'nav-home-highlight-2' : ''}`.trim()
     : `oq-header-shell fixed left-1/2 top-0 z-50 w-[calc(100%-2rem)] max-w-7xl -translate-x-1/2 rounded-b-[15px] px-5 py-5 sm:w-[calc(100%-3rem)] sm:px-6 lg:w-[calc(100%-4rem)] ${isHome ? 'nav-home-highlight-2' : ''}`.trim();
