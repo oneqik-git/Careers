@@ -769,7 +769,7 @@ export default function PublicJobsPage() {
           </section>
         ) : null}
 
-        <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-8">
+        <div className="grid gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-8">
           <aside className="big-box-shadow h-max rounded-[1.3rem] border border-[rgba(29,40,56,0.9)] bg-[linear-gradient(180deg,rgba(255,255,255,0.025),transparent_100%),rgba(6,18,43,0.9)] p-4 pb-5 lg:sticky lg:top-[6.3rem] lg:max-h-[calc(100vh-7.6rem)] lg:overflow-y-auto">
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--text)]">Filters</h2>
@@ -848,9 +848,9 @@ export default function PublicJobsPage() {
           </aside>
 
           <div className="min-w-0 space-y-5">
-            <section className="oq-home-search-strip">
+            <section className="oq-home-search-strip sticky top-[5.25rem] z-20 !p-0 lg:top-[6.3rem]">
               <form className="flex w-full flex-col gap-3" onSubmit={handleSearchSubmit}>
-                <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_156px] sm:items-center">
+                <div className="grid gap-6 sm:grid-cols-[minmax(0,1fr)_156px] sm:items-center">
                   <input
                     className="home-search-input-style-2 min-h-[52px] flex-1"
                     onChange={(event) => setQuery(event.target.value)}
@@ -903,7 +903,7 @@ export default function PublicJobsPage() {
                   </p>
                 </div>
 
-                <div className="grid gap-[22px]">
+                <div className="grid items-stretch gap-[22px] xl:grid-cols-2">
                   {jobsWithState.map((job) => (
                     <JobsProductCard
                       key={job.id}

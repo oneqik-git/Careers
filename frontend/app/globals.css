@@ -241,6 +241,12 @@ textarea {
     box-shadow: var(--shadow-strong);
   }
 
+  .oq-card.oq-card-no-hover:hover {
+    transform: none;
+    border-color: var(--dark-1);
+    box-shadow: var(--shadow-soft);
+  }
+
   .big-box-shadow {
     box-shadow: 8px 8px 10px 5px rgba(0, 0, 0, .3), -8px -8px 10px 5px rgba(93, 224, 230, .05);
   }
@@ -589,6 +595,12 @@ textarea {
     transform: translateY(-2px);
     border-color: rgba(93, 224, 230, 0.16);
     box-shadow: 0 22px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .oq-public-root .oq-card.oq-card-no-hover:hover {
+    transform: none;
+    border-color: var(--dark-1);
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.16);
   }
 
   .oq-public-root .oq-hero {

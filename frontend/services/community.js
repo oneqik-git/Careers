@@ -14,8 +14,33 @@ export async function toggleCommunityUpvote(postId) {
   return unwrapData(response);
 }
 
+export async function toggleCommunityReaction(targetType, targetId) {
+  const response = await api.post(`/api/community/${targetType}/${targetId}/reactions`);
+  return unwrapData(response);
+}
+
 export async function createCommunityComment(postId, payload) {
   const response = await api.post(`/api/community/${postId}/comments`, payload);
+  return unwrapData(response);
+}
+
+export async function createCommunityTargetComment(targetType, targetId, payload) {
+  const response = await api.post(`/api/community/${targetType}/${targetId}/comments`, payload);
+  return unwrapData(response);
+}
+
+export async function createCommunityQuestion(payload) {
+  const response = await api.post('/api/community/questions', payload);
+  return unwrapData(response);
+}
+
+export async function createCommunityPost(payload) {
+  const response = await api.post('/api/community/posts', payload);
+  return unwrapData(response);
+}
+
+export async function createCommunityAnswer(questionId, payload) {
+  const response = await api.post(`/api/community/questions/${questionId}/answers`, payload);
   return unwrapData(response);
 }
 

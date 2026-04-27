@@ -606,7 +606,7 @@ const migrations = [
     id            VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
     author_id     VARCHAR(36) NOT NULL,    -- user_id
     author_role   ENUM('candidate','employer'),
-    post_type     ENUM('question','poll','blog','story','tip'),
+    post_type     ENUM('question','post','poll','blog','story','tip'),
     title         VARCHAR(500),            -- for blog/question
     content       LONGTEXT NOT NULL,
     domain_tags   JSON,                    -- ['Sales','Tech']
@@ -617,6 +617,7 @@ const migrations = [
     view_count    INT DEFAULT 0,
     status        ENUM('pending','approved','rejected','flagged') DEFAULT 'pending',
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (author_id) REFERENCES users(id),
     INDEX idx_post_type (post_type),
     INDEX idx_status (status),
@@ -638,10 +639,63 @@ const migrations = [
     INDEX idx_user (user_id)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
 
+  `CREATE TABLE IF NOT EXISTS community_answers (
+    id            VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    question_id   VARCHAR(36) NOT NULL,
+    author_id     VARCHAR(36) NOT NULL,
+    author_role   ENUM('candidate','employer'),
+    body          LONGTEXT NOT NULL,
+    supporting_link VARCHAR(500),
+    upvote_count  INT DEFAULT 0,
+    comment_count INT DEFAULT 0,
+    status        ENUM('pending','approved','rejected','flagged') DEFAULT 'approved',
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (question_id) REFERENCES community_posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_question (question_id),
+    INDEX idx_author (author_id),
+    INDEX idx_status (status),
+    FULLTEXT idx_answer_search (body)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  `CREATE TABLE IF NOT EXISTS community_topics (
+    id            VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    name          VARCHAR(120) NOT NULL,
+    slug          VARCHAR(140) NOT NULL UNIQUE,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_slug (slug),
+    INDEX idx_name (name)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  `CREATE TABLE IF NOT EXISTS community_post_topics (
+    post_id       VARCHAR(36) NOT NULL,
+    topic_id      VARCHAR(36) NOT NULL,
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (post_id, topic_id),
+    FOREIGN KEY (post_id) REFERENCES community_posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (topic_id) REFERENCES community_topics(id) ON DELETE CASCADE,
+    INDEX idx_topic (topic_id)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
+  `CREATE TABLE IF NOT EXISTS community_reactions (
+    id            VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
+    target_type   ENUM('post','answer','comment') NOT NULL,
+    target_id     VARCHAR(36) NOT NULL,
+    user_id       VARCHAR(36) NOT NULL,
+    reaction_type ENUM('upvote','like') DEFAULT 'upvote',
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uniq_target_reaction (target_type, target_id, user_id, reaction_type),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    INDEX idx_target (target_type, target_id),
+    INDEX idx_user (user_id)
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
+
   // —— COMMUNITY COMMENTS & REPLIES ———————————————————————————————————————
   `CREATE TABLE IF NOT EXISTS community_comments (
     id                 VARCHAR(36) PRIMARY KEY DEFAULT (UUID()),
-    post_id            VARCHAR(36) NOT NULL,
+    post_id            VARCHAR(36) NULL,
+    answer_id          VARCHAR(36) NULL,
     author_id          VARCHAR(36) NOT NULL,
     author_role        ENUM('candidate','employer'),
     parent_comment_id  VARCHAR(36) NULL,
@@ -649,10 +703,13 @@ const migrations = [
     upvote_count       INT DEFAULT 0,
     status             ENUM('pending','approved','rejected','flagged') DEFAULT 'approved',
     created_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at         TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (post_id) REFERENCES community_posts(id) ON DELETE CASCADE,
+    FOREIGN KEY (answer_id) REFERENCES community_answers(id) ON DELETE CASCADE,
     FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (parent_comment_id) REFERENCES community_comments(id) ON DELETE CASCADE,
     INDEX idx_post (post_id),
+    INDEX idx_answer (answer_id),
     INDEX idx_parent (parent_comment_id),
     INDEX idx_status (status)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci`,
@@ -777,6 +834,23 @@ const schemaExtensions = [
       ['idx_job_geo', 'INDEX idx_job_geo (`location_latitude`, `location_longitude`)'],
     ],
   },
+  {
+    table: 'community_posts',
+    columns: [
+      ['updated_at', 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `created_at`'],
+    ],
+    indexes: [],
+  },
+  {
+    table: 'community_comments',
+    columns: [
+      ['answer_id', 'VARCHAR(36) NULL AFTER `post_id`'],
+      ['updated_at', 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP AFTER `created_at`'],
+    ],
+    indexes: [
+      ['idx_answer', 'INDEX idx_answer (`answer_id`)'],
+    ],
+  },
 ];
 
 async function columnExists(tableName, columnName) {
@@ -805,8 +879,35 @@ async function indexExists(tableName, indexName) {
   return Number(rows[0]?.count || 0) > 0;
 }
 
+async function getColumnInfo(tableName, columnName) {
+  const [rows] = await pool.execute(
+    `SELECT COLUMN_TYPE, IS_NULLABLE
+     FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE()
+     AND TABLE_NAME = ?
+     AND COLUMN_NAME = ?`,
+    [tableName, columnName]
+  );
+
+  return rows[0] || null;
+}
+
+async function foreignKeyExists(tableName, columnName, referencedTableName) {
+  const [rows] = await pool.execute(
+    `SELECT COUNT(*) AS count
+     FROM information_schema.KEY_COLUMN_USAGE
+     WHERE TABLE_SCHEMA = DATABASE()
+     AND TABLE_NAME = ?
+     AND COLUMN_NAME = ?
+     AND REFERENCED_TABLE_NAME = ?`,
+    [tableName, columnName, referencedTableName]
+  );
+
+  return Number(rows[0]?.count || 0) > 0;
+}
+
 async function runSchemaExtensions() {
-  console.log('\nRunning location schema extensions...\n');
+  console.log('\nRunning schema extensions...\n');
 
   for (const extension of schemaExtensions) {
     for (const [columnName, definition] of extension.columns) {
@@ -825,6 +926,33 @@ async function runSchemaExtensions() {
 
       await pool.execute(`ALTER TABLE \`${extension.table}\` ADD ${definition}`);
       console.log(`  indexed ${extension.table}.${indexName}`);
+    }
+  }
+
+  const postType = await getColumnInfo('community_posts', 'post_type');
+  if (postType && !String(postType.COLUMN_TYPE || '').includes("'post'")) {
+    await pool.execute(
+      "ALTER TABLE community_posts MODIFY post_type ENUM('question','post','poll','blog','story','tip')"
+    );
+    console.log('  extended community_posts.post_type');
+  }
+
+  const commentPostId = await getColumnInfo('community_comments', 'post_id');
+  if (commentPostId && commentPostId.IS_NULLABLE === 'NO') {
+    await pool.execute('ALTER TABLE community_comments MODIFY post_id VARCHAR(36) NULL');
+    console.log('  made community_comments.post_id nullable');
+  }
+
+  if (!(await foreignKeyExists('community_comments', 'answer_id', 'community_answers'))) {
+    try {
+      await pool.execute(
+        'ALTER TABLE community_comments ADD CONSTRAINT fk_community_comments_answer FOREIGN KEY (answer_id) REFERENCES community_answers(id) ON DELETE CASCADE'
+      );
+      console.log('  linked community_comments.answer_id');
+    } catch (error) {
+      if (!String(error.message || '').includes('Duplicate')) {
+        throw error;
+      }
     }
   }
 }

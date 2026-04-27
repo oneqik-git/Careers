@@ -394,16 +394,19 @@ const CANDIDATES = [
 ];
 
 const COMMUNITY_POSTS = [
-  { authorEmail: 'priya.sharma+candidate@demo.oneqik', role: 'candidate', type: 'story', title: 'What changed when I stopped overselling in discovery', content: 'The quality of my pipeline changed when I listened for operational pain instead of racing to pitch features. Slower early conversations gave me cleaner next steps and much better forecast confidence.', tags: ['Sales Execution', 'Communication'], anonymous: false, alias: 'Revenue professional · 8 yrs', upvotes: 38, views: 460 },
+  { authorEmail: 'priya.sharma+candidate@demo.oneqik', role: 'candidate', type: 'post', title: 'What changed when I stopped overselling in discovery', content: 'The quality of my pipeline changed when I listened for operational pain instead of racing to pitch features. Slower early conversations gave me cleaner next steps and much better forecast confidence.', tags: ['Sales Execution', 'Communication'], anonymous: false, alias: 'Revenue professional - 8 yrs', upvotes: 38, views: 460 },
   { authorEmail: 'kabir.mehta+candidate@demo.oneqik', role: 'candidate', type: 'question', title: 'How much product context should a frontend engineer ask for before implementation starts?', content: 'I keep seeing tickets that are detailed on UI states but thin on business rules. How do you ask sharper product questions without sounding obstructive?', tags: ['Technology', 'Product'], anonymous: false, alias: 'Frontend engineer · 5 yrs', upvotes: 27, views: 389 },
   { authorEmail: 'aisha.thomas+candidate@demo.oneqik', role: 'candidate', type: 'poll', title: 'Which interview-stage gap frustrates candidates most right now?', content: 'Curious what people feel most often breaks the experience after a process starts moving.', tags: ['Interview Readiness', 'Human Resources'], anonymous: false, alias: 'Talent partner · 6 yrs', upvotes: 42, views: 512 },
-  { authorEmail: 'rohit.verma+candidate@demo.oneqik', role: 'candidate', type: 'tip', title: 'A small ops habit that helped me a lot', content: 'If a repeated issue needs three explanations, it probably needs a tracker, not another meeting.', tags: ['Operations', 'Business Acumen'], anonymous: true, alias: 'Operations analyst · 3 yrs', upvotes: 25, views: 280 },
-  { authorEmail: 'meera.kulkarni+candidate@demo.oneqik', role: 'candidate', type: 'story', title: 'Launches got better when our briefs got shorter', content: 'Moving from long documents to a tighter launch brief plus a dependency tracker cut a lot of avoidable confusion for us.', tags: ['Product', 'Communication'], anonymous: false, alias: 'Product ops specialist · 4 yrs', upvotes: 31, views: 344 },
-  { authorEmail: 'sneha.kapoor@aptedge.software', role: 'employer', type: 'tip', title: 'What makes a candidate follow-up stand out to hiring teams', content: 'A strong follow-up references one concrete discussion point, clarifies one relevant strength, and keeps the tone calm. The best ones make it easier for the panel to remember you, not guilty for forgetting you.', tags: ['Interview Readiness', 'Communication'], anonymous: false, alias: 'Hiring leader', upvotes: 44, views: 601 },
+  { authorEmail: 'rohit.verma+candidate@demo.oneqik', role: 'candidate', type: 'post', title: 'A small ops habit that helped me a lot', content: 'If a repeated issue needs three explanations, it probably needs a tracker, not another meeting.', tags: ['Operations', 'Business Acumen'], anonymous: true, alias: 'Operations analyst - 3 yrs', upvotes: 25, views: 280 },
+  { authorEmail: 'meera.kulkarni+candidate@demo.oneqik', role: 'candidate', type: 'post', title: 'Launches got better when our briefs got shorter', content: 'Moving from long documents to a tighter launch brief plus a dependency tracker cut a lot of avoidable confusion for us.', tags: ['Product Careers', 'Communication'], anonymous: false, alias: 'Product ops specialist - 4 yrs', upvotes: 31, views: 344 },
+  { authorEmail: 'sneha.kapoor@aptedge.software', role: 'employer', type: 'post', title: 'What makes a candidate follow-up stand out to hiring teams', content: 'A strong follow-up references one concrete discussion point, clarifies one relevant strength, and keeps the tone calm. The best ones make it easier for the panel to remember you, not guilty for forgetting you.', tags: ['Interview Readiness', 'Employer Expectations'], anonymous: false, alias: 'Hiring leader', upvotes: 44, views: 601 },
   { authorEmail: 'kriti.bansal@cloudmosaic.ai', role: 'employer', type: 'question', title: 'What makes implementation talent stand out in SaaS hiring now?', content: 'We meet many strong operators, but the people who stand out can translate workflow mess into a calm plan. Curious what others look for in implementation roles.', tags: ['Operations', 'SaaS'], anonymous: false, alias: 'Talent partner', upvotes: 18, views: 233 },
   { authorEmail: 'vaishali.reddy@novadesk.solutions', role: 'employer', type: 'poll', title: 'What matters most in an early PM interview?', content: 'We are reviewing our PM screening. Which signal should carry the most weight in the first serious conversation?', tags: ['Product', 'Interview Readiness'], anonymous: false, alias: 'Talent acquisition lead', upvotes: 16, views: 198 },
-  { authorEmail: 'namrata.joshi@truenorthhrcloud.com', role: 'employer', type: 'story', title: 'Why we now share hiring timelines much earlier', content: 'Our process quality improved when we started telling candidates what would happen after each round, even when the answer was imperfect. Uncertainty creates more friction than most teams realize.', tags: ['Human Resources', 'Communication'], anonymous: false, alias: 'Head of talent', upvotes: 22, views: 248 },
-  { authorEmail: 'mehul.shah@ledgerlane.finance', role: 'employer', type: 'tip', title: 'Commercial candidates who stand out in fintech', content: 'The strongest revenue candidates we meet can connect customer pain to business impact without losing the operational detail that risk teams care about.', tags: ['Sales Execution', 'Fintech'], anonymous: false, alias: 'Senior talent partner', upvotes: 20, views: 214 },
+  { authorEmail: 'namrata.joshi@truenorthhrcloud.com', role: 'employer', type: 'post', title: 'Why we now share hiring timelines much earlier', content: 'Our process quality improved when we started telling candidates what would happen after each round, even when the answer was imperfect. Uncertainty creates more friction than most teams realize.', tags: ['Application Feedback', 'Employer Expectations'], anonymous: false, alias: 'Head of talent', upvotes: 22, views: 248 },
+  { authorEmail: 'mehul.shah@ledgerlane.finance', role: 'employer', type: 'post', title: 'Commercial candidates who stand out in fintech', content: 'The strongest revenue candidates we meet can connect customer pain to business impact without losing the operational detail that risk teams care about.', tags: ['Sales Execution', 'Fintech'], anonymous: false, alias: 'Senior talent partner', upvotes: 20, views: 214 },
+  { authorEmail: 'rohit.verma+candidate@demo.oneqik', role: 'candidate', type: 'question', title: 'Are BPO voice roles still a good first job for freshers?', content: 'I am mentoring two cousins who need their first stable job. The concern is whether voice support gives useful career capital or traps them too early.', tags: ['BPO Jobs', 'Fresher Hiring'], anonymous: false, alias: 'Operations analyst - 3 yrs', upvotes: 29, views: 371 },
+  { authorEmail: 'meera.kulkarni+candidate@demo.oneqik', role: 'candidate', type: 'question', title: 'How should freshers ask for application feedback without sounding impatient?', content: 'Many entry-level candidates get silence after interviews. What is the right way to ask for feedback and still sound professional?', tags: ['Fresher Hiring', 'Application Feedback'], anonymous: false, alias: 'Product ops specialist - 4 yrs', upvotes: 34, views: 418 },
+  { authorEmail: 'priya.sharma+candidate@demo.oneqik', role: 'candidate', type: 'question', title: 'What is a reasonable way to negotiate salary after a verbal offer?', content: 'I want to negotiate without making the recruiter feel I am shopping the offer around. What language has worked for people here?', tags: ['Salary Negotiation', 'Interview Readiness'], anonymous: false, alias: 'Revenue professional - 8 yrs', upvotes: 41, views: 530 },
 ];
 
 const COMMUNITY_COMMENTS = {
@@ -420,6 +423,35 @@ const COMMUNITY_COMMENTS = {
   ],
   'Why we now share hiring timelines much earlier': [
     ['aisha.thomas+candidate@demo.oneqik', 'candidate', 'This alone changes how candidates interpret silence.'],
+  ],
+  'How should freshers ask for application feedback without sounding impatient?': [
+    ['sneha.kapoor@aptedge.software', 'employer', 'A short note after the stated timeline is reasonable. Include thanks, one line of context, and a clear ask.'],
+    ['aisha.thomas+candidate@demo.oneqik', 'candidate', 'I tell freshers to ask for one improvement area rather than a full review. It gets better responses.'],
+  ],
+  'What is a reasonable way to negotiate salary after a verbal offer?': [
+    ['mehul.shah@ledgerlane.finance', 'employer', 'Anchor it in role scope and market evidence, not personal pressure. That keeps the conversation professional.'],
+  ],
+};
+
+const COMMUNITY_ANSWERS = {
+  'How much product context should a frontend engineer ask for before implementation starts?': [
+    { authorEmail: 'meera.kulkarni+candidate@demo.oneqik', role: 'candidate', body: 'Ask for the decision the user is trying to make, the state that blocks that decision, and the edge case the team is most worried about. Those three prompts usually reveal the real business rule behind the UI.', upvotes: 19 },
+    { authorEmail: 'vaishali.reddy@novadesk.solutions', role: 'employer', body: 'As a hiring signal, I like engineers who separate "needed to ship" from "nice context". It shows judgment. A crisp question list with assumptions is better than pausing the whole ticket.', upvotes: 14 },
+  ],
+  'What makes implementation talent stand out in SaaS hiring now?': [
+    { authorEmail: 'rohit.verma+candidate@demo.oneqik', role: 'candidate', body: 'The strongest implementation people I have worked with write down the messy workflow before proposing the clean one. They are not just good with customers; they are good at making ambiguity visible.', upvotes: 12 },
+    { authorEmail: 'kabir.mehta+candidate@demo.oneqik', role: 'candidate', body: 'Technical curiosity helps too. They do not need to code, but they should understand integrations, data quality, permissions, and where handoffs usually break.', upvotes: 9 },
+  ],
+  'Are BPO voice roles still a good first job for freshers?': [
+    { authorEmail: 'aisha.thomas+candidate@demo.oneqik', role: 'candidate', body: 'They can be a good first step when the company has structured training, fair shifts, and a path into QA, workforce management, customer success, or team lead roles. The risk is staying too long without building evidence beyond call volume.', upvotes: 21 },
+    { authorEmail: 'namrata.joshi@truenorthhrcloud.com', role: 'employer', body: 'Freshers should ask about ramp targets, shift policy, escalation training, and internal movement. A good BPO job teaches communication under pressure; a weak one only teaches endurance.', upvotes: 17 },
+  ],
+  'How should freshers ask for application feedback without sounding impatient?': [
+    { authorEmail: 'sneha.kapoor@aptedge.software', role: 'employer', body: 'Wait until the timeline shared by the recruiter has passed. Then send a note that says you are still interested, ask whether there is an update, and request one area to improve if the team has closed the role.', upvotes: 22 },
+  ],
+  'What is a reasonable way to negotiate salary after a verbal offer?': [
+    { authorEmail: 'mehul.shah@ledgerlane.finance', role: 'employer', body: 'Thank them first, restate interest, then say the scope and market range make you more comfortable around a specific number. Give a number, not a vague "better package" request.', upvotes: 24 },
+    { authorEmail: 'priya.sharma+candidate@demo.oneqik', role: 'candidate', body: 'What helped me was asking about the full structure first: fixed, variable, joining bonus, review cycle, and benefits. Sometimes the negotiation space is not only base pay.', upvotes: 16 },
   ],
 };
 
@@ -514,7 +546,7 @@ function buildAnswer(candidate, questionText) {
 async function clearExistingData() {
   const conn = await pool.getConnection();
   const tables = [
-    'community_poll_votes', 'community_poll_options', 'community_comments', 'community_post_votes', 'community_posts',
+    'community_poll_votes', 'community_poll_options', 'community_comments', 'community_reactions', 'community_post_topics', 'community_answers', 'community_post_votes', 'community_posts', 'community_topics',
     'notifications', 'application_status_history', 'prescreening_answers', 'prescreening_questions', 'job_applications',
     'job_postings', 'score_events', 'career_scores', 'course_enrollments', 'course_modules', 'courses',
     'skill_assessments', 'performance_records', 'achievements', 'work_experiences', 'digilocker_documents',
@@ -904,6 +936,49 @@ async function seedApplications(context) {
 }
 
 async function seedCommunity(usersByEmail) {
+  const communityUsers = Array.from(usersByEmail.values());
+  const postIdsByTitle = new Map();
+
+  async function seedTopics(postId, tags) {
+    for (const tag of tags || []) {
+      const slug = String(tag || '')
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+
+      if (!slug) continue;
+
+      await query(
+        `INSERT INTO community_topics (id, name, slug)
+         VALUES (?, ?, ?)
+         ON DUPLICATE KEY UPDATE name = VALUES(name)`,
+        [uuid(), tag, slug]
+      );
+
+      const [topic] = await query('SELECT id FROM community_topics WHERE slug = ?', [slug]);
+      if (topic?.id) {
+        await query(
+          `INSERT IGNORE INTO community_post_topics (post_id, topic_id)
+           VALUES (?, ?)`,
+          [postId, topic.id]
+        );
+      }
+    }
+  }
+
+  async function seedReactions(targetType, targetId, count, createdAtDaysAgo) {
+    const voters = communityUsers.slice(0, Math.min(count, communityUsers.length));
+    for (let index = 0; index < voters.length; index += 1) {
+      await query(
+        `INSERT IGNORE INTO community_reactions
+          (id, target_type, target_id, user_id, reaction_type, created_at)
+         VALUES (?, ?, ?, ?, 'upvote', ?)`,
+        [uuid(), targetType, targetId, voters[index].id, toSqlDateTime(isoDate(createdAtDaysAgo, 12 + (index % 6)))]
+      );
+    }
+  }
+
   for (let index = 0; index < COMMUNITY_POSTS.length; index += 1) {
     const post = COMMUNITY_POSTS[index];
     const user = usersByEmail.get(post.authorEmail);
@@ -916,6 +991,9 @@ async function seedCommunity(usersByEmail) {
        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, 'approved', ?)`,
       [postId, user.id, post.role, post.type, post.title, post.content, listToJson(post.tags), post.anonymous ? 1 : 0, post.alias, post.upvotes, post.views, toSqlDateTime(isoDate(20 - index))]
     );
+    postIdsByTitle.set(post.title, postId);
+    await seedTopics(postId, post.tags);
+    await seedReactions('post', postId, Math.min(post.upvotes, 8), 20 - index);
 
     let commentCount = 0;
     for (let commentIndex = 0; commentIndex < (COMMUNITY_COMMENTS[post.title] || []).length; commentIndex += 1) {
@@ -953,6 +1031,26 @@ async function seedCommunity(usersByEmail) {
     }
 
     await query('UPDATE community_posts SET comment_count = ? WHERE id = ?', [commentCount, postId]);
+  }
+
+  for (const [questionTitle, answers] of Object.entries(COMMUNITY_ANSWERS)) {
+    const questionId = postIdsByTitle.get(questionTitle);
+    if (!questionId) continue;
+
+    for (let answerIndex = 0; answerIndex < answers.length; answerIndex += 1) {
+      const answer = answers[answerIndex];
+      const user = usersByEmail.get(answer.authorEmail);
+      if (!user) continue;
+
+      const answerId = uuid();
+      await query(
+        `INSERT INTO community_answers
+          (id, question_id, author_id, author_role, body, upvote_count, comment_count, status, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, 0, 'approved', ?)`,
+        [answerId, questionId, user.id, answer.role, answer.body, answer.upvotes, toSqlDateTime(isoDate(9 - answerIndex, 14 + answerIndex))]
+      );
+      await seedReactions('answer', answerId, Math.min(answer.upvotes, 6), 8 - answerIndex);
+    }
   }
 }
 
