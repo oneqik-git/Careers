@@ -1,11 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import EmptyState from '@/components/EmptyState';
 import LoadingState from '@/components/LoadingState';
 import MessageBanner from '@/components/MessageBanner';
-import PageHero from '@/components/PageHero';
 import PublicShell from '@/components/PublicShell';
 import SectionCard from '@/components/SectionCard';
 import {
@@ -70,13 +69,6 @@ export default function CommunityPage() {
     });
     loadFeed();
   }, []);
-
-  const postMix = useMemo(() => {
-    return feed.posts.reduce((accumulator, post) => {
-      accumulator[post.post_type] = (accumulator[post.post_type] || 0) + 1;
-      return accumulator;
-    }, {});
-  }, [feed.posts]);
 
   async function handleUpvote(postId) {
     if (!viewer.role) {
@@ -144,44 +136,9 @@ export default function CommunityPage() {
     }
   }
 
-  const heroActions = viewer.role
-    ? [{ label: viewer.role === 'candidate' ? 'Candidate Workspace' : 'Employer Workspace', href: viewer.role === 'candidate' ? '/candidate/dashboard' : '/employer/dashboard' }]
-    : [{ label: 'Candidate Login', href: '/login' }, { label: 'Employer Login', href: '/employer/login', variant: 'secondary' }];
-
   return (
     <PublicShell>
       <div className="space-y-8">
-        <PageHero
-          eyebrow="Community"
-          title="Career conversations that already feel active"
-          description="Public visitors can browse the feed, questions, and polls. Signed-in candidates and employers can add visible interaction without leaving the product tone behind."
-          badges={[
-            `${feed.posts.length} seeded posts`,
-            `${feed.topics.length} active topics`,
-            viewer.user?.full_name ? `Signed in as ${viewer.user.full_name}` : 'Public browsing enabled',
-          ]}
-          actions={heroActions}
-          aside={
-            <div className="space-y-4">
-              <div className="rounded-[1.2rem] border border-[rgba(93,224,230,0.16)] bg-[rgba(93,224,230,0.06)] px-4 py-4">
-                <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[var(--text-muted)]">Feed mix</p>
-                <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                  {['story', 'question', 'poll', 'tip'].map((type) => (
-                    <div key={type}>
-                      <p className="text-sm font-medium text-[var(--text)]">{formatStatus(type)}</p>
-                      <p className="mt-1 text-sm text-[var(--text-soft)]">{postMix[type] || 0}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div className="rounded-[1.2rem] border border-[rgba(29,40,56,0.9)] bg-[rgba(255,255,255,0.03)] px-4 py-4">
-                <p className="text-[0.7rem] uppercase tracking-[0.18em] text-[var(--text-muted)]">Participation</p>
-                <p className="mt-3 text-sm leading-7 text-[var(--text-soft)]">Browsing stays open. Sign-in unlocks upvotes, comments, and poll participation without changing the route.</p>
-              </div>
-            </div>
-          }
-        />
-
         {notice.message ? <MessageBanner tone={notice.tone} message={notice.message} /> : null}
         {error ? <MessageBanner tone="error" message={error.message || 'Unable to load community feed.'} /> : null}
 
@@ -291,18 +248,6 @@ export default function CommunityPage() {
                   description="Topic counts will appear here once the community feed includes tagged posts."
                 />
               )}
-            </SectionCard>
-
-            <SectionCard title="How interaction works" description="The public route stays readable, while login adds the actions that turn a feed into a community.">
-              <div className="space-y-3 text-sm leading-7 text-[var(--text-soft)]">
-                <p>Public visitors can browse posts, questions, polls, and replies without hitting a wall.</p>
-                <p>Signed-in candidates and employers can upvote, comment, and vote directly from the same feed view.</p>
-                {!viewer.role ? (
-                  <p>
-                    <Link className="oq-link" href="/login">Candidate login</Link> or <Link className="oq-link" href="/employer/login">employer login</Link> unlocks participation.
-                  </p>
-                ) : null}
-              </div>
             </SectionCard>
           </div>
         </div>
