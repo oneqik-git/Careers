@@ -29,6 +29,36 @@ const emptyComposer = {
   supporting_link: '',
 };
 
+const privacyIdentityLabels = [
+  'Verified Recruiter · Identity Hidden · SaaS',
+  'Anonymous Candidate · Sales · 2 yrs',
+  'Hiring Manager · Role Visible · Product',
+  'Career Member · 3 yrs exp · BPO',
+  'Employer Representative · Role Visible',
+];
+
+function getPrivacyIdentityLabel(item = {}) {
+  const existingLabel = String(item.author_label || '').trim();
+
+  if (/anonymous|verified|identity hidden|career member|hiring manager|employer representative/i.test(existingLabel)) {
+    return existingLabel;
+  }
+
+  const id = String(item.id || existingLabel || item.created_at || 'career-member');
+  const score = id.split('').reduce((total, char) => total + char.charCodeAt(0), 0);
+  return privacyIdentityLabels[score % privacyIdentityLabels.length];
+}
+
+function formatVoteTotal(count) {
+  const total = Number(count) || 0;
+
+  if (total >= 3000) {
+    return `${(total / 1000).toFixed(1).replace(/\.0$/, '')}k Votes`;
+  }
+
+  return `${total} Votes`;
+}
+
 function LoginMark({ user }) {
   const initials = user?.email ? user.email.slice(0, 2).toUpperCase() : 'OQ';
 
@@ -62,7 +92,7 @@ function CommentThread({ comments = [] }) {
     <div className="space-y-2.5">
       {comments.map((comment) => (
         <div key={comment.id} className="rounded-[0.85rem] border border-[rgba(29,40,56,0.9)] bg-[rgba(255,255,255,0.03)] px-3 py-3">
-          <p className="text-xs font-medium text-[var(--text)]">{comment.author_label}</p>
+          <p className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--text)]">{getPrivacyIdentityLabel(comment)}</p>
           <p className="mt-1.5 text-xs leading-6 text-[var(--text-soft)]">{comment.content}</p>
           <p className="mt-2 text-[0.65rem] uppercase tracking-[0.14em] text-[var(--text-muted)]">{formatDateTime(comment.created_at)}</p>
           {comment.replies?.length ? (
@@ -86,15 +116,15 @@ function CommunityComposer({ onOpen, viewer }) {
           onClick={() => onOpen('post')}
           type="button"
         >
-          What do you want to ask or share?
+          Need suggestions, have questions, or workplace situations? Share it here.
         </button>
       </div>
 
       <div className="mt-2.5 grid grid-cols-3 divide-x divide-[rgba(93,224,230,0.12)]">
         {[
-          ['ask', 'Ask'],
-          ['answer', 'Answer'],
-          ['post', 'Post'],
+          ['ask', 'Ask Question'],
+          ['answer', 'Share Insight'],
+          ['post', 'Start Discussion'],
         ].map(([mode, label]) => (
           <button
             key={mode}
@@ -114,14 +144,15 @@ function CommunityComposer({ onOpen, viewer }) {
 function ComposerModal({ mode, form, questions, onChange, onClose, onSubmit, isSubmitting }) {
   if (!mode) return null;
 
-  const title = mode === 'ask' ? 'Ask a question' : mode === 'answer' ? 'Write an answer' : 'Create a post';
+  const title = mode === 'ask' ? 'Ask a career question' : mode === 'answer' ? 'Share Insight' : 'Start Discussion';
+  const submitLabel = mode === 'ask' ? 'Ask Question' : mode === 'answer' ? 'Share Insight' : 'Start Discussion';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4 py-6">
       <div className="w-full max-w-2xl rounded-[22px] border border-[rgba(93,224,230,0.18)] bg-[rgba(5,18,43,0.98)] p-5 shadow-[0_28px_70px_rgba(0,0,0,0.46)] sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="oq-kicker">Community</p>
+            <p className="oq-kicker">Career Discussion Engine</p>
             <h2 className="mt-2 text-2xl font-medium text-[var(--text)]">{title}</h2>
           </div>
           <button className="oq-button-ghost !px-3 !py-2" onClick={onClose} type="button">Close</button>
@@ -134,24 +165,24 @@ function ComposerModal({ mode, form, questions, onChange, onClose, onSubmit, isS
                 className="oq-input"
                 name="title"
                 onChange={onChange}
-                placeholder="Write your question"
+                placeholder="Ask a career, hiring, or workplace question"
                 value={form.title}
               />
               <textarea
                 className="oq-textarea min-h-32"
                 name="details"
                 onChange={onChange}
-                placeholder="Add details, context, or what you have already tried"
+                placeholder="Add context, constraints, role type, or decision points"
                 value={form.details}
               />
-              <input className="oq-input" name="topics" onChange={onChange} placeholder="Topics, separated by commas" value={form.topics} />
+              <input className="oq-input" name="topics" onChange={onChange} placeholder="Career topics, separated by commas" value={form.topics} />
             </>
           ) : null}
 
           {mode === 'answer' ? (
             <>
               <select className="oq-select" name="questionId" onChange={onChange} value={form.questionId}>
-                <option value="">Select a question</option>
+                <option value="">Select a career question</option>
                 {questions.map((question) => (
                   <option key={question.id} value={question.id}>{question.title}</option>
                 ))}
@@ -160,7 +191,7 @@ function ComposerModal({ mode, form, questions, onChange, onClose, onSubmit, isS
                 className="oq-textarea min-h-40"
                 name="body"
                 onChange={onChange}
-                placeholder="Share a practical answer"
+                placeholder="Share a practical insight, context, or decision framework"
                 value={form.body}
               />
               <input className="oq-input" name="supporting_link" onChange={onChange} placeholder="Supporting link, optional" value={form.supporting_link} />
@@ -169,22 +200,22 @@ function ComposerModal({ mode, form, questions, onChange, onClose, onSubmit, isS
 
           {mode === 'post' ? (
             <>
-              <input className="oq-input" name="title" onChange={onChange} placeholder="Title, optional" value={form.title} />
+              <input className="oq-input" name="title" onChange={onChange} placeholder="Discussion title, optional" value={form.title} />
               <textarea
                 className="oq-textarea min-h-40"
                 name="body"
                 onChange={onChange}
-                placeholder="Share an update, story, or useful thought"
+                placeholder="Share a career situation, hiring observation, job-market context, or decision point"
                 value={form.body}
               />
-              <input className="oq-input" name="topics" onChange={onChange} placeholder="Topics, separated by commas" value={form.topics} />
+              <input className="oq-input" name="topics" onChange={onChange} placeholder="Career topics, separated by commas" value={form.topics} />
             </>
           ) : null}
 
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
             <button className="oq-button-secondary" onClick={onClose} type="button">Cancel</button>
             <button className="oq-button-primary" disabled={isSubmitting} type="submit">
-              {isSubmitting ? 'Publishing...' : 'Publish'}
+              {isSubmitting ? 'Sharing...' : submitLabel}
             </button>
           </div>
         </form>
@@ -205,27 +236,40 @@ function CommunityCard({
 }) {
   const isQuestion = item.content_type === 'question';
   const isAnswer = item.content_type === 'answer';
-  const isPoll = item.content_type === 'poll';
+  const isPoll = item.content_type === 'poll' || item.post_type === 'poll';
   const targetType = item.target_type || (isAnswer ? 'answer' : 'post');
   const title = isAnswer ? item.question_title || item.title : item.title;
+  const identityLabel = getPrivacyIdentityLabel(item);
+  const cardTypeLabel = isPoll ? 'Public Opinion Poll' : isAnswer ? 'Insight' : isQuestion ? 'Career Question' : 'Career Discussion';
+  const engagementLabel = item.comment_count > 0 ? `${item.comment_count} Engagements` : 'Nothing yet. Got something?';
+  const pollVoteTotal = (item.poll_options || []).reduce((total, option) => total + (Number(option.vote_count) || 0), 0);
+  const activityLabel = isPoll ? formatVoteTotal(pollVoteTotal) : null;
 
   return (
     <article className="rounded-[16px] border border-[rgba(29,40,56,0.9)] bg-[rgba(4,14,32,0.58)] p-4 shadow-[inset_-4px_-1px_8px_-5px_rgba(93,224,230,0.3),inset_6px_3px_10px_5px_rgba(0,0,0,0.3)]">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-[0.65rem] uppercase tracking-[0.16em] text-[var(--text-muted)]">
-            {isAnswer ? 'Answer' : formatStatus(item.content_type)} | {item.author_label}
+            {cardTypeLabel} | {identityLabel}
           </p>
           {title ? (
             <h2 className="mt-1.5 text-[1.05rem] font-medium leading-snug text-[var(--text)]">
-              {isAnswer ? `Answer to: ${title}` : title}
+              {isAnswer ? `Insight on: ${title}` : title}
             </h2>
           ) : null}
         </div>
-        <div className="rounded-full border border-[rgba(93,224,230,0.16)] px-2.5 py-1.5 text-[0.65rem] uppercase tracking-[0.14em] text-[var(--secondary-1)]">
-          {item.view_count || item.answer_count || 0} {isQuestion ? 'answers' : 'views'}
-        </div>
+        {activityLabel ? (
+          <div className="rounded-full border border-[rgba(93,224,230,0.16)] px-2.5 py-1.5 text-[0.65rem] uppercase tracking-[0.14em] text-[var(--secondary-1)]">
+            {activityLabel}
+          </div>
+        ) : null}
       </div>
+
+      {isPoll ? (
+        <div className="mt-3 inline-flex rounded-full border border-[rgba(93,224,230,0.18)] bg-[rgba(93,224,230,0.07)] px-3 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.14em] text-[var(--brand-accent)]">
+          Public Opinion Poll
+        </div>
+      ) : null}
 
       <p className="mt-3 text-[0.86rem] leading-6 text-[var(--text-soft)]">{item.body || item.content}</p>
 
@@ -255,14 +299,14 @@ function CommunityCard({
 
       <div className="mt-4 flex flex-wrap items-center gap-2.5 text-xs text-[var(--text-soft)]">
         <button className="inline-flex min-h-7 items-center gap-1.5 rounded-full border border-[rgba(29,40,56,0.9)] px-2.5 py-1 text-[0.72rem] font-medium text-[var(--text-soft)] transition hover:border-[rgba(93,224,230,0.22)] hover:text-white" onClick={() => onReaction(targetType, item.id)} type="button">
-          <span className="text-[0.68rem] text-[var(--brand-accent)]">^</span> Helpful | {item.upvote_count || 0}
+          <span className="text-[0.68rem] text-[var(--brand-accent)]">^</span> Useful | {item.upvote_count || 0}
         </button>
         {isQuestion ? (
           <button className="oq-button-ghost !rounded-full !px-3 !py-1.5 !text-xs" onClick={() => onAnswer(item.id)} type="button">
-            <IconGlyph type="answer" /> Answer
+            <IconGlyph type="answer" /> Share Insight
           </button>
         ) : null}
-        <span>{item.comment_count || 0} Engagements</span>
+        <span>{engagementLabel}</span>
         <span>{formatDateTime(item.created_at)}</span>
       </div>
 
@@ -270,19 +314,19 @@ function CommunityCard({
         <div className="mt-4 space-y-2.5 border-t border-[rgba(93,224,230,0.12)] pt-4">
           {item.answers.slice(0, 2).map((answer) => (
             <div key={answer.id} className="rounded-[0.85rem] border border-[rgba(29,40,56,0.9)] bg-[rgba(255,255,255,0.03)] p-3">
-              <p className="text-xs font-medium text-[var(--text)]">{answer.author_label}</p>
+              <p className="text-xs font-medium uppercase tracking-[0.12em] text-[var(--text)]">{getPrivacyIdentityLabel(answer)}</p>
               <p className="mt-1.5 text-xs leading-6 text-[var(--text-soft)]">{answer.body}</p>
-              <p className="mt-2 text-[0.65rem] uppercase tracking-[0.14em] text-[var(--text-muted)]">{answer.upvote_count || 0} helpful</p>
+              <p className="mt-2 text-[0.65rem] uppercase tracking-[0.14em] text-[var(--text-muted)]">{answer.upvote_count || 0} useful</p>
             </div>
           ))}
         </div>
       ) : null}
 
-      <div className="mt-4 flex items-center gap-2">
+      <div className="mt-2 flex items-center gap-5">
         <textarea
           className="oq-textarea min-h-8 min-w-0 flex-1 resize-none rounded-full px-3 py-1.5 text-xs leading-5"
           onChange={(event) => onCommentChange(item.id, event.target.value)}
-          placeholder={viewer.role ? 'Add an engagement' : 'Sign in to engage'}
+          placeholder={viewer.role ? 'Add to the discussion' : 'Sign in to discuss'}
           rows={1}
           value={commentDraft || ''}
         />
@@ -338,7 +382,7 @@ export default function CommunityPage() {
   }, []);
 
   function redirectToLogin() {
-    router.push('/login?next=/community');
+    router.push('/community?auth=login&next=/community');
   }
 
   function requireAuth() {
@@ -376,40 +420,40 @@ export default function CommunityPage() {
           topics: composerForm.topics,
           visibility: 'public',
         });
-        setNotice({ tone: 'success', message: 'Question added to the community feed.' });
+        setNotice({ tone: 'success', message: 'Career question added to the discussion board.' });
       }
 
       if (composerMode === 'post') {
         if (!composerForm.body.trim()) {
-          throw new Error('Write something before publishing your post.');
+          throw new Error('Add a career situation or hiring observation before starting the discussion.');
         }
         await createCommunityPost({
           title: composerForm.title,
           body: composerForm.body,
           topics: composerForm.topics,
         });
-        setNotice({ tone: 'success', message: 'Post added to the community feed.' });
+        setNotice({ tone: 'success', message: 'Career discussion started.' });
       }
 
       if (composerMode === 'answer') {
         if (!composerForm.questionId) {
-          throw new Error('Select a question to answer.');
+          throw new Error('Select a career question to add insight to.');
         }
         if (!composerForm.body.trim()) {
-          throw new Error('Write an answer before publishing.');
+          throw new Error('Share an insight before submitting.');
         }
         await createCommunityAnswer(composerForm.questionId, {
           body: composerForm.body,
           supporting_link: composerForm.supporting_link || undefined,
         });
-        setNotice({ tone: 'success', message: 'Answer added to the question.' });
+        setNotice({ tone: 'success', message: 'Insight added to the discussion.' });
       }
 
       setComposerMode(null);
       setComposerForm(emptyComposer);
       await loadFeed();
     } catch (requestError) {
-      setNotice({ tone: 'error', message: requestError.message || 'Unable to publish right now.' });
+      setNotice({ tone: 'error', message: requestError.message || 'Unable to share this right now.' });
     } finally {
       setIsSubmitting(false);
     }
@@ -429,14 +473,14 @@ export default function CommunityPage() {
         )),
       }));
     } catch (requestError) {
-      setNotice({ tone: 'error', message: requestError.message || 'Unable to register this as helpful right now.' });
+      setNotice({ tone: 'error', message: requestError.message || 'Unable to mark this as useful right now.' });
     }
   }
 
   async function handleComment(targetType, targetId) {
     const content = String(commentDrafts[targetId] || '').trim();
     if (!content) {
-      setNotice({ tone: 'warning', message: 'Write an engagement before posting it.' });
+      setNotice({ tone: 'warning', message: 'Add to the discussion before submitting.' });
       return;
     }
     if (!requireAuth()) return;
@@ -444,7 +488,7 @@ export default function CommunityPage() {
     try {
       await createCommunityTargetComment(targetType, targetId, { content });
       setCommentDrafts((current) => ({ ...current, [targetId]: '' }));
-      setNotice({ tone: 'success', message: 'Engagement added to the discussion.' });
+      setNotice({ tone: 'success', message: 'Contribution added to the discussion.' });
       await loadFeed();
     } catch (requestError) {
       setNotice({ tone: 'error', message: requestError.message || 'Unable to add the engagement right now.' });
@@ -474,7 +518,7 @@ export default function CommunityPage() {
     <PublicShell>
       <div className="space-y-5">
         {notice.message ? <MessageBanner tone={notice.tone} message={notice.message} /> : null}
-        {error ? <MessageBanner tone="error" message={error.message || 'Unable to load community feed.'} /> : null}
+        {error ? <MessageBanner tone="error" message={error.message || 'Unable to load career discussions.'} /> : null}
 
         <ComposerModal
           form={composerForm}
@@ -497,7 +541,7 @@ export default function CommunityPage() {
                   ))}
                 </div>
               ) : (
-                <EmptyState align="left" eyebrow="Topics" title="No active topics yet" description="Topic counts will appear here once the community feed includes tagged posts." />
+                <EmptyState align="left" eyebrow="Topics" title="No active topics yet" description="Topic counts will appear here once career discussions include tagged topics." />
               )}
             </SectionCard>
           </div>
@@ -507,7 +551,7 @@ export default function CommunityPage() {
 
             {isLoading ? (
               <SectionCard>
-                <LoadingState compact description="Loading questions, answers, posts, polls, and engagements." label="Community" title="Loading the feed" />
+                <LoadingState compact description="Loading career questions, insights, discussions, and polls." label="Community discussion" title="Loading career discussions" />
               </SectionCard>
             ) : feed.posts.length ? (
               <div className="space-y-4">
@@ -528,10 +572,10 @@ export default function CommunityPage() {
             ) : (
               <SectionCard>
                 <EmptyState
-                  eyebrow="Community feed"
-                  title="No posts are visible yet"
-                  description="Once the community feed has content, stories, questions, and polls will appear here."
-                  action={!viewer.role ? <Link className="oq-button-primary" href="/login?next=/community">Candidate Login</Link> : null}
+                  eyebrow="Career discussions"
+                  title="No career discussions yet"
+                  description="Career questions, practical insights, public-opinion polls, and useful discussions will appear here."
+                  action={!viewer.role ? <Link className="oq-button-primary" href="?auth=login&next=/community">Candidate Login</Link> : null}
                 />
               </SectionCard>
             )}

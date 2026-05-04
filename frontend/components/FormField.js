@@ -6,10 +6,11 @@ export default function FormField({
   onChange,
   placeholder,
   required = false,
+  hideLabel = false,
 }) {
   return (
     <label className="block">
-      <span className="mb-2 block text-sm font-medium text-[var(--text-soft)]">{label}</span>
+      <span className={hideLabel ? 'sr-only' : 'mb-2 block text-sm font-medium text-[var(--text-soft)]'}>{label}</span>
       <input
         className="oq-input text-sm"
         name={name}

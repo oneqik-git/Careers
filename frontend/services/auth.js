@@ -28,7 +28,7 @@ export async function registerUser(payload) {
       }
     : {
         email: payload.email,
-        phone: payload.phone,
+        phone: payload.phone || undefined,
         password: payload.password,
         full_name: payload.full_name,
       };

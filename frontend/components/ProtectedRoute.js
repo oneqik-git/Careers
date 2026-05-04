@@ -16,9 +16,9 @@ export default function ProtectedRoute({ allowedRoles, children }) {
 
     if (!token || !role) {
       const prefersEmployerEntry = allowedRoles.every((allowedRole) => allowedRole === 'employer' || allowedRole === 'admin');
-      const loginPath = prefersEmployerEntry ? '/employer/login' : '/login';
+      const loginPath = prefersEmployerEntry ? '/employer/login' : '/';
       const next = pathname && pathname.startsWith('/') ? `?next=${encodeURIComponent(pathname)}` : '';
-      router.replace(`${loginPath}${next}`);
+      router.replace(prefersEmployerEntry ? `${loginPath}${next}` : `${loginPath}?auth=login${next ? `&${next.slice(1)}` : ''}`);
       return;
     }
 

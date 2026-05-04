@@ -80,7 +80,7 @@ function sendAuthPayload(res, payload, status = 200, message) {
 // POST /api/auth/register/candidate
 router.post('/register/candidate', [
   body('email').isEmail().withMessage('A valid email is required').normalizeEmail(),
-  body('phone').isMobilePhone('en-IN').withMessage('A valid Indian mobile number is required'),
+  body('phone').optional({ checkFalsy: true }).isMobilePhone('en-IN').withMessage('A valid Indian mobile number is required'),
   body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters long'),
   body('full_name').isLength({ min: 2 }).withMessage('Full name must be at least 2 characters long'),
 ], asyncHandler(async (req, res) => {
@@ -89,13 +89,15 @@ router.post('/register/candidate', [
   }
 
   const { email, phone, password, full_name } = req.body;
-  const existing = await queryOne('SELECT id FROM users WHERE email = ? OR phone = ?', [email, phone]);
+  const existing = phone
+    ? await queryOne('SELECT id FROM users WHERE email = ? OR phone = ?', [email, phone])
+    : await queryOne('SELECT id FROM users WHERE email = ?', [email]);
 
   if (existing) {
     return sendError(res, {
       status: 409,
       code: 'USER_ALREADY_EXISTS',
-      message: 'Email or phone already registered',
+      message: phone ? 'Email or phone already registered' : 'Email already registered',
     });
   }
 

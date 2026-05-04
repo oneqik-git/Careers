@@ -30,6 +30,8 @@ export default function LoggedOutMobileChrome({
     return null;
   }
 
+  const candidateLoginHref = `${pathname || '/'}?auth=login`;
+
   return (
     <>
       {showTopbar ? (
@@ -37,7 +39,7 @@ export default function LoggedOutMobileChrome({
           <Link
             aria-label="Login"
             className="oq-home-mobile-profile-chip"
-            href="/login"
+            href={candidateLoginHref}
           >
             <span className="oq-home-mobile-profile-avatar" aria-hidden="true">
               P

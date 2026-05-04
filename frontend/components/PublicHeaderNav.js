@@ -57,6 +57,7 @@ export default function PublicHeaderNav({
   const workspaceLabel = session.role === 'candidate' ? 'Candidate Workspace' : 'Employer Workspace';
   const isHome = pathname === '/';
   const usesHomeNav = isHome || isLoggedOut;
+  const candidateLoginHref = `${pathname || '/'}?auth=login`;
   const headerClassName = usesHomeNav
     ? 'oq-header-shell hidden fixed left-1/2 top-0 z-50 w-[calc(100%-3rem)] max-w-7xl -translate-x-1/2 rounded-b-[15px] px-6 py-5 md:block lg:w-[calc(100%-4rem)] nav-home-highlight-2'
     : 'oq-header-shell fixed left-1/2 top-0 z-50 w-[calc(100%-2rem)] max-w-7xl -translate-x-1/2 rounded-b-[15px] px-5 py-5 sm:w-[calc(100%-3rem)] sm:px-6 lg:w-[calc(100%-4rem)]';
@@ -113,7 +114,7 @@ export default function PublicHeaderNav({
                   <Link className={usesHomeNav ? 'oq-nav-utility-link' : 'oq-nav-cta oq-nav-cta-secondary'} href="/employer/login">
                     Employers
                   </Link>
-                  <Link className={usesHomeNav ? 'oq-nav-cta oq-nav-cta-secondary btn-box-style-2' : 'oq-nav-utility-link'} href="/login">
+                  <Link className={usesHomeNav ? 'oq-nav-cta oq-nav-cta-secondary btn-box-style-2' : 'oq-nav-utility-link'} href={candidateLoginHref}>
                     Login
                   </Link>
                 </>

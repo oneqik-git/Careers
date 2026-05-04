@@ -86,7 +86,7 @@ function CandidateJobDetailContent() {
 
     if (authCodes.includes(error?.code) || authCodes.includes(submitError?.code)) {
       clearAuthStorage();
-      router.replace('/login');
+      router.replace('/?auth=login&next=/candidate/jobs/detail');
     }
   }, [error, submitError, router]);
 

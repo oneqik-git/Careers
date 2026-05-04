@@ -30,40 +30,41 @@ export default function AuthLayout({
   sidePoints = [],
 }) {
   const isEmployer = variant === 'employer';
+  const shellClassName = `oq-shell grid w-full max-w-6xl overflow-hidden rounded-[2.2rem] ${isEmployer ? 'lg:grid-cols-[1.05fr_0.95fr]' : 'max-w-xl'}`;
 
   return (
     <main className="relative flex min-h-screen items-center justify-center px-4 pb-[124px] pt-24 sm:px-6 md:pb-10 md:pt-[220px] lg:pt-[136px]">
       <LoggedOutMobileChrome topbarClassName="absolute left-6 right-6 top-6 flex items-center justify-between gap-3 md:hidden" />
       <PublicHeaderNav loggedOutOnly />
-      <div className={`oq-shell grid w-full max-w-6xl overflow-hidden rounded-[2.2rem] ${isEmployer ? 'lg:grid-cols-[1.05fr_0.95fr]' : 'max-w-4xl lg:grid-cols-[0.88fr_1.12fr]'}`.trim()}>
-        <section className={`relative overflow-hidden border-b border-[var(--border)] p-8 lg:border-b-0 ${isEmployer ? 'oq-hero text-white' : 'bg-[linear-gradient(180deg,rgba(255,255,255,0.06),transparent),var(--surface-muted)]'} `.trim()}>
-          {isEmployer ? <div className="oq-grid-overlay absolute inset-0 opacity-25" aria-hidden="true" /> : null}
-          <div className="relative flex h-full flex-col justify-between gap-10">
-            <div>
-              <BrandLockup />
-              <p className={`mt-8 ${isEmployer ? 'oq-kicker text-white/80' : 'oq-kicker'}`.trim()}>{eyebrow || (isEmployer ? 'Employer access' : 'Candidate sign in')}</p>
-              <h1 className={`mt-3 max-w-md text-4xl font-semibold leading-tight ${isEmployer ? 'text-white' : 'text-[var(--text)]'}`.trim()}>
-                {sideTitle || (isEmployer ? 'Run hiring from a cleaner front door.' : 'A lighter way back into your career flow.')}
-              </h1>
-              <p className={`mt-4 max-w-md text-sm leading-7 ${isEmployer ? 'text-white/82' : 'text-[var(--text-soft)]'}`.trim()}>
-                {sideBody || (isEmployer
-                  ? 'Use your work email to manage roles, review applicants, and keep employer actions connected to the right company.'
-                  : 'Sign in quickly, browse roles, and continue applications without landing on a heavy sales page.')}
-              </p>
-            </div>
-
-            {sidePoints.length ? (
-              <div className={`space-y-3 rounded-[1.7rem] border p-5 ${isEmployer ? 'border-white/12 bg-white/10 backdrop-blur' : 'border-[var(--border)] bg-[var(--surface-elevated)]'}`.trim()}>
-                {sidePoints.map((point) => (
-                  <div key={point} className="flex items-start gap-3">
-                    <span className="oq-dot mt-2 shrink-0" />
-                    <p className={`text-sm leading-6 ${isEmployer ? 'text-white/84' : 'text-[var(--text-soft)]'}`.trim()}>{point}</p>
-                  </div>
-                ))}
+      <div className={shellClassName}>
+        {isEmployer ? (
+          <section className="oq-hero relative overflow-hidden border-b border-[var(--border)] p-8 text-white lg:border-b-0">
+            <div className="oq-grid-overlay absolute inset-0 opacity-25" aria-hidden="true" />
+            <div className="relative flex h-full flex-col justify-between gap-10">
+              <div>
+                <BrandLockup />
+                <p className="oq-kicker mt-8 text-white/80">{eyebrow || 'Employer access'}</p>
+                <h1 className="mt-3 max-w-md text-4xl font-semibold leading-tight text-white">
+                  {sideTitle || 'Run hiring from a cleaner front door.'}
+                </h1>
+                <p className="mt-4 max-w-md text-sm leading-7 text-white/82">
+                  {sideBody || 'Use your work email to manage roles, review applicants, and keep employer actions connected to the right company.'}
+                </p>
               </div>
-            ) : null}
-          </div>
-        </section>
+
+              {sidePoints.length ? (
+                <div className="space-y-3 rounded-[1.7rem] border border-white/12 bg-white/10 p-5 backdrop-blur">
+                  {sidePoints.map((point) => (
+                    <div key={point} className="flex items-start gap-3">
+                      <span className="oq-dot mt-2 shrink-0" />
+                      <p className="text-sm leading-6 text-white/84">{point}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          </section>
+        ) : null}
 
         <section className="bg-transparent p-6 sm:p-8 lg:p-10">
           <div className="mx-auto max-w-md">

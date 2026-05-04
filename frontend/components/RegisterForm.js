@@ -17,11 +17,18 @@ const initialForm = {
   designation: '',
 };
 
+function getCompactCandidateName(email) {
+  const localPart = String(email || '').split('@')[0].replace(/[._-]+/g, ' ').trim();
+  return localPart.length >= 2 ? localPart : 'Candidate';
+}
+
 export default function RegisterForm({
   fixedRole = null,
+  compactCandidate = false,
   submitLabel = 'Create account',
   emailLabel = 'Email',
   emailPlaceholder = 'name@example.com',
+  hideLabels = false,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -56,7 +63,10 @@ export default function RegisterForm({
     setIsSubmitting(true);
 
     try {
-      const payload = await registerUser({ ...form, role: activeRole });
+      const normalizedForm = compactCandidate && !isEmployer
+        ? { ...form, full_name: getCompactCandidateName(form.email) }
+        : form;
+      const payload = await registerUser({ ...normalizedForm, role: activeRole });
       setAuthSession(payload);
       router.push(getPostAuthRoute(payload?.user?.role, searchParams.get('next')));
     } catch (requestError) {
@@ -83,14 +93,17 @@ export default function RegisterForm({
         </label>
       ) : null}
 
-      <FormField
-        label="Full name"
-        name="full_name"
-        value={form.full_name}
-        onChange={handleChange}
-        placeholder={isEmployer ? 'Your full name' : 'Your full name'}
-        required
-      />
+      {compactCandidate && !isEmployer ? null : (
+        <FormField
+          label="Full name"
+          name="full_name"
+          value={form.full_name}
+          onChange={handleChange}
+          placeholder={isEmployer ? 'Your full name' : 'Your full name'}
+          hideLabel={hideLabels}
+          required
+        />
+      )}
       <FormField
         label={emailLabel}
         name="email"
@@ -98,15 +111,17 @@ export default function RegisterForm({
         value={form.email}
         onChange={handleChange}
         placeholder={emailPlaceholder}
+        hideLabel={hideLabels}
         required
       />
-      {!isEmployer ? (
+      {!isEmployer && !compactCandidate ? (
         <FormField
           label="Phone"
           name="phone"
           value={form.phone}
           onChange={handleChange}
           placeholder="Indian mobile number"
+          hideLabel={hideLabels}
           required
         />
       ) : null}
@@ -117,6 +132,7 @@ export default function RegisterForm({
         value={form.password}
         onChange={handleChange}
         placeholder="At least 8 characters"
+        hideLabel={hideLabels}
         required
       />
 
@@ -128,6 +144,7 @@ export default function RegisterForm({
             value={form.company_name}
             onChange={handleChange}
             placeholder="Your company name"
+            hideLabel={hideLabels}
             required
           />
           <FormField
@@ -136,6 +153,7 @@ export default function RegisterForm({
             value={form.designation}
             onChange={handleChange}
             placeholder="Talent lead, founder, hiring manager..."
+            hideLabel={hideLabels}
           />
         </>
       ) : null}

@@ -24,7 +24,7 @@ export default function CandidateDashboardPage() {
   useEffect(() => {
     if (error?.code === 'AUTH_REQUIRED' || error?.code === 'TOKEN_INVALID' || error?.code === 'TOKEN_EXPIRED') {
       clearAuthStorage();
-      router.replace('/login');
+      router.replace('/?auth=login&next=/candidate/dashboard');
     }
   }, [error, router]);
 

@@ -700,7 +700,7 @@ export default function HomePage() {
                 <span className="block">Not because you’re not capable, but the right Company never even saw you.</span>
               </p>
               <div className="mt-6">
-                <Link className="btn-box-style-2" href="/register">
+                <Link className="btn-box-style-2" href="?auth=register">
                   Create Profile
                 </Link>
               </div>

@@ -1,11 +1,19 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { getStoredRole, getStoredToken } from '@/utils/authStorage';
 import { getDashboardRoute } from '@/utils/roles';
 
 export default function PublicApplyAction({ jobId }) {
   const router = useRouter();
+  const pathname = usePathname();
+
+  function openCandidateAuth(mode, nextPath) {
+    const params = new URLSearchParams();
+    params.set('auth', mode);
+    params.set('next', nextPath);
+    router.push(`${pathname || '/'}?${params.toString()}`);
+  }
 
   function handleApply() {
     const token = getStoredToken();
@@ -13,7 +21,7 @@ export default function PublicApplyAction({ jobId }) {
     const nextPath = `/candidate/jobs/detail?jobId=${jobId}`;
 
     if (!token || !role) {
-      router.push(`/login?next=${encodeURIComponent(nextPath)}`);
+      openCandidateAuth('login', nextPath);
       return;
     }
 
@@ -26,7 +34,7 @@ export default function PublicApplyAction({ jobId }) {
   }
 
   function handleRegister() {
-    router.push(`/register?next=${encodeURIComponent(`/candidate/jobs/detail?jobId=${jobId}`)}`);
+    openCandidateAuth('register', `/candidate/jobs/detail?jobId=${jobId}`);
   }
 
   return (

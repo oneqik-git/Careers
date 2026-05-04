@@ -1,30 +1,29 @@
 'use client';
 
-import { Suspense } from 'react';
-import AuthLayout from '@/components/AuthLayout';
-import RegisterForm from '@/components/RegisterForm';
-import { useAuthRedirect } from '@/hooks/useAuthRedirect';
+import { Suspense, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function RegisterPage() {
-  useAuthRedirect();
+function RegisterRedirect() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('auth', 'register');
+    router.replace(`/?${params.toString()}`);
+  }, [router, searchParams]);
 
   return (
-    <AuthLayout
-      variant="candidate"
-      eyebrow="Candidate profile"
-      title="Create your profile"
-      subtitle="Start with the basics and build the rest as you go."
-      footerLabel="Already registered?"
-      footerHref="/login"
-      footerText="Sign in"
-      sidePoints={[
-        'Apply with more than a resume when you are ready.',
-        'Keep your candidate flow lightweight at the point of entry.',
-      ]}
-    >
-      <Suspense fallback={<div className="text-sm text-[var(--text-soft)]">Loading registration...</div>}>
-        <RegisterForm fixedRole="candidate" submitLabel="Create Profile" />
-      </Suspense>
-    </AuthLayout>
+    <main className="flex min-h-screen items-center justify-center px-4 text-sm text-[var(--text-soft)]">
+      Opening registration...
+    </main>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<main className="flex min-h-screen items-center justify-center px-4 text-sm text-[var(--text-soft)]">Opening registration...</main>}>
+      <RegisterRedirect />
+    </Suspense>
   );
 }

@@ -1,30 +1,29 @@
 'use client';
 
-import { Suspense } from 'react';
-import AuthLayout from '@/components/AuthLayout';
-import LoginForm from '@/components/LoginForm';
-import { useAuthRedirect } from '@/hooks/useAuthRedirect';
+import { Suspense, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function LoginPage() {
-  useAuthRedirect();
+function LoginRedirect() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('auth', 'login');
+    router.replace(`/?${params.toString()}`);
+  }, [router, searchParams]);
 
   return (
-    <AuthLayout
-      variant="candidate"
-      eyebrow="Candidate sign in"
-      title="Sign in"
-      subtitle="Pick up where you left off."
-      footerLabel="Need an account?"
-      footerHref="/register"
-      footerText="Create your profile"
-      sidePoints={[
-        'Browse publicly before you sign in.',
-        'Continue applications and track progress after auth.',
-      ]}
-    >
-      <Suspense fallback={<div className="text-sm text-[var(--text-soft)]">Loading sign-in...</div>}>
-        <LoginForm submitLabel="Sign in" />
-      </Suspense>
-    </AuthLayout>
+    <main className="flex min-h-screen items-center justify-center px-4 text-sm text-[var(--text-soft)]">
+      Opening sign-in...
+    </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<main className="flex min-h-screen items-center justify-center px-4 text-sm text-[var(--text-soft)]">Opening sign-in...</main>}>
+      <LoginRedirect />
+    </Suspense>
   );
 }

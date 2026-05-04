@@ -21,6 +21,7 @@ export default function LoginForm({
   expectedRole = null,
   submitLabel = 'Sign in',
   emailPlaceholder = 'name@example.com',
+  hideLabels = false,
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -63,6 +64,7 @@ export default function LoginForm({
         value={form.email}
         onChange={handleChange}
         placeholder={emailPlaceholder}
+        hideLabel={hideLabels}
         required
       />
       <FormField
@@ -72,6 +74,7 @@ export default function LoginForm({
         value={form.password}
         onChange={handleChange}
         placeholder="Enter your password"
+        hideLabel={hideLabels}
         required
       />
 

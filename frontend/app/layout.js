@@ -1,6 +1,7 @@
 import { Outfit } from 'next/font/google';
 import './globals.css';
 import './design-presets.css';
+import AuthModalHost from '@/components/AuthModalHost';
 import ThemeProvider from '@/components/ThemeProvider';
 
 const outfit = Outfit({
@@ -19,7 +20,10 @@ export default function RootLayout({ children }) {
   return (
     <html className={outfit.variable} lang="en" suppressHydrationWarning>
       <body className={outfit.className}>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <AuthModalHost />
+        </ThemeProvider>
       </body>
     </html>
   );

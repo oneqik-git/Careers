@@ -341,16 +341,15 @@ textarea {
   .oq-button-primary:hover,
   .oq-button-secondary:hover,
   .oq-button-ghost:hover {
-    transform: translateY(-2px);
+    transform: scale(0.98);
+    border-color: rgba(93, 224, 230, 0.2);
+    background: rgba(9, 12, 17, 0.46);
+    color: var(--brand-accent);
   }
 
   .oq-button-primary {
     background: linear-gradient(90deg, var(--primary-2) 0%, var(--primary-5) 100%);
     color: #06162d;
-  }
-
-  .oq-button-primary:hover {
-    background: linear-gradient(90deg, #7be7eb 0%, #5c9cff 100%);
   }
 
   .oq-button-secondary {
@@ -363,20 +362,13 @@ textarea {
     color: var(--text);
   }
 
-  .oq-button-secondary:hover {
-    border-color: rgba(93, 224, 230, 0.2);
-    color: var(--brand-accent);
-  }
-
   .oq-button-ghost {
     background: transparent;
     color: var(--secondary-1);
   }
 
   .oq-button-ghost:hover {
-    border-color: rgba(93, 224, 230, 0.16);
-    background: rgba(93, 224, 230, 0.06);
-    color: var(--white);
+    background: rgba(9, 12, 17, 0.46);
   }
 
   .oq-button-primary:disabled,
@@ -559,6 +551,59 @@ textarea {
     box-shadow: 0 0 0 4px rgba(93, 224, 230, 0.08);
   }
 
+  .candidate-auth-modal .oq-input,
+  .candidate-auth-modal .oq-select,
+  .candidate-auth-modal .oq-textarea {
+    border-color: rgba(93, 224, 230, 0.13);
+    background: rgba(0, 8, 32, 0.64);
+    color: var(--white);
+    box-shadow:
+      inset -4px -1px 8px -5px rgba(93, 224, 230, 0.28),
+      inset 6px 3px 10px 5px rgba(0, 0, 0, 0.32);
+  }
+
+  .candidate-auth-modal .oq-input:focus,
+  .candidate-auth-modal .oq-select:focus,
+  .candidate-auth-modal .oq-textarea:focus {
+    border-color: rgba(93, 224, 230, 0.32);
+    box-shadow:
+      inset -4px -1px 8px -5px rgba(93, 224, 230, 0.3),
+      inset 6px 3px 10px 5px rgba(0, 0, 0, 0.32),
+      0 0 0 3px rgba(93, 224, 230, 0.08);
+  }
+
+  .candidate-auth-modal .oq-input::placeholder,
+  .candidate-auth-modal .oq-textarea::placeholder {
+    color: rgba(192, 207, 225, 0.62);
+  }
+
+  .candidate-auth-modal label > span {
+    color: var(--secondary-1);
+  }
+
+  .candidate-auth-modal .oq-button-primary {
+    border: 1px solid rgba(93, 224, 230, 0.13);
+    background: rgba(0, 8, 32, 0.68);
+    color: var(--white);
+    width: auto;
+    min-width: 9.5rem;
+    justify-content: center;
+    box-shadow:
+      -6px -6px 10px 3px rgba(93, 224, 230, 0.05),
+      6px 6px 10px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  .candidate-auth-modal .oq-button-primary:hover,
+  .candidate-auth-modal .oq-button-primary:focus-visible {
+    border-color: rgba(93, 224, 230, 0.26);
+    background: rgba(3, 17, 40, 0.92);
+    color: var(--white);
+    box-shadow:
+      -6px -6px 10px 3px rgba(93, 224, 230, 0.07),
+      6px 6px 10px 3px rgba(0, 0, 0, 0.34),
+      0 0 0 3px rgba(93, 224, 230, 0.08);
+  }
+
   .oq-public-root .oq-shell {
     box-shadow: 0 16px 36px rgba(0, 0, 0, 0.18);
   }
@@ -677,6 +722,8 @@ textarea {
     border: 0 !important;
     background: transparent !important;
     box-shadow: none !important;
+    overflow: visible !important;
+    padding: 0.75rem 0 1.1rem !important;
   }
 
   .oq-public-root .oq-public-job-detail-hero::before,
@@ -685,11 +732,67 @@ textarea {
     display: none;
   }
 
+  .oq-public-root .oq-public-job-detail-hero > .relative {
+    gap: 2.25rem;
+  }
+
+  .oq-public-root .oq-public-job-detail-hero h2 {
+    max-width: 46rem;
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+  }
+
+  .oq-public-root .oq-public-job-detail-hero .oq-kicker {
+    font-size: 0.7rem;
+  }
+
+  .oq-public-root .oq-public-job-detail-hero h2 + div:has(> span) {
+    margin-top: 1rem;
+    gap: 0.5rem;
+  }
+
+  .oq-public-root .oq-public-job-detail-hero h2 + div:has(> span) > span {
+    padding: 0.42rem 0.72rem;
+    font-size: 0.78rem;
+  }
+
+  .oq-public-root .oq-public-job-detail .oq-public-job-section {
+    border-radius: 5px !important;
+    padding: 1.25rem !important;
+  }
+
+  .oq-public-root .oq-public-job-detail .oq-public-job-section:hover {
+    transform: none;
+    border-color: var(--dark-1);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .oq-public-root .oq-public-job-detail .oq-public-job-section > div:first-child {
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+  }
+
+  .oq-public-root .oq-public-job-detail .oq-public-job-section > div:last-child {
+    padding-top: 1rem;
+  }
+
   .oq-public-root .oq-public-job-detail .oq-public-job-section .oq-section-title {
     color: var(--primary-3) !important;
-    font-size: clamp(1.55rem, 2.2vw, 2rem);
+    font-size: clamp(1.25rem, 1.8vw, 1.55rem);
     font-weight: 400 !important;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.015em;
+  }
+
+  .oq-public-root .oq-public-job-detail .oq-public-job-section .oq-section-title + p {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  .oq-public-root .oq-public-job-detail .oq-public-job-section p[class*='uppercase'] {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
   }
 
   .oq-public-root .oq-public-job-detail .oq-detail-list {
@@ -708,12 +811,19 @@ textarea {
     font-weight: 400 !important;
   }
 
+  .oq-public-root .oq-public-job-detail .oq-detail-content .oq-chip {
+    padding: 0.38rem 0.7rem;
+    font-size: 0.78rem;
+  }
+
   .oq-public-root .oq-public-job-detail .oq-public-job-detail-hero .oq-button-primary,
   .oq-public-root .oq-public-job-detail .oq-public-job-detail-hero .oq-button-secondary {
     border: 1px solid var(--dark-1);
     border-radius: 15px;
     background: transparent;
     color: var(--paragraphs);
+    padding: 0.84rem 1.4rem;
+    font-size: 0.88rem;
     box-shadow:
       -10px -6px 10px 5px var(--light-glow),
       10px 6px 10px 5px var(--dark-glow);
@@ -721,17 +831,44 @@ textarea {
 
   .oq-public-root .oq-public-job-detail .oq-public-job-detail-hero div:has(> .oq-button-primary) {
     gap: 1.25rem;
+    margin-top: 3rem;
+    overflow: visible;
+    padding: 0.5rem 1rem 1rem;
+    margin-left: -1rem;
+    margin-bottom: -1rem;
+  }
+
+  @media (min-width: 640px) {
+    .oq-public-root .oq-public-job-detail .oq-public-job-section {
+      padding: 1.4rem !important;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .oq-public-root .oq-public-job-detail-hero > .relative {
+      grid-template-columns: minmax(0, 1fr) 340px;
+    }
+
+    .oq-public-root .oq-public-job-detail .oq-public-job-section {
+      padding: 1.6rem !important;
+    }
   }
 
   .oq-public-root .oq-public-job-detail .oq-public-job-detail-hero .oq-button-primary:hover,
   .oq-public-root .oq-public-job-detail .oq-public-job-detail-hero .oq-button-secondary:hover,
   .oq-public-root .oq-public-job-detail .oq-public-job-detail-hero .oq-button-primary:focus-visible,
   .oq-public-root .oq-public-job-detail .oq-public-job-detail-hero .oq-button-secondary:focus-visible {
-    border-color: rgba(93, 224, 230, 0.28);
-    background: rgba(93, 224, 230, 0.06);
-    box-shadow:
-      -10px -6px 12px 5px rgba(93, 224, 230, 0.08),
-      10px 6px 12px 5px rgba(0, 0, 0, 0.46);
+    transform: scale(0.98);
+    border-color: rgba(93, 224, 230, 0.2);
+    background: rgba(9, 12, 17, 0.46);
+    color: var(--brand-accent);
+    box-shadow: var(--shadow-soft);
+  }
+
+  .oq-public-root .oq-public-job-detail .oq-public-job-detail-hero .oq-button-primary:active,
+  .oq-public-root .oq-public-job-detail .oq-public-job-detail-hero .oq-button-secondary:active {
+    transform: scale(0.96);
+    box-shadow: var(--shadow-soft);
   }
 
   @media (min-width: 1280px) {
@@ -794,13 +931,11 @@ textarea {
   .oq-public-root .oq-button-primary:focus-visible,
   .oq-public-root .oq-button-secondary:focus-visible,
   .oq-public-root .oq-button-ghost:focus-visible {
-    transform: translateY(-2px);
-    border-color: rgba(93, 224, 230, 0.34);
-    background:
-      linear-gradient(90deg, rgba(55, 162, 206, 0.18) 0%, rgba(93, 224, 230, 0.24) 100%),
-      rgba(9, 12, 17, 0.58);
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(93, 224, 230, 0.08);
-    color: var(--white);
+    transform: scale(0.98);
+    border-color: rgba(93, 224, 230, 0.2);
+    background: rgba(9, 12, 17, 0.46);
+    box-shadow: none;
+    color: var(--brand-accent);
   }
 
   .oq-public-root .oq-button-primary {
@@ -822,8 +957,8 @@ textarea {
 
   .oq-public-root .oq-button-ghost:hover,
   .oq-public-root .oq-button-ghost:focus-visible {
-    border-color: rgba(93, 224, 230, 0.16);
-    background: rgba(93, 224, 230, 0.06);
+    border-color: rgba(93, 224, 230, 0.2);
+    background: rgba(9, 12, 17, 0.46);
   }
 
   .oq-public-root .oq-nav-link,
@@ -875,7 +1010,9 @@ textarea {
   .oq-public-root .oq-nav-cta:hover,
   .oq-public-root .oq-nav-cta:focus-visible {
     transform: scale(0.98);
-    border-color: rgba(93, 224, 230, 0.3);
+    border-color: rgba(93, 224, 230, 0.2);
+    background: rgba(9, 12, 17, 0.46);
+    color: var(--brand-accent);
     box-shadow: var(--shadow-soft);
   }
 
@@ -886,10 +1023,8 @@ textarea {
 
   .oq-public-root .oq-nav-cta-secondary:hover,
   .oq-public-root .oq-nav-cta-secondary:focus-visible {
-    background:
-      linear-gradient(90deg, rgba(55, 162, 206, 0.14) 0%, rgba(93, 224, 230, 0.18) 100%),
-      rgba(9, 12, 17, 0.5);
-    color: var(--white);
+    background: rgba(9, 12, 17, 0.46);
+    color: var(--brand-accent);
   }
 
   .oq-public-root .oq-nav-cta-primary {
@@ -901,9 +1036,7 @@ textarea {
 
   .oq-public-root .oq-nav-cta-primary:hover,
   .oq-public-root .oq-nav-cta-primary:focus-visible {
-    background:
-      linear-gradient(90deg, rgba(55, 162, 206, 0.16) 0%, rgba(93, 224, 230, 0.22) 100%),
-      rgba(9, 12, 17, 0.6);
+    background: rgba(9, 12, 17, 0.46);
   }
 
   .oq-public-root .oq-chip {
